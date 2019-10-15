@@ -202,23 +202,80 @@ Mood Following and Sharing
 US 05.01.01
 As a participant, I want to ask another participant to follow their most recent mood event.
 
-**The amount of work to do: Send notification to unique user. Accept/Decline. 
+**The amount of work to do: Send notification to unique user. Accept/Decline UI integration, buttons, code. Testing.
 
-getFollowerReq
+
+getFollowerReq, getFollowing, follow_requests
+
+**Complexity : Mainly uses the database server to communicate with other users' for follow requests. 
+
+**Risk & Uncertainty: Does following the mood event show it's details? How will the UI look for follow requests? 
+
+**Story points for US 05.01.01:  4
 
 US 05.02.01
 As a participant, I want to grant another participant permission to follow my most recent mood event.
 
+**The amount of work to do: Check if there is a follower request, accept/decline the request. If accepted, send notification
+to other user. Add UI integration. Testing.
+
+follow_requests , getFollowerReq
+
+*Complexity : UI integraion of follow granted, display mood event if follow accepted (unlocked)
+
+**Risk & Uncertainty: testing required to make sure mood details are provided when the user accepts the request only
+
+**Story points for US 05.02.01:  3
+
+
 US 05.03.01
 As a participant, I want to view as a list the most recent mood events of the other participants I am granted to follow, sorted by date and time, in reverse chronological order (most recent coming first).
+
+**The amount of work to do: Fetch database information for particular user followed/accepted. If accepted, add recent following mood events to list. Allow
+sorting as per other Story. (already implemented). Testing
+
+*Complexity : merge mood events with allowed follower users. sorting should be already implemented in the UI for sorting 
+events via date/time reverse chronological order
+
+**Risk & Uncertainty: testing required since we are implementing multiple parts of the UI. slight uncertainty
+
+**Story points for US 05.03.01:  4
+
 
 Geolocation and Maps
 
 US 06.01.01
 As a participant, I want to optionally attach my current location to a mood event.
 
+**The amount of work to do: UI integration of current location. Ask for permission. Upload to db. Testing.
+
+location
+
+*Complexity :  Most likely a java function to attach location. 
+
+**Risk & Uncertainty: Not much, testing required. UI integration of how it should look, required.
+
+**Story points for US 06.01.01: 2
+
 US 06.02.01
 As a participant, I want to see a map of the mood events (showing their emotional states) from my mood history list (that have locations).
 
+**The amount of work to do: Filter out mood events that have locations, display using UI view, for history list. Testing
+
+*Complexity :  Filter function for map/location entered for mood Event. display using chronological UI implemented before.
+
+**Risk & Uncertainty: Not much, except for the filtering. 
+
+
+**Story points for US 06.02.01: 2
+
 US 06.03.01
 As a participant, I want to see a map of the mood events (showing their emotional states and the username) from my mood following list (that have locations).
+
+**The amount of work to do: Filter out mood events for following users (That have already accepted the follow), in the following list. testing.
+
+*Complexity :  Filter function similar to US 06.02.01. display using chronological UI implemented before.
+
+**Risk & Uncertainty:  Not much, except for filtering in the correct following  list.
+
+**Story points for US 06.03.01: 2
