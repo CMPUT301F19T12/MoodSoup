@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "10469747667",
+    "firebase_url": "https://moodsoup-cc107.firebaseio.com",
+    "project_id": "moodsoup-cc107",
+    "storage_bucket": "moodsoup-cc107.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:10469747667:android:a7f4368ebb964216c91d26",
+        "android_client_info": {
+          "package_name": "com.example.test.moodsoup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "10469747667-6bqkunj9u27v1u701gfta2690ruljto9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.test.moodsoup",
+            "certificate_hash": "66fd0d7f085a851f2d518e020233019de355a958"
+          }
+        },
+        {
+          "client_id": "10469747667-qstaui6d3ilgqcq3d78cpsrg4jk6nvq2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvKvU7IPMpUQbQ9gMs-V2ZHEXhLo8pawY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "10469747667-qstaui6d3ilgqcq3d78cpsrg4jk6nvq2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
