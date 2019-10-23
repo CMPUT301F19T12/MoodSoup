@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 
 public class Register extends AppCompatActivity {
+    TextView emailTV;
     TextView usernameTV;
     TextView passwordTV;
     Button registerBTN;
@@ -37,15 +38,19 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        usernameTV = findViewById(R.id.username_new_user_tv);
+        emailTV = findViewById(R.id.email_new_user_tv);
         passwordTV = findViewById(R.id.password_new_user_tv);
         registerBTN = findViewById(R.id.register_new_user_btn);
+        usernameTV = findViewById(R.id.username_new_user_tv);
+        final CollectionReference collectionReference = db.collection("Users");
 
     registerBTN.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            final String email = usernameTV.getText().toString();
+            final String email = emailTV.getText().toString();
             final String password = passwordTV.getText().toString();
+            final String username = usernameTV.getText().toString();
+            HashMap<String, String> data = new HashMap<>();
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -63,6 +68,22 @@ public class Register extends AppCompatActivity {
                             }
 
                             // ...
+                        }
+                    });
+            data.put("username",username);
+            collectionReference
+                    .document(email)
+                    .set(data)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG,"Data Addition Successful");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG,"Data Addition Failed" + e.toString());
                         }
                     });
         }
