@@ -21,34 +21,39 @@ import java.util.Objects;
 
 public class Login extends AppCompatActivity {
 
+    // Initialize Variables
     String TAG = "Sample";
     EditText usernameTV,passwordTV;
     Button login, register;
-
     private FirebaseAuth mAuth;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
+        // Assign Variables
         usernameTV=findViewById(R.id.username);
         passwordTV=findViewById(R.id.password);
         login=findViewById(R.id.login);
         register = findViewById(R.id.register_btn);
 
 
+        // Upon Login button press
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String email = usernameTV.getText().toString();
                 String password = passwordTV.getText().toString();
+                // Login with FireStore
                 mAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
+                                // If user and password combination is in FireStore
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d(TAG, "signInWithEmail:success");
@@ -67,6 +72,7 @@ public class Login extends AppCompatActivity {
             }
         });
 
+        // See if a user is currently logged in
         register.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {

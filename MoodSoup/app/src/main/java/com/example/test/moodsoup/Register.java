@@ -23,6 +23,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 
 public class Register extends AppCompatActivity {
+
+    // Initialize Variables
     TextView emailTV;
     TextView usernameTV;
     TextView passwordTV;
@@ -38,55 +40,60 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        // Assign Variables
         emailTV = findViewById(R.id.email_new_user_tv);
         passwordTV = findViewById(R.id.password_new_user_tv);
         registerBTN = findViewById(R.id.register_new_user_btn);
         usernameTV = findViewById(R.id.username_new_user_tv);
         final CollectionReference collectionReference = db.collection("Users");
 
-    registerBTN.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            final String email = emailTV.getText().toString();
-            final String password = passwordTV.getText().toString();
-            final String username = usernameTV.getText().toString();
-            HashMap<String, String> data = new HashMap<>();
-            mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                Log.d(TAG, "createUserWithEmail:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                finish();
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                Toast.makeText(Register.this, "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
-                            }
+        // Upon pressing the register button
+        registerBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Get strings from TextView
+                final String email = emailTV.getText().toString();
+                final String password = passwordTV.getText().toString();
+                final String username = usernameTV.getText().toString();
+                HashMap<String, String> data = new HashMap<>();
+                mAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                // If email is valid and not in use
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d(TAG, "createUserWithEmail:success");
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    finish();
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                    Toast.makeText(Register.this, "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+                                }
 
-                            // ...
-                        }
-                    });
-            data.put("username",username);
-            collectionReference
-                    .document(email)
-                    .set(data)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(TAG,"Data Addition Successful");
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG,"Data Addition Failed" + e.toString());
-                        }
-                    });
+                                // ...
+                            }
+                        });
+                // Add new users to user database
+                data.put("username",username);
+                collectionReference
+                        .document(email)
+                        .set(data)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG,"Data Addition Successful");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG,"Data Addition Failed" + e.toString());
+                            }
+                        });
+            }
+        });
         }
-    });
     }
-}
