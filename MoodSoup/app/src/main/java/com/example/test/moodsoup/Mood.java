@@ -5,14 +5,34 @@ public class Mood {
     private String date;
     private String time;
     private String reason;
-    private User creator;
+    private String social;
+    private String location;
+    //private User creator;
 
-    public Mood(User creator, String emotion, String date, String time, String reason) {
-        this.creator = creator;
+    public Mood(String date, String time, String emotion, String reason, String social, String location) {
+        //this.creator = creator;
         this.emotion = emotion;
         this.date = date;
         this.time = time;
         this.reason = reason;
+        this.social = social;
+        this.location = location;
+    }
+
+    public String getSocial() {
+        return social;
+    }
+
+    public void setSocial(String social) {
+        this.social = social;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getEmotion() {
@@ -47,11 +67,11 @@ public class Mood {
         this.reason = reason;
     }
 
-    public User getCreator() {
-        return creator;
-    }
+    //public User getCreator() {
+    //    return creator;
+    // }
 
-    public void setCreator(User creator) {
-        this.creator = creator;
-    }
+    //public void setCreator(User creator) {
+    //    this.creator = creator;
+    //}
 }
