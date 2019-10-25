@@ -3,6 +3,7 @@ package com.example.test.moodsoup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +18,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -28,8 +31,11 @@ public class Register extends AppCompatActivity {
     TextView emailTV;
     TextView usernameTV;
     TextView passwordTV;
+    TextView firstNameTV;
+    TextView lastNameTV;
     Button registerBTN;
     String TAG = "Sample";
+
     private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +45,13 @@ public class Register extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
         // Assign Variables
         emailTV = findViewById(R.id.email_new_user_tv);
         passwordTV = findViewById(R.id.password_new_user_tv);
         registerBTN = findViewById(R.id.register_new_user_btn);
         usernameTV = findViewById(R.id.username_new_user_tv);
+        firstNameTV = findViewById(R.id.firstname_new_user_tv);
+        lastNameTV = findViewById(R.id.lastname_new_user_tv);
         final CollectionReference collectionReference = db.collection("Users");
 
         // Upon pressing the register button
@@ -55,6 +62,8 @@ public class Register extends AppCompatActivity {
                 final String email = emailTV.getText().toString();
                 final String password = passwordTV.getText().toString();
                 final String username = usernameTV.getText().toString();
+                final String firstname = firstNameTV.getText().toString();
+                final String lastname = lastNameTV.getText().toString();
                 HashMap<String, String> data = new HashMap<>();
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
@@ -78,6 +87,8 @@ public class Register extends AppCompatActivity {
                         });
                 // Add new users to user database
                 data.put("username",username);
+                data.put("firstName",firstname);
+                data.put("lastName",lastname);
                 collectionReference
                         .document(email)
                         .set(data)
@@ -95,5 +106,5 @@ public class Register extends AppCompatActivity {
                         });
             }
         });
-        }
     }
+}
