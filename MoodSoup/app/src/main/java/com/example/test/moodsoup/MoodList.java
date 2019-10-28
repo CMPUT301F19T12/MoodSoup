@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -53,39 +54,38 @@ public class MoodList extends ArrayAdapter<Mood> {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        String email = mAuth.getCurrentUser().getEmail();
-        DocumentReference docRef = db.collection("Users").document(email);
-        final String TAG = "DOCUMENT ";
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        System.out.println(document.getData().get("firstName").toString());
-                        name.setText(document.getData().get("firstName").toString());
-                        info.setText(String.format("@%s - %s - %s",document.getData().get("username") ,mood.getDate(), mood.getTime()));
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            String email = user.getEmail();
+            DocumentReference docRef = db.collection("Users").document(email);
+            final String TAG = "DOCUMENT ";
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            System.out.println(document.getData().get("firstName").toString());
+                            name.setText(document.getData().get("firstName").toString());
+                            info.setText(String.format("@%s - %s - %s", document.getData().get("username"), mood.getDate(), mood.getTime()));
+                        } else {
+                            Log.d(TAG, "No such document");
+                        }
                     } else {
-                        Log.d(TAG, "No such document");
+                        Log.d(TAG, "get failed with ", task.getException());
                     }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
                 }
+            });
+            emotion.setText(mood.getEmotion());
+            if (mood.getEmotion().toUpperCase().equals("HAPPY")) {
+                image.setImageResource(R.drawable.moodsoup_happy);
+            } else {
+                image.setImageResource(R.drawable.moodsoup_sad);
             }
-        });
-
-
-        emotion.setText(mood.getEmotion());
-        if (mood.getEmotion().toUpperCase().equals("HAPPY")) {
-            image.setImageResource(R.drawable.moodsoup_happy);
+            reason.setText(mood.getReason());
+            social.setText(mood.getSocial());
+            location.setText(mood.getLocation());
         }
-        else{
-            image.setImageResource(R.drawable.moodsoup_sad);
-        }
-        reason.setText(mood.getReason());
-        social.setText(mood.getSocial());
-        location.setText(mood.getLocation());
-
         return view;
     }
 }
