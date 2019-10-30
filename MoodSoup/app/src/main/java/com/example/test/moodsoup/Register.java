@@ -17,14 +17,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-<<<<<<< Updated upstream
-=======
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
->>>>>>> Stashed changes
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -40,10 +37,7 @@ public class Register extends AppCompatActivity {
     TextView passwordTV;
     Button registerBTN;
     String TAG = "Sample";
-<<<<<<< Updated upstream
-=======
     FirebaseFirestore db;
->>>>>>> Stashed changes
     private FirebaseAuth mAuth;
     String uniqueID;
     @Override
@@ -88,10 +82,6 @@ public class Register extends AppCompatActivity {
                     uniqueID = "0"+uniqueID;
                 }*/
                 final String username = usernameTV.getText().toString();
-<<<<<<< Updated upstream
-                HashMap<String, String> data = new HashMap<>();
-=======
->>>>>>> Stashed changes
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -129,31 +119,7 @@ public class Register extends AppCompatActivity {
                                 // ...
                             }
                         });
-<<<<<<< Updated upstream
-                // Add new users to user database
-                data.put("username",username);
-                collectionReference
-                        .document(email)
-                        .set(data)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG,"Data Addition Successful");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG,"Data Addition Failed" + e.toString());
-                            }
-                        });
-=======
->>>>>>> Stashed changes
             }
         });
-        }
     }
-<<<<<<< Updated upstream
-=======
 }
->>>>>>> Stashed changes
