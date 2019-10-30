@@ -11,9 +11,9 @@ public class User {
     private ArrayList<User> follower_req = new ArrayList<User>();
     private ArrayList<User> following_req = new ArrayList<User>();
 
-    public User(String username, String email){
-        this.username=username;
-        this.email=email;
+    public User(String username, String email) {
+        this.username = username;
+        this.email = email;
     }
 
     public String getUsername() {

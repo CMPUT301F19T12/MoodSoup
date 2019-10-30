@@ -3,6 +3,7 @@ package com.example.test.moodsoup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,8 +27,12 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Register extends AppCompatActivity {
 
@@ -35,6 +40,8 @@ public class Register extends AppCompatActivity {
     TextView emailTV;
     TextView usernameTV;
     TextView passwordTV;
+    TextView firstNameTV;
+    TextView lastNameTV;
     Button registerBTN;
     String TAG = "Sample";
     FirebaseFirestore db;
@@ -48,12 +55,13 @@ public class Register extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
         // Assign Variables
         emailTV = findViewById(R.id.email_new_user_tv);
         passwordTV = findViewById(R.id.password_new_user_tv);
         registerBTN = findViewById(R.id.register_new_user_btn);
         usernameTV = findViewById(R.id.username_new_user_tv);
+        firstNameTV = findViewById(R.id.firstname_new_user_tv);
+        lastNameTV = findViewById(R.id.lastname_new_user_tv);
         final CollectionReference collectionReference = db.collection("Users");
 
         // Upon pressing the register button

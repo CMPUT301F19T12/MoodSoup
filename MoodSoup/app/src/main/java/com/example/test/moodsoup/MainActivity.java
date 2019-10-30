@@ -5,24 +5,53 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ListView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
-
+    ImageButton profile;
+    ImageButton home;
+    FloatingActionButton addMood;
+    ListView moodList;
+    ArrayList<Mood> moodArray;
+    ArrayAdapter<Mood> moodAdapter;
+    Button logout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-        // Access a Cloud Firestore instance from your Activity
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.test_button).setOnClickListener(new View.OnClickListener() {
+        //Initialize views
+        profile = findViewById(R.id.profile);
+        home = findViewById(R.id.home);
+        moodList = findViewById(R.id.moodList);
+        addMood = findViewById(R.id.addMood);
+        logout = findViewById(R.id.logout);
+        
+        //Set adapter for moodList
+        moodArray = new ArrayList<>();
+        moodAdapter = new MoodList(this,moodArray);
+        moodList.setAdapter(moodAdapter);
+
+        Mood happyMood = new Mood("2019-01-01","12:00","Happy","Happy Test","","");
+        moodAdapter.add(happyMood);
+        Mood sadMood = new Mood("2019-01-02","13:30","Sad","Sad Test","","");
+        moodAdapter.add(sadMood);
+        //Logout
+        logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mAuth.signOut();
@@ -31,7 +60,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Move to user's profile screen on profile button pressed
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Move screen to profile screen
+                Intent ProfileIntent = new Intent(getApplicationContext(), Profile.class);
+                startActivity(ProfileIntent);
+            }
+        });
 
+        addMood.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,NewMood.class);
+                startActivity(intent);
+            }
+        });
     }
     @Override
     public void onStart() {

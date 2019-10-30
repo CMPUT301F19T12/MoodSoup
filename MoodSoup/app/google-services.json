@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "10469747667-5djg2uqvug8ffno28cu796kkg61sf6ju.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.test.moodsoup",
+            "certificate_hash": "8fbcb2499c65ff3fb06c20738c7cd07b0cc5f967"
+          }
+        },
+        {
           "client_id": "10469747667-6bqkunj9u27v1u701gfta2690ruljto9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
