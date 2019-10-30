@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.test.moodsoup.ui.home.HomeFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -64,8 +65,7 @@ public class MoodList extends ArrayAdapter<Mood> {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
-                            System.out.println(document.getData().get("firstName").toString());
-                            name.setText(document.getData().get("firstName").toString());
+                            //name.setText(document.getData().get("firstName").toString());
                             info.setText(String.format("@%s - %s - %s", document.getData().get("username"), mood.getDate(), mood.getTime()));
                         } else {
                             Log.d(TAG, "No such document");
