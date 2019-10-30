@@ -1,7 +1,6 @@
 package com.example.test.moodsoup;
 
 import android.content.Context;
-import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,9 +46,9 @@ public class MoodList extends ArrayAdapter<Mood> {
         final TextView name = view.findViewById(R.id.name);
         final TextView info = view.findViewById(R.id.userInfo);
         TextView emotion = view.findViewById(R.id.feeling);
-        TextView reason = view.findViewById(R.id.reason);
-        TextView social = view.findViewById(R.id.social);
-        TextView location = view.findViewById(R.id.location);
+        TextView reason = view.findViewById(R.id.new_mood_reason);
+        TextView social = view.findViewById(R.id.new_mood_social);
+        TextView location = view.findViewById(R.id.new_mood_location);
         ImageView image = view.findViewById(R.id.image);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();

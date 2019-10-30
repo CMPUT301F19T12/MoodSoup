@@ -3,13 +3,18 @@ package com.example.test.moodsoup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -18,9 +23,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class NewMood extends AppCompatActivity{
-    private EditText date;
-    private EditText time;
+import java.util.Calendar;
+
+public class NewMood extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
+    private TextView date;
+    private TextView time;
     private Spinner emotion;
     private EditText reason;
     private EditText social;
@@ -32,12 +39,12 @@ public class NewMood extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newmood);
 
-        date = findViewById(R.id.date);
-        time = findViewById(R.id.time);
-        emotion = findViewById(R.id.emotion);
-        reason = findViewById(R.id.reason);
-        social = findViewById(R.id.social);
-        location = findViewById(R.id.location);
+        date = findViewById(R.id.new_mood_date);
+        time = findViewById(R.id.new_mood_time);
+        emotion = findViewById(R.id.new_mood_emotion);
+        reason = findViewById(R.id.new_mood_reason);
+        social = findViewById(R.id.new_mood_social);
+        location = findViewById(R.id.new_mood_location);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<String> adapter = new ArrayAdapter<>(NewMood.this,
@@ -60,6 +67,19 @@ public class NewMood extends AppCompatActivity{
             }
         });
 
+        date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDatePickerDialog();
+            }
+        });
+
+        time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimePickerDialog();
+            }
+        });
         ImageButton post = findViewById(R.id.post);
         post.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +106,7 @@ public class NewMood extends AppCompatActivity{
                     collectionReference
                             .document(email)
                             .collection("moodHistory")
-                            .document(dateText + " - " + timeText)
+                            .document(dateText)
                             .set(mood)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -105,5 +125,64 @@ public class NewMood extends AppCompatActivity{
             }
         });
 
+    }
+    // Initializes Date Picker and sets default values to be current date
+    private void showDatePickerDialog(){
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                this,
+                this,
+                Calendar.getInstance().get(Calendar.YEAR),
+                Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+        );
+        datePickerDialog.show();
+    }
+
+    // Modifies textView to match user input into date picker
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        month += 1;
+        String monthTxt = Integer.toString(month);
+        String dayTxt = Integer.toString(dayOfMonth);
+        if (month<10){
+            monthTxt = '0'+ monthTxt;
+        }
+        if (dayOfMonth<10){
+            dayTxt = '0' + dayTxt;
+        }
+        String tempdate = year + "-" + monthTxt + "-" + dayTxt;
+        date.setText(tempdate);
+    }
+
+    // Initializes time picker and sets default values to be current time
+    private void showTimePickerDialog(){
+        TimePickerDialog timePickerDialog = new TimePickerDialog(
+                this,
+                this,
+                Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
+                Calendar.getInstance().get(Calendar.MINUTE),
+                Boolean.TRUE
+        );
+        timePickerDialog.show();
+    }
+
+    // Modifies TextView to match user input into time picker
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        String temptime;
+        String hour;
+        if (hourOfDay<10){
+            hour = "0"+hourOfDay;
+        }
+        else {
+            hour = Integer.toString(hourOfDay);
+        }
+        if (minute<10){
+            temptime = hour + ":0" + minute;
+        }
+        else {
+            temptime = hour + ":" + minute;
+        }
+        time.setText(temptime);
     }
 }

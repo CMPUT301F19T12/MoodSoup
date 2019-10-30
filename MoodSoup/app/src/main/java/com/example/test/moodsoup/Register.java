@@ -99,9 +99,9 @@ public class Register extends AppCompatActivity {
                                     Log.d(TAG, "createUserWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     HashMap<String, String> data = new HashMap<>();
-                                    data.put("email",email);
+                                    data.put("username",username);
                                     collectionReference
-                                            .document(username)
+                                            .document(email)
                                             .set(data)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
