@@ -35,6 +35,7 @@ public class HomeFragment extends Fragment {
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         //Set adapter for moodList
+        db = FirebaseFirestore.getInstance();
         moodList = root.findViewById(R.id.home_mood_list);
         moodArray = new ArrayList<>();
         moodAdapter = new MoodList(getActivity(),moodArray);
