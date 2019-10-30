@@ -22,8 +22,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Register extends AppCompatActivity {
 
@@ -64,6 +68,7 @@ public class Register extends AppCompatActivity {
                 final String username = usernameTV.getText().toString();
                 final String firstname = firstNameTV.getText().toString();
                 final String lastname = lastNameTV.getText().toString();
+                List<String> pending = new ArrayList<String>();
                 HashMap<String, String> data = new HashMap<>();
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
@@ -89,9 +94,28 @@ public class Register extends AppCompatActivity {
                 data.put("username",username);
                 data.put("firstName",firstname);
                 data.put("lastName",lastname);
+
                 collectionReference
                         .document(email)
                         .set(data)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG,"Data Addition Successful");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG,"Data Addition Failed" + e.toString());
+                            }
+                        });
+
+                HashMap<String, List<String>> data2 = new HashMap<>();
+                data2.put("pending",pending);
+                collectionReference
+                        .document(email)
+                        .set(data2, SetOptions.merge())
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
