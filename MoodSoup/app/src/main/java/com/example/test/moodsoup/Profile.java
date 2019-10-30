@@ -1,35 +1,26 @@
 package com.example.test.moodsoup;
 
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
+import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
+public class Profile extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.profile);
 
-public class Profile {
-    private FirebaseAuth mAuth;
-    private String username;
-    private String following;
-    private ArrayList<Mood> moodHistory = new ArrayList<Mood>(); // all events
-    ListView event_list;
-    ArrayAdapter<Mood> MoodAdapter;
-
-    public Profile(String username,String following, ArrayList<Mood> allEvents){
-        this.username = username;
-        this.following = following;
-        this.moodHistory = moodHistory;
+        final Button toFollowing = findViewById(R.id.button);
+        toFollowing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent FollowingIntent = new Intent(getApplicationContext(), Following.class);
+                startActivity(FollowingIntent);
+            }
+        });
     }
-
-
-    //Send Auth to firebase to follow specific user
-
-    public void request_follow(String username){
-        mAuth = FirebaseAuth.getInstance();
-
-
-
-
-    }
-
 }

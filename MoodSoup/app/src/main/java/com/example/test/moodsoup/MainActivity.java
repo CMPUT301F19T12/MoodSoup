@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         moodList = findViewById(R.id.moodList);
         addMood = findViewById(R.id.addMood);
         logout = findViewById(R.id.logout);
-
+        
         //Set adapter for moodList
         moodArray = new ArrayList<>();
         moodAdapter = new MoodList(this,moodArray);
@@ -65,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Move screen to profile screen
-                //Intent intent = new Intent();
-                //startActivity(intent);
+                Intent ProfileIntent = new Intent(getApplicationContext(), Profile.class);
+                startActivity(ProfileIntent);
             }
         });
 
