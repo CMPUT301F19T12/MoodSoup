@@ -65,8 +65,8 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Get strings from TextView
-                findViewById(R.id.register_invalid_username).setVisibility(View.VISIBLE);
-                findViewById(R.id.register_invalid_email).setVisibility(View.VISIBLE);
+                findViewById(R.id.register_invalid_username).setVisibility(View.INVISIBLE);
+                findViewById(R.id.register_invalid_email).setVisibility(View.INVISIBLE);
 
                 final String email = emailTV.getText().toString();
                 final String password = passwordTV.getText().toString();
