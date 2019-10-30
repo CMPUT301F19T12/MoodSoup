@@ -17,7 +17,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+<<<<<<< Updated upstream
+=======
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+>>>>>>> Stashed changes
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -30,13 +40,18 @@ public class Register extends AppCompatActivity {
     TextView passwordTV;
     Button registerBTN;
     String TAG = "Sample";
+<<<<<<< Updated upstream
+=======
+    FirebaseFirestore db;
+>>>>>>> Stashed changes
     private FirebaseAuth mAuth;
+    String uniqueID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         // Access a Cloud Firestore instance from your Activity
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
@@ -54,8 +69,29 @@ public class Register extends AppCompatActivity {
                 // Get strings from TextView
                 final String email = emailTV.getText().toString();
                 final String password = passwordTV.getText().toString();
+
+                /*DatabaseReference a = FirebaseDatabase.getInstance().getReference("Unique").child("ID");
+                a.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        uniqueID = dataSnapshot.child("Current").getValue().toString();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
+
+                int ID = Integer.valueOf(uniqueID)+1;
+                uniqueID = Integer.toString(ID);
+                while (uniqueID.length()<4){
+                    uniqueID = "0"+uniqueID;
+                }*/
                 final String username = usernameTV.getText().toString();
+<<<<<<< Updated upstream
                 HashMap<String, String> data = new HashMap<>();
+=======
+>>>>>>> Stashed changes
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -65,17 +101,35 @@ public class Register extends AppCompatActivity {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d(TAG, "createUserWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
+                                    HashMap<String, String> data = new HashMap<>();
+                                    data.put("email",email);
+                                    collectionReference
+                                            .document(username)
+                                            .set(data)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d(TAG,"Data Addition Successful");
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.d(TAG,"Data Addition Failed" + e.toString());
+                                                    findViewById(R.id.register_invalid_username).setVisibility(View.VISIBLE);
+                                                }
+                                            });
                                     finish();
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                    Toast.makeText(Register.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
+                                    findViewById(R.id.register_invalid_email).setVisibility(View.VISIBLE);
                                 }
 
                                 // ...
                             }
                         });
+<<<<<<< Updated upstream
                 // Add new users to user database
                 data.put("username",username);
                 collectionReference
@@ -93,7 +147,13 @@ public class Register extends AppCompatActivity {
                                 Log.d(TAG,"Data Addition Failed" + e.toString());
                             }
                         });
+=======
+>>>>>>> Stashed changes
             }
         });
         }
     }
+<<<<<<< Updated upstream
+=======
+}
+>>>>>>> Stashed changes
