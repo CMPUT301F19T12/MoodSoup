@@ -40,8 +40,6 @@ public class Register extends AppCompatActivity {
     TextView emailTV;
     TextView usernameTV;
     TextView passwordTV;
-    TextView firstNameTV;
-    TextView lastNameTV;
     Button registerBTN;
     String TAG = "Sample";
     FirebaseFirestore db;
@@ -60,8 +58,6 @@ public class Register extends AppCompatActivity {
         passwordTV = findViewById(R.id.password_new_user_tv);
         registerBTN = findViewById(R.id.register_new_user_btn);
         usernameTV = findViewById(R.id.username_new_user_tv);
-        firstNameTV = findViewById(R.id.firstname_new_user_tv);
-        lastNameTV = findViewById(R.id.lastname_new_user_tv);
         final CollectionReference collectionReference = db.collection("Users");
 
         // Upon pressing the register button
@@ -69,6 +65,9 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Get strings from TextView
+                findViewById(R.id.register_invalid_username).setVisibility(View.VISIBLE);
+                findViewById(R.id.register_invalid_email).setVisibility(View.VISIBLE);
+
                 final String email = emailTV.getText().toString();
                 final String password = passwordTV.getText().toString();
 
