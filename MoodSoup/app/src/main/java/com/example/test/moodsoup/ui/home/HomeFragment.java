@@ -44,6 +44,8 @@ public class HomeFragment extends Fragment {
         /*WHAT SHOULD HAPPEN HERE:
         * get the most recent post from each of the users you are following
         * add the most recent moods to the arrayadapter*/
+
+        //PLACEHOLDER MOODS
         Mood happyMood = new Mood("2019-01-01","12:00","Happy","Happy Test","","");
         moodAdapter.add(happyMood);
         Mood sadMood = new Mood("2019-01-02","13:30","Sad","Sad Test","","");

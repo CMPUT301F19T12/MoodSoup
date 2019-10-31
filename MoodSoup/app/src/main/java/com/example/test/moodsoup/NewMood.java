@@ -58,11 +58,6 @@ public class NewMood extends AppCompatActivity implements DatePickerDialog.OnDat
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                date.setText("");
-                time.setText("");
-                reason.setText("");
-                social.setText("");
-                location.setText("");
                 finish();
             }
         });
