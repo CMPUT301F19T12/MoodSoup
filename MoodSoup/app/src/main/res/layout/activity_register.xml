@@ -13,7 +13,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/nav_header_Username"
+            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="4"
@@ -29,13 +29,47 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/register_invalid_email"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/invalid_email"
-        android:textColor="@android:color/holo_red_dark"
-        android:visibility="invisible" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:text="First Name" />
+
+        <EditText
+            android:id="@+id/firstname_new_user_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textPersonName" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:text="Last Name" />
+
+        <EditText
+            android:id="@+id/lastname_new_user_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textPersonName" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,14 +91,6 @@
             android:ems="10"
             android:inputType="textPersonName" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/register_invalid_username"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/invalid_username"
-        android:textColor="@android:color/holo_red_dark"
-        android:visibility="invisible" />
 
     <LinearLayout
         android:layout_width="match_parent"

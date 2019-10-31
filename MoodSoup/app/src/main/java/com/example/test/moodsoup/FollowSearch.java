@@ -60,22 +60,24 @@ public class FollowSearch extends AppCompatActivity {
 
 
                                         HashMap<String, String> data = new HashMap<>();
-                                        data.put("pending",toSearch);
+                                        data.put("pending", toSearch);
                                         db.collection("Users")
                                                 .document(user.getEmail())
-                                                .set(data, SetOptions.merge())
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        Log.d(TAG,"Data Addition Successful");
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.d(TAG,"Data Addition Failed" + e.toString());
-                                                    }
-                                                });
+                                                .collection("pending")
+                                                .document(toSearch)
+                                                .set(data)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG,"Data Addition Successful");
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.d(TAG,"Data Addition Failed" + e.toString());
+                                            }
+                                        });
 
                                         Intent FollowingIntent = new Intent(getApplicationContext(), Following.class);
                                         startActivity(FollowingIntent);
