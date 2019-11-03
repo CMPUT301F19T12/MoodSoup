@@ -71,23 +71,33 @@ public class Register extends AppCompatActivity {
                 final String email = emailTV.getText().toString();
                 final String password = passwordTV.getText().toString();
 
-                /*DatabaseReference a = FirebaseDatabase.getInstance().getReference("Unique").child("ID");
-                a.addValueEventListener(new ValueEventListener() {
+                // Get the unique current user ID field
+                DocumentReference docRef = db.collection("Unique").document("ID");
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        uniqueID = dataSnapshot.child("Current").getValue().toString();
-                    }
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                uniqueID = document.getString("Current");
+                                int ID = Integer.parseInt(uniqueID) +1;
+                            } else {
+                                Log.d(TAG, "No such document");
+                            }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
+                        }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Add 1 to current to create the unique user ID
+                        int ID = Integer.parseInt(uniqueID) + 1;
+                        uniqueID = Integer.toString(ID);
+                        while (uniqueID.length()<4){
+                            uniqueID = "0" + uniqueID;
+                        }
                     }
                 });
 
-                int ID = Integer.valueOf(uniqueID)+1;
-                uniqueID = Integer.toString(ID);
-                while (uniqueID.length()<4){
-                    uniqueID = "0"+uniqueID;
-                }*/
                 final String username = usernameTV.getText().toString();
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
