@@ -5,11 +5,12 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:srcCompat="@tools:sample/avatars[0]" />
+        tools:srcCompat="@tools:sample/avatars[11]" />
 
     <ImageButton
         android:id="@+id/imageButton"
@@ -20,8 +21,7 @@
     <TextView
         android:id="@+id/ProfileName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ProfileName" />
+        android:layout_height="wrap_content" />
 
     <ListView
         android:id="@+id/event_list_self"
@@ -31,3 +31,4 @@
     </ListView>
 
 </LinearLayout>
+
