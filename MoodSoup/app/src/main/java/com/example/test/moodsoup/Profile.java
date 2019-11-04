@@ -70,11 +70,18 @@ public class Profile extends AppCompatActivity {
 
         //User info
 
-        if (user!= null){
-            String name = user.getDisplayName();
-            String email = user.getEmail();
-        }
 
+        String uid = user.getUid();
+        String name = user.getDisplayName();
+        String email = user.getEmail();
+
+
+        // Set user name on profile layout display view
+        TextView display_name = (TextView) findViewById(R.id.ProfileName);
+
+        if (user != null) {
+            display_name.setText(name);
+        }
 
         //User moods
 
@@ -90,7 +97,7 @@ public class Profile extends AppCompatActivity {
 
         CollectionReference moodRef = db.collection("Users").document(email).collection("moodHistory");
 
-        public void LoadHistory(ListView moodList) {
+        public void LoadHistory(ListView moodList)) {
             moodRef.get()
                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>(){
                         @Override
