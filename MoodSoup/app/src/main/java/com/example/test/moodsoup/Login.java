@@ -34,6 +34,7 @@ public class Login extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        mAuth.signOut();
 
         // Assign Variables
         usernameTV=findViewById(R.id.username);
