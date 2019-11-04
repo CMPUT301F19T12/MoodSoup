@@ -69,14 +69,16 @@ public class Profile extends AppCompatActivity {
         FirebaseUser user = mAuth.getCurrentUser();
 
         //User info
-        String name = user.getDisplayName();
-        String email = user.getEmail();
+
+        if (user!= null){
+            String name = user.getDisplayName();
+            String email = user.getEmail();
+        }
+
 
         //User moods
 
-        // Photo URL not done yet,so do toString()
 
-        String photoUrl = user.getPhotoUrl().toString();
 
         toFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
