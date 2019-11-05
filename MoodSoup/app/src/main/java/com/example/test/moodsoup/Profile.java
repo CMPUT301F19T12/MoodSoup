@@ -2,7 +2,9 @@ package com.example.test.moodsoup;
 
 import android.content.Intent;
 import android.media.Image;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -19,10 +21,17 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.ui.AppBarConfiguration;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -34,7 +43,10 @@ import com.google.firebase.firestore.auth.User;
 
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import io.opencensus.metrics.export.Summary;
 
@@ -70,22 +82,6 @@ public class Profile extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         //User info
-
-
-        String uid = user.getUid();
-        String name = user.getDisplayName();
-        String email = user.getEmail();
-
-
-        // Set user name on profile layout display view
-        TextView display_name =  profileName;
-        display_name.setText("User email: "+email);
-
-
-        //User moods
-
-
-
         toFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,7 +90,47 @@ public class Profile extends AppCompatActivity {
             }
         });
 
+        String uid = user.getUid();
+        String name = user.getDisplayName();
+        String email = user.getEmail();
+
+
+        // Set user name on profile layout display view
+        final TextView display_name =  profileName;
+        display_name.setText("User email: "+email);
+
+
+        //User moods stuff /////////////
         CollectionReference moodRef = db.collection("Users").document(email).collection("moodHistory");
+        Log.d("MOODREF",moodRef.toString());
+
+
+
+        ListView moodListview = findViewById(R.id.event_list_self);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference moodref = ref.child("moodHistory");
+
+
+        ///////////
+
+        ValueEventListener eventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<String> list = new ArrayList<>();
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    String name = ds.child("moodHistory").getValue(String.class);
+                    list.add(name);
+                    Log.d("TAG", name);
+                }
+                Log.d("TAG", list.toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        };
+        moodref.addListenerForSingleValueEvent(eventListener);
+
+
         // Error?
 
         /*public void LoadHistory(ListView moodList)) {
