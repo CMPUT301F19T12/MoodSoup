@@ -51,8 +51,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(newMood);
             }
         });
+        // Check if user is logged in
+        if (FirebaseAuth.getInstance().getCurrentUser() == null){
+            Intent intent = new Intent(MainActivity.this,Login.class);
+            startActivity(intent);
+        }
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser curUser = mAuth.getCurrentUser();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -102,14 +106,5 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null){
-            Intent intent = new Intent(MainActivity.this,Login.class);
-            startActivity(intent);
-        }
-    }
+
 }
