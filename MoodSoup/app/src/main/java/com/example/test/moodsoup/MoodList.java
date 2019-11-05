@@ -53,38 +53,35 @@ public class MoodList extends ArrayAdapter<Mood> {
         ImageView image = view.findViewById(R.id.image);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
-            String email = user.getEmail();
-            DocumentReference docRef = db.collection("Users").document(email);
-            final String TAG = "DOCUMENT ";
-            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            //name.setText(document.getData().get("firstName").toString());
-                            info.setText(String.format("@%s - %s - %s", document.getData().get("username"), mood.getDate(), mood.getTime()));
-                        } else {
-                            Log.d(TAG, "No such document");
-                        }
+        DocumentReference docRef = db.collection("Users").document(mood.getEmail());
+        final String TAG = "DOCUMENT ";
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //name.setText(document.getData().get("firstName").toString());
+                        info.setText(String.format("@%s - %s - %s", document.getData().get("username"), mood.getDate(), mood.getTime()));
                     } else {
-                        Log.d(TAG, "get failed with ", task.getException());
+                        Log.d(TAG, "No such document");
                     }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
                 }
-            });
-            emotion.setText(mood.getEmotion());
-            if (mood.getEmotion().toUpperCase().equals("HAPPY")) {
-                image.setImageResource(R.drawable.moodsoup_happy);
-            } else {
-                image.setImageResource(R.drawable.moodsoup_sad);
             }
-            reason.setText(mood.getReason());
-            social.setText(mood.getSocial());
-            location.setText(mood.getLocation());
+        });
+        emotion.setText(mood.getEmotion());
+        if (mood.getEmotion().toUpperCase().equals("HAPPY")) {
+            image.setImageResource(R.drawable.moodsoup_happy);
+        } else {
+            image.setImageResource(R.drawable.moodsoup_sad);
         }
+
+        reason.setText(mood.getReason());
+        social.setText(mood.getSocial());
+        location.setText(mood.getLocation());
+        name.setText(mood.getEmail());
         return view;
     }
 }

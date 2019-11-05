@@ -9,12 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,53 +21,39 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
-public class Following extends AppCompatActivity  implements PendingContext.SheetListener{
+public class Follower extends AppCompatActivity implements RequestContext.RequestSheetListener {
+
     private ArrayList<String> pendingList;
-    private ArrayList<String> followingList;
-    private ListView pending;
-    private ListView following;
-    private ArrayAdapter<String> pendingListAdapter;
-    private ArrayAdapter followingAdapter;
+    private ArrayList<String> followerList;
+    private ListView request;
+    private ListView follower;
+    private ArrayAdapter<String> listAdapter;
+    private ArrayAdapter followerAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.following);
-        final Button search = findViewById(R.id.Search);
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent searchPage = new Intent(Following.this, FollowSearch.class);
-                startActivity(searchPage);
-                finish();
-            }
-        });
+        setContentView(R.layout.activity_follower);
 
         pendingList = new ArrayList<>();
-        followingList = new ArrayList<>();
-        pending = findViewById(R.id.pending);
-        following = findViewById(R.id.following);
+        followerList = new ArrayList<>();
+        request = findViewById(R.id.requests);
+        follower = findViewById(R.id.follower);
 
-        registerForContextMenu(following);
         final FirebaseFirestore db;
         final String TAG = "Sample";
         db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
         final Context context = this;
-        final PendingContext.SheetListener listener = this;
-        CollectionReference colRef = db.collection("Users").document(user.getEmail()).collection("pending");
-        colRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        final RequestContext.RequestSheetListener listener = this;
+        CollectionReference pendingColRef = db.collection("Users").document(user.getEmail()).collection("request");
+        pendingColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -81,15 +62,16 @@ public class Following extends AppCompatActivity  implements PendingContext.Shee
                     {
                         pendingList.add(document.getId());
                     }
-                    pendingListAdapter = new PendingContext(context , pendingList, listener);
-                    pending.setAdapter(pendingListAdapter);
+                    listAdapter = new RequestContext(context , pendingList, listener);
+                    request.setAdapter(listAdapter);
+
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
                 }
             }
         });
 
-        CollectionReference followerColRef = db.collection("Users").document(user.getEmail()).collection("following");
+        CollectionReference followerColRef = db.collection("Users").document(user.getEmail()).collection("follower");
         followerColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -97,24 +79,23 @@ public class Following extends AppCompatActivity  implements PendingContext.Shee
 
                     for (QueryDocumentSnapshot document : task.getResult())
                     {
-                        followingList.add(document.getId());
+                        followerList.add(document.getId());
                     }
-                    followingAdapter = new FollowerContext(context , followingList);
-                    following.setAdapter(followingAdapter);
-                    registerForContextMenu(following);
+                    followerAdapter = new FollowerContext(context , followerList);
+                    follower.setAdapter(followerAdapter);
+                    registerForContextMenu(follower);
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
                 }
             }
         });
-
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
     {
-        if (v.getId() == R.id.following) {
-            getMenuInflater().inflate(R.menu.following_menu,menu);
+        if (v.getId() == R.id.follower) {
+            getMenuInflater().inflate(R.menu.follower_menu,menu);
         }
     }
 
@@ -123,14 +104,14 @@ public class Following extends AppCompatActivity  implements PendingContext.Shee
         switch (item.getItemId()){
             case R.id.remove:
                 AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-                String email = followingList.get(info.position);
+                String email = followerList.get(info.position);
                 final String TAG = "Remove Follower";
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 final FirebaseUser user = mAuth.getCurrentUser();
                 if (user != null) {
-                    //Remove user from my following
-                    db.collection("Users").document(user.getEmail()).collection("following").document(email)
+                    //Remove user from my follower
+                    db.collection("Users").document(user.getEmail()).collection("follower").document(email)
                             .delete()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -145,8 +126,8 @@ public class Following extends AppCompatActivity  implements PendingContext.Shee
                                 }
                             });
 
-                    //Remove me from user's follower list
-                    db.collection("Users").document(email).collection("follower").document(user.getEmail())
+                    //Remove me from user's following list
+                    db.collection("Users").document(email).collection("following").document(user.getEmail())
                             .delete()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -161,8 +142,8 @@ public class Following extends AppCompatActivity  implements PendingContext.Shee
                                 }
                             });
                 }
-                following.setAdapter(followingAdapter);
-                followingList.remove(info.position);
+                follower.setAdapter(followerAdapter);
+                followerList.remove(info.position);
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -171,18 +152,21 @@ public class Following extends AppCompatActivity  implements PendingContext.Shee
 
     @Override
     public void onButtonClicked(String state, int position) {
-        pending.setAdapter(pendingListAdapter);
+        request.setAdapter(listAdapter);
+        follower.setAdapter(followerAdapter);
         if (state.equals("delete"))
         {
             pendingList.remove(position);
-            Toast.makeText(getApplicationContext(),"User Deleted",
-                    Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            followerList.add(state);
         }
     }
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(Following.this, MainActivity.class);
+        Intent intent = new Intent(Follower.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
