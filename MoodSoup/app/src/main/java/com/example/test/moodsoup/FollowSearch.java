@@ -58,12 +58,35 @@ public class FollowSearch extends AppCompatActivity {
                                         Toast.makeText(getApplicationContext(), "User Found",
                                                 Toast.LENGTH_SHORT).show();
 
-
-                                        HashMap<String, String> data = new HashMap<>();
-                                        data.put("pending",toSearch);
+                                        //Add searched user to my pending
+                                        HashMap<String, String> pendingData = new HashMap<>();
+                                        pendingData.put("pending",toSearch);
                                         db.collection("Users")
                                                 .document(user.getEmail())
-                                                .set(data, SetOptions.merge())
+                                                .collection("pending")
+                                                .document(toSearch)
+                                                .set(pendingData)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Log.d(TAG,"Data Addition Successful");
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.d(TAG,"Data Addition Failed" + e.toString());
+                                                    }
+                                                });
+
+                                        //Add me to searched user's request
+                                        HashMap<String, String> requestData = new HashMap<>();
+                                        requestData.put("request", user.getEmail());
+                                        db.collection("Users")
+                                                .document(toSearch)
+                                                .collection("request")
+                                                .document(user.getEmail())
+                                                .set(requestData)
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {

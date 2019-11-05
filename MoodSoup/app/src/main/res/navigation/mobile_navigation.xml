@@ -21,6 +21,12 @@
         android:label="@string/menu_following"
         tools:layout="@layout/following" />
     <activity
+        android:id="@+id/nav_follower"
+        android:name="com.example.test.moodsoup.Follower"
+        android:label="Follower"
+        tools:layout="@layout/activity_follower"
+        />
+    <activity
         android:id="@+id/nav_profile"
         android:name="com.example.test.moodsoup.Profile"
         android:label="@string/menu_profile"
@@ -30,10 +36,5 @@
         android:name="com.example.test.moodsoup.Login"
         android:label="@string/login"
         tools:layout="@layout/activity_login" />
-    <activity
-        android:id="@+id/nav_newMood"
-        android:name="com.example.test.moodsoup.NewMood"
-        android:label="@string/newMood"
-        tools:layout="@layout/activity_newmood" />
 
 </navigation>

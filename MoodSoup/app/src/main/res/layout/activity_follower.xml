@@ -4,37 +4,25 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/Search"
+    <TextView
+        android:id="@+id/requestText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add" />
+        android:text="    Requests" />
 
     <ListView
-        android:id="@+id/following"
+        android:id="@+id/requests"
         android:layout_width="match_parent"
-        android:layout_height="400dp">
-
-    </ListView>
+        android:layout_height="200dp"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="#c0c0c0"/>
 
-    <TextView
-        android:id="@+id/requestText"
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:gravity="bottom"
-        android:text="          Requested" />
 
     <ListView
-        android:id="@+id/pending"
+        android:id="@+id/follower"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </ListView>
-
-
+        android:layout_height="match_parent" />
 </LinearLayout>
