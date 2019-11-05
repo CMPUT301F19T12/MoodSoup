@@ -6,19 +6,31 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
+            android:icon="@mipmap/moodsoup_logo_round"
             android:title="@string/menu_home" />
         <item
             android:id="@+id/nav_search"
+            android:icon="@mipmap/moodsoup_logo_round"
             android:title="@string/menu_search" />
         <item
             android:id="@+id/nav_following"
+            android:icon="@mipmap/moodsoup_logo_round"
             android:title="@string/menu_following" />
         <item
+            android:id="@+id/nav_follower"
+            android:title="Follower"/>
+        <item
             android:id="@+id/nav_profile"
+            android:icon="@mipmap/moodsoup_logo_round"
             android:title="@string/menu_profile" />
         <item
             android:id="@+id/nav_logout"
+            android:icon="@mipmap/moodsoup_logo_round"
             android:title="@string/logout" />
     </group>
+
+
+
+
 
 </menu>

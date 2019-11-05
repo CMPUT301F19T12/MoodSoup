@@ -8,6 +8,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.view.MenuItem;
 import android.util.Log;
 import android.view.View;
 
@@ -32,7 +33,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private FirebaseAuth mAuth;
     private AppBarConfiguration mAppBarConfiguration;
     FirebaseFirestore db;
@@ -44,21 +45,23 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent newMood = new Intent(MainActivity.this,NewMood.class);
+                Intent newMood = new Intent(MainActivity.this, NewMood.class);
                 startActivity(newMood);
+                finish();
             }
         });
-        // Check if user is logged in
         mAuth = FirebaseAuth.getInstance();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_search, R.id.nav_following, R.id.nav_profile, R.id.nav_logout)
+                R.id.nav_home, R.id.nav_search, R.id.nav_following, R.id.nav_following, R.id.nav_follower, R.id.nav_profile, R.id.nav_logout)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -66,34 +69,47 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         db = FirebaseFirestore.getInstance();
+        // Check if user is logged in
         FirebaseUser cUser = mAuth.getCurrentUser();
-        if (cUser == null){
-            Intent intent = new Intent(MainActivity.this,Login.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (cUser == null) {
+            Intent intent = new Intent(MainActivity.this, Login.class);
             startActivity(intent);
         }
-        String email = cUser.getEmail();
-        DocumentReference docRef = db.collection("Users").document(email);
-        final String TAG = "DOCUMENT ";
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        TextView username = findViewById(R.id.nav_header_Username);
-                        String usern = (String) document.getData().get("username");
-                        username.setText(usern);
-                    } else {
-                        Log.d(TAG, "No such document");
+        if (cUser != null) {
+            String email = cUser.getEmail();
+            DocumentReference docRef = db.collection("Users").document(email);
+            final String TAG = "DOCUMENT ";
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            TextView username = findViewById(R.id.nav_header_Username);
+                            String usern = (String) document.getData().get("username");
+                            username.setText(usern);
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
+                        }
                     }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
                 }
-            }
-        });
+            });
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item){
+        switch(item.getItemId()){
+            case R.id.nav_profile:
+                getSupportFragmentManager().beginTransaction().replace(R.id.mobile_navigation, new ProfileFragment()).commit();
+                break;
+        }
+
+
+        return true;
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -108,5 +124,4 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
-
 }
