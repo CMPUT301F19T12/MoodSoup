@@ -27,14 +27,14 @@
         tools:layout="@layout/activity_follower"
         />
     <activity
-        android:id="@+id/nav_profile"
-        android:name="com.example.test.moodsoup.Profile"
-        android:label="@string/menu_profile"
-        tools:layout="@layout/profile" />
-    <activity
         android:id="@+id/nav_logout"
         android:name="com.example.test.moodsoup.Login"
         android:label="@string/login"
         tools:layout="@layout/activity_login" />
+    <activity
+        android:id="@+id/nav_profile"
+        android:name="com.example.test.moodsoup.Profile"
+        android:label="profile"
+        tools:layout="@layout/profile" />
 
 </navigation>

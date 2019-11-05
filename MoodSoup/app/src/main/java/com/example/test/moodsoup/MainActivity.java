@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_search, R.id.nav_following,R.id.nav_following,R.id.nav_follower ,R.id.nav_profile, R.id.nav_logout)
+                R.id.nav_home, R.id.nav_search, R.id.nav_following, R.id.nav_following, R.id.nav_follower, R.id.nav_profile, R.id.nav_logout)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -71,25 +71,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         db = FirebaseFirestore.getInstance();
         // Check if user is logged in
         FirebaseUser cUser = mAuth.getCurrentUser();
-        if (cUser == null){
-            Intent intent = new Intent(MainActivity.this,Login.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (cUser == null) {
+            Intent intent = new Intent(MainActivity.this, Login.class);
             startActivity(intent);
         }
-        String email = cUser.getEmail();
-        DocumentReference docRef = db.collection("Users").document(email);
-        final String TAG = "DOCUMENT ";
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        TextView username = findViewById(R.id.nav_header_Username);
-                        String usern = (String) document.getData().get("username");
-                        username.setText(usern);
-                    } else {
-                        Log.d(TAG, "get failed with ", task.getException());
+        if (cUser != null) {
+            String email = cUser.getEmail();
+            DocumentReference docRef = db.collection("Users").document(email);
+            final String TAG = "DOCUMENT ";
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            TextView username = findViewById(R.id.nav_header_Username);
+                            String usern = (String) document.getData().get("username");
+                            username.setText(usern);
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
+                        }
                     }
                 }
             });
