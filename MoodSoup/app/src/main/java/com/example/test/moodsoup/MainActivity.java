@@ -52,10 +52,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         // Check if user is logged in
-        if (FirebaseAuth.getInstance().getCurrentUser() == null){
-            Intent intent = new Intent(MainActivity.this,Login.class);
-            startActivity(intent);
-        }
         mAuth = FirebaseAuth.getInstance();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -70,7 +66,13 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         db = FirebaseFirestore.getInstance();
-        String email = mAuth.getCurrentUser().getEmail();
+        FirebaseUser cUser = mAuth.getCurrentUser();
+        if (cUser == null){
+            Intent intent = new Intent(MainActivity.this,Login.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        String email = cUser.getEmail();
         DocumentReference docRef = db.collection("Users").document(email);
         final String TAG = "DOCUMENT ";
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
