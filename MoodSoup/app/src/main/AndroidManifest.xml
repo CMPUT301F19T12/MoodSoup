@@ -27,8 +27,8 @@
         <activity android:name=".Register" />
         <activity android:name=".Login" />
         <activity android:name=".Following" />
-        <activity android:name=".Profile" />
-        <activity android:name=".FollowSearch" />
+        <activity android:name=".old_activities.Profile" />
+        <activity android:name=".old_activities.FollowSearch" />
     </application>
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />

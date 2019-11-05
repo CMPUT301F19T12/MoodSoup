@@ -11,11 +11,6 @@
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
     <activity
-        android:id="@+id/nav_search"
-        android:name="com.example.test.moodsoup.FollowSearch"
-        android:label="@string/menu_search"
-        tools:layout="@layout/follow_search" />
-    <activity
         android:id="@+id/nav_following"
         android:name="com.example.test.moodsoup.Following"
         android:label="@string/menu_following"
@@ -31,10 +26,15 @@
         android:name="com.example.test.moodsoup.Login"
         android:label="@string/login"
         tools:layout="@layout/activity_login" />
-    <activity
+    <fragment
         android:id="@+id/nav_profile"
-        android:name="com.example.test.moodsoup.Profile"
+        android:name="com.example.test.moodsoup.ProfileFragment"
         android:label="profile"
         tools:layout="@layout/profile" />
+    <fragment
+        android:id="@+id/nav_search"
+        android:name="com.example.test.moodsoup.SearchFragment"
+        android:label="follow_search"
+        tools:layout="@layout/follow_search" />
 
 </navigation>

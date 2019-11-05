@@ -21,10 +21,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
+            android:paddingStart="120dp"
             android:text="@string/registration_page"
             android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-            android:textSize="30sp"
-            android:paddingStart="120dp"/>
+            android:textSize="28sp" />
 
         <View
             android:id="@+id/divider_reg"
