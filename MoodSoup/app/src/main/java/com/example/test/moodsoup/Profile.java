@@ -32,6 +32,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import io.opencensus.metrics.export.Summary;
@@ -67,7 +69,6 @@ public class Profile extends AppCompatActivity {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-
         //User info
 
 
@@ -77,11 +78,9 @@ public class Profile extends AppCompatActivity {
 
 
         // Set user name on profile layout display view
-        TextView display_name = (TextView) findViewById(R.id.ProfileName);
+        TextView display_name =  profileName;
+        display_name.setText(name);
 
-        if (user != null) {
-            display_name.setText(name);
-        }
 
         //User moods
 
@@ -96,8 +95,9 @@ public class Profile extends AppCompatActivity {
         });
 
         CollectionReference moodRef = db.collection("Users").document(email).collection("moodHistory");
+        // Error?
 
-        public void LoadHistory(ListView moodList)) {
+        /*public void LoadHistory(ListView moodList)) {
             moodRef.get()
                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>(){
                         @Override
@@ -115,6 +115,7 @@ public class Profile extends AppCompatActivity {
                         }
                     });
         }
+
         /*db.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
