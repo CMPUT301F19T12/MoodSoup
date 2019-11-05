@@ -8,49 +8,66 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="269dp"
+        android:layout_height="293dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="-300dp"
-        app:srcCompat="@drawable/moodsoup_logo" />
+        android:layout_marginTop="0dp"
+        app:srcCompat="@drawable/moodsoup_nobg" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="350dp"
+        android:layout_marginTop="220dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:orientation="vertical">
 
         <EditText
+            android:paddingStart="10dp"
             android:id="@+id/username"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/email" />
+            android:layout_height="35dp"
+            android:hint="@string/email"
+            android:background="@drawable/edittextborder"/>
 
         <EditText
+            android:paddingStart="10dp"
+            android:layout_marginTop="15dp"
             android:id="@+id/password"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:hint="@string/password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:background="@drawable/edittextborder"/>
 
         <Button
             android:id="@+id/login"
+            android:layout_marginTop="60dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#2196F3"
             android:text="@string/login"
             android:textColor="#fff" />
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="80dp"
+            android:background="@color/common_google_signin_btn_text_light_focused"
+            android:backgroundTint="@color/common_google_signin_btn_text_light_focused" />
+
         <Button
             android:id="@+id/register_btn"
+            style="@style/AlertDialog.AppCompat.Light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16px"
-            android:background="#2196F3"
-            android:text="@string/register"
-            android:textColor="#fff" />
+            android:layout_marginTop="40dp"
+            android:background="@android:color/transparent"
+            android:text="@string/register_login"
+            android:textColor="@color/common_google_signin_btn_text_light_focused" />
 
     </LinearLayout>
 
