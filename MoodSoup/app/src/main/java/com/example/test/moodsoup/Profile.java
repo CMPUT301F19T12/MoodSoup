@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.media.Image;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -59,18 +60,51 @@ public class Profile extends AppCompatActivity {
     private ListView moodList;
     private TextView profileName;
     private ImageButton toFollowing;
-
+    private ImageButton imageButton2;
     private static final String KEY_DATE = "Date";
     private static final String KEY_EMOTION = "Emotion";
     private static final String KEY_LOCATION = "Location";
     private static final String KEY_REASON = "Reason";
     private static final String KEY_SOCIAL = "Social";
     private static final String KEY_TIME = "Time";
+    private static int RESULT_LOAD_IMG = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile);
+
+        ///Set profile picture
+        final ImageButton button = (ImageButton)findViewById(R.id.imageButton2);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                button.setSelected(!button.isPressed());
+
+                if (button.isPressed()) {
+
+                    Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                    photoPickerIntent.setType("image/*");
+                    startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
+
+
+                    button.setImageResource(R.drawable.moodsoup_happy);
+                }
+                else {
+                    button.setImageResource(R.drawable.moodsoup_sad);
+                }
+            }
+        });
+
+
+
+
+
+
+
+
 
         // View ID
         profileName = findViewById(R.id.ProfileName);
@@ -122,6 +156,8 @@ public class Profile extends AppCompatActivity {
                     list.add(name);
                     Log.d("TAG", name);
                 }
+
+
                 Log.d("TAG", list.toString());
             }
 

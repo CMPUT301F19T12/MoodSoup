@@ -6,11 +6,11 @@
     android:layout_height="match_parent">
 
 
-    <ImageView
-        android:id="@+id/imageView2"
+    <ImageButton
+        android:id="@+id/imageButton2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@mipmap/face_round" />
+        app:srcCompat="@mipmap/face_foreground" />
 
     <ImageButton
         android:id="@+id/imageButton"
