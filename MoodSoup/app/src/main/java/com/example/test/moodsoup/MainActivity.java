@@ -8,7 +8,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+profileBranch
+import android.view.MenuItem;
 import android.util.Log;
+INDEV
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -32,7 +35,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private FirebaseAuth mAuth;
     private AppBarConfiguration mAppBarConfiguration;
     FirebaseFirestore db;
@@ -43,7 +46,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+
         FloatingActionButton fab = findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -91,6 +99,20 @@ public class MainActivity extends AppCompatActivity {
             });
         }
     }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item){
+        switch(item.getItemId()){
+            case R.id.nav_profile:
+                getSupportFragmentManager().beginTransaction().replace(R.id.mobile_navigation, new ProfileFragment()).commit();
+                break;
+        }
+
+
+        return true;
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
