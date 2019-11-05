@@ -47,22 +47,19 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent newMood = new Intent(MainActivity.this,NewMood.class);
+                Intent newMood = new Intent(MainActivity.this, NewMood.class);
                 startActivity(newMood);
+                finish();
             }
         });
-        // Check if user is logged in
-        if (FirebaseAuth.getInstance().getCurrentUser() == null){
-            Intent intent = new Intent(MainActivity.this,Login.class);
-            startActivity(intent);
-        }
+
         mAuth = FirebaseAuth.getInstance();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_search, R.id.nav_following, R.id.nav_profile, R.id.nav_logout)
+                R.id.nav_home, R.id.nav_search, R.id.nav_following,R.id.nav_following,R.id.nav_follower ,R.id.nav_profile, R.id.nav_logout)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -70,27 +67,29 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         db = FirebaseFirestore.getInstance();
-        String email = mAuth.getCurrentUser().getEmail();
-        DocumentReference docRef = db.collection("Users").document(email);
-        final String TAG = "DOCUMENT ";
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        TextView username = findViewById(R.id.nav_header_Username);
-                        String usern = (String) document.getData().get("username");
-                        username.setText(usern);
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            String email = currentUser.getEmail();
+            DocumentReference docRef = db.collection("Users").document(email);
+            final String TAG = "DOCUMENT ";
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            TextView username = findViewById(R.id.nav_header_Username);
+                            String user = (String) document.getData().get("username");
+                            username.setText(user);
+                        } else {
+                            Log.d(TAG, "No such document");
+                        }
                     } else {
-                        Log.d(TAG, "No such document");
+                        Log.d(TAG, "get failed with ", task.getException());
                     }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
                 }
-            }
-        });
-
+            });
+        }
     }
 
     @Override
@@ -106,5 +105,14 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null){
+            Intent intent = new Intent(MainActivity.this,Login.class);
+            startActivity(intent);
+        }
+    }
 }

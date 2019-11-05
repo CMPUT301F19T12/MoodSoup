@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -48,7 +49,7 @@ public class NewMood extends AppCompatActivity implements DatePickerDialog.OnDat
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<String> adapter = new ArrayAdapter<>(NewMood.this,
-               android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.emotion));
+                android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.emotion));
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
@@ -58,6 +59,8 @@ public class NewMood extends AppCompatActivity implements DatePickerDialog.OnDat
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(NewMood.this,MainActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
@@ -97,7 +100,7 @@ public class NewMood extends AppCompatActivity implements DatePickerDialog.OnDat
                     CollectionReference collectionReference = db.collection("Users");
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
                     String email = mAuth.getCurrentUser().getEmail();
-                    Mood mood = new Mood(dateText,timeText,emotionText,reasonText,socialText,locationText);
+                    Mood mood = new Mood(email,dateText,timeText,emotionText,reasonText,socialText,locationText);
                     collectionReference
                             .document(email)
                             .collection("moodHistory")
@@ -115,8 +118,10 @@ public class NewMood extends AppCompatActivity implements DatePickerDialog.OnDat
                                     Log.d(TAG,"Data Addition Failed" + e.toString());
                                 }
                             });
+                    Intent intent = new Intent(NewMood.this,MainActivity.class);
+                    startActivity(intent);
                     finish();
-                   }
+                }
             }
         });
 
@@ -179,5 +184,12 @@ public class NewMood extends AppCompatActivity implements DatePickerDialog.OnDat
             temptime = hour + ":" + minute;
         }
         time.setText(temptime);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(NewMood.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

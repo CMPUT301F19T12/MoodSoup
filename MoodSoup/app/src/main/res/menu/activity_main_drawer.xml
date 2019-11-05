@@ -14,6 +14,9 @@
             android:id="@+id/nav_following"
             android:title="@string/menu_following" />
         <item
+            android:id="@+id/nav_follower"
+            android:title="Follower"/>
+        <item
             android:id="@+id/nav_profile"
             android:title="@string/menu_profile" />
         <item
