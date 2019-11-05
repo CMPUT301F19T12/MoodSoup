@@ -79,7 +79,7 @@ public class Profile extends AppCompatActivity {
 
         // Set user name on profile layout display view
         TextView display_name =  profileName;
-        display_name.setText(name);
+        display_name.setText("User email: "+email);
 
 
         //User moods
