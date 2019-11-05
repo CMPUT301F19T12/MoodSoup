@@ -1,4 +1,4 @@
-package com.example.test.moodsoup;
+package com.example.test.moodsoup.old_activities;
 
 import android.content.Intent;
 import android.media.Image;
@@ -21,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.ui.AppBarConfiguration;
 
+import com.example.test.moodsoup.Following;
+import com.example.test.moodsoup.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -97,14 +99,6 @@ public class Profile extends AppCompatActivity {
                 }
             }
         });
-
-
-
-
-
-
-
-
 
         // View ID
         profileName = findViewById(R.id.ProfileName);
