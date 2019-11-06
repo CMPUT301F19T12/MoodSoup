@@ -34,6 +34,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author Richard Qin
+ * @author Darian Chen
+ */
 public class Register extends AppCompatActivity {
 
     // Initialize Variables
@@ -44,7 +48,6 @@ public class Register extends AppCompatActivity {
     String TAG = "Sample";
     FirebaseFirestore db;
     private FirebaseAuth mAuth;
-    String uniqueID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Initialize Firebase Auth
@@ -70,25 +73,8 @@ public class Register extends AppCompatActivity {
 
                 final String email = emailTV.getText().toString();
                 final String password = passwordTV.getText().toString();
-
-                /*DatabaseReference a = FirebaseDatabase.getInstance().getReference("Unique").child("ID");
-                a.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        uniqueID = dataSnapshot.child("Current").getValue().toString();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                });
-
-                int ID = Integer.valueOf(uniqueID)+1;
-                uniqueID = Integer.toString(ID);
-                while (uniqueID.length()<4){
-                    uniqueID = "0"+uniqueID;
-                }*/
                 final String username = usernameTV.getText().toString();
+                // Creates a new user with email and password input by user
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -98,6 +84,7 @@ public class Register extends AppCompatActivity {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d(TAG, "createUserWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
+                                    // Creates a new user in the database
                                     HashMap<String, String> data = new HashMap<>();
                                     data.put("username",username);
                                     collectionReference
