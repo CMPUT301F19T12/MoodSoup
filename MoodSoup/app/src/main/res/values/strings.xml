@@ -12,8 +12,22 @@
     <string name="logout">Logout</string>
     <string name="newMood">New Mood</string>
     <string-array name="emotion">
+        <item>Choose an emotion:</item>
         <item>Happy</item>
         <item>Sad</item>
+        <item>Excited</item>
+        <item>Angry</item>
+        <item>Bored</item>
+        <item>Tired</item>
+        <item>Scared</item>
+        <item>Surprised</item>
+    </string-array>
+    <string-array name="social_situation">
+        <item>Choose a social situation:</item>
+        <item>Alone</item>
+        <item>With one other person</item>
+        <item>With two to several people</item>
+        <item>With a crowd</item>
     </string-array>
     <string name="title_activity_main">MoodSoup</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
