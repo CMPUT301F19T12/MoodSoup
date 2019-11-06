@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:srcCompat="@tools:sample/avatars[0]" />
-
     <TextView
-        android:id="@+id/ProfileName"
+        android:id="@+id/requestText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ProfileName" />
+        android:text="    Requests" />
 
     <ListView
-        android:id="@+id/event_list_self"
+        android:id="@+id/requests"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="200dp"/>
 
-    </ListView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#c0c0c0"/>
 
+
+    <ListView
+        android:id="@+id/follower"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

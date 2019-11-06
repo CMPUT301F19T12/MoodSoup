@@ -9,6 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".RequestContext"></activity>
+        <activity android:name=".PendingContext" />
+        <activity android:name=".FollowerContext" />
+        <activity android:name=".Follower" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
@@ -23,8 +27,9 @@
         <activity android:name=".Register" />
         <activity android:name=".Login" />
         <activity android:name=".Following" />
-        <activity android:name=".Profile" />
-        <activity android:name=".FollowSearch" />
+        <activity android:name=".old_activities.Profile" />
+        <activity android:name=".old_activities.FollowSearch" />
     </application>
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 </manifest>
