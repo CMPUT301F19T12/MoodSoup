@@ -40,7 +40,7 @@
     <View
         android:id="@+id/divider_reg"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="0.3dp"
         android:layout_alignParentStart="true"
         android:background="#696969" />
 
@@ -80,7 +80,7 @@
         <View
             android:id="@+id/divider_reg1"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.3dp"
             android:layout_alignParentStart="true"
             android:background="@color/common_google_signin_btn_text_light_focused"
             android:backgroundTint="@color/common_google_signin_btn_text_light_focused" />
@@ -113,7 +113,7 @@
         <View
             android:id="@+id/divider_reg3"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.3dp"
             android:layout_alignParentStart="true"
             android:background="@color/common_google_signin_btn_text_light_focused"
             android:backgroundTint="@color/common_google_signin_btn_text_light_focused" />
@@ -134,7 +134,7 @@
         <View
             android:id="@+id/divider_reg4"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.3dp"
             android:layout_alignParentStart="true"
             android:background="@color/common_google_signin_btn_text_light_focused"
             android:backgroundTint="@color/common_google_signin_btn_text_light_focused" />
@@ -155,7 +155,7 @@
         <View
             android:id="@+id/divider_reg5"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.3dp"
             android:layout_alignParentStart="true"
             android:background="@color/common_google_signin_btn_text_light_focused"
             android:backgroundTint="@color/common_google_signin_btn_text_light_focused" />
