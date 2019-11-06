@@ -71,7 +71,7 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
-
+        
         // View ID
         profileName = root.findViewById(R.id.ProfileName);
         moodList = root.findViewById(R.id.event_list_self);
