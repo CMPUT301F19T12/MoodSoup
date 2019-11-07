@@ -1,20 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="108dp"
+    android:background="#0C000000">
 
-    <EditText
-        android:id="@+id/Search_User"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Enter Name"
-        android:inputType="textShortMessage" />
+        android:layout_height="103dp"
+        android:orientation="vertical"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
 
-    <Button
-        android:id="@+id/search_button"
+        <EditText
+            android:id="@+id/Search_User"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Enter Name"
+            android:inputType="textShortMessage"
+            android:background="@drawable/edittextborder"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingStart="10dp"
+            android:layout_marginTop="16dp"/>
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="Search_button"
+            android:text="Search" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider_reg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="Search_button"
-        android:text="Search" />
+        android:layout_height="0.5dp"
+        android:background="#696969"
+        android:layout_marginTop="5dp"/>
+
 </LinearLayout>
