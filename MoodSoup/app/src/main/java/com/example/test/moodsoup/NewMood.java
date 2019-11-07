@@ -3,19 +3,15 @@ package com.example.test.moodsoup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,12 +22,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
 
-public class NewMood extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
+/**
+ * @author Sanae Mayer
+ * @author Richard Qin
+ */
+public class NewMood extends AppCompatActivity{
     private TextView date;
-    private TextView time;
     private Spinner emotion;
     private EditText reason;
-    private EditText social;
+    private Spinner social;
     private EditText location;
     String TAG = "Sample";
 
@@ -40,8 +39,7 @@ public class NewMood extends AppCompatActivity implements DatePickerDialog.OnDat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newmood);
 
-        date = findViewById(R.id.new_mood_date);
-        time = findViewById(R.id.new_mood_time);
+        date = findViewById(R.id.new_mood_datetime);
         emotion = findViewById(R.id.new_mood_emotion);
         reason = findViewById(R.id.new_mood_reason);
         social = findViewById(R.id.new_mood_social);
@@ -55,42 +53,39 @@ public class NewMood extends AppCompatActivity implements DatePickerDialog.OnDat
         // Apply the adapter to the spinner
         emotion.setAdapter(adapter);
 
+        ArrayAdapter<String> socialSituationAdapter = new ArrayAdapter<>(NewMood.this,
+                android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.social_situation));
+        socialSituationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        social.setAdapter(socialSituationAdapter);
+
+        Calendar calendar = Calendar.getInstance();
+        final String currentDate = getDateString(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+        final String currentTime = getTimeString(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+        final String uploadTime = currentDate+ ' ' + currentTime;
+        date.setText(uploadTime);
+
         ImageButton cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(NewMood.this,MainActivity.class);
-                startActivity(intent);
+            public void onClick(View view) {
                 finish();
             }
         });
 
-        date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDatePickerDialog();
-            }
-        });
-
-        time.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showTimePickerDialog();
-            }
-        });
         ImageButton post = findViewById(R.id.post);
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String dateText = date.getText().toString();
-                String timeText = time.getText().toString();
                 String emotionText = emotion.getSelectedItem().toString();
                 String reasonText = reason.getText().toString();
-                String socialText = social.getText().toString();
+                String socialText = social.getSelectedItem().toString();
                 String locationText = location.getText().toString();
-
-                if (dateText.isEmpty() || timeText.isEmpty() || emotionText.isEmpty()){
-                    System.out.println(dateText + " " + timeText + " " + emotionText);
+                findViewById(R.id.new_mood_error_emotion).setVisibility(View.INVISIBLE);
+                if (socialText.equals("Choose a social situation:")){
+                    socialText = "";
+                }
+                if (emotionText.equals("Choose an emotion:")){
+                    findViewById(R.id.new_mood_error_emotion).setVisibility(View.VISIBLE);
                     Toast.makeText(NewMood.this, "Please Fill out the Required Fields",
                             Toast.LENGTH_SHORT).show();
                 }
@@ -100,11 +95,11 @@ public class NewMood extends AppCompatActivity implements DatePickerDialog.OnDat
                     CollectionReference collectionReference = db.collection("Users");
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
                     String email = mAuth.getCurrentUser().getEmail();
-                    Mood mood = new Mood(email,dateText,timeText,emotionText,reasonText,socialText,locationText);
+                    Mood mood = new Mood(email,currentDate, currentTime,emotionText,reasonText,socialText,locationText);
                     collectionReference
                             .document(email)
                             .collection("moodHistory")
-                            .document(dateText)
+                            .document(uploadTime)
                             .set(mood)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -126,21 +121,19 @@ public class NewMood extends AppCompatActivity implements DatePickerDialog.OnDat
         });
 
     }
-    // Initializes Date Picker and sets default values to be current date
-    private void showDatePickerDialog(){
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                this,
-                this,
-                Calendar.getInstance().get(Calendar.YEAR),
-                Calendar.getInstance().get(Calendar.MONTH),
-                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-        );
-        datePickerDialog.show();
-    }
 
-    // Modifies textView to match user input into date picker
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+    /**
+     * formats a date
+     * @param year
+     * integer representing year
+     * @param month
+     * integer representing month
+     * @param dayOfMonth
+     * integer representing the current day
+     * @return
+     * Returns a string with a date format of yyyy-mm-dd
+     */
+    public String getDateString(int year, int month, int dayOfMonth) {
         month += 1;
         String monthTxt = Integer.toString(month);
         String dayTxt = Integer.toString(dayOfMonth);
@@ -150,25 +143,19 @@ public class NewMood extends AppCompatActivity implements DatePickerDialog.OnDat
         if (dayOfMonth<10){
             dayTxt = '0' + dayTxt;
         }
-        String tempdate = year + "-" + monthTxt + "-" + dayTxt;
-        date.setText(tempdate);
+        return year + "-" + monthTxt + "-" + dayTxt;
     }
 
-    // Initializes time picker and sets default values to be current time
-    private void showTimePickerDialog(){
-        TimePickerDialog timePickerDialog = new TimePickerDialog(
-                this,
-                this,
-                Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
-                Calendar.getInstance().get(Calendar.MINUTE),
-                Boolean.TRUE
-        );
-        timePickerDialog.show();
-    }
-
-    // Modifies TextView to match user input into time picker
-    @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+    /**
+     * Formats a time
+     * @param hourOfDay
+     * integer representing the current hour of day
+     * @param minute
+     * integer representing the current minute of the hour
+     * @return
+     * Returns a string with time format hh:mm
+     */
+    public String getTimeString( int hourOfDay, int minute) {
         String temptime;
         String hour;
         if (hourOfDay<10){
@@ -183,13 +170,11 @@ public class NewMood extends AppCompatActivity implements DatePickerDialog.OnDat
         else {
             temptime = hour + ":" + minute;
         }
-        time.setText(temptime);
+        return temptime;
     }
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(NewMood.this, MainActivity.class);
-        startActivity(intent);
         finish();
     }
 }
