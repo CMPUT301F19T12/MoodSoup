@@ -8,10 +8,8 @@ public class Mood{
     private String reason;
     private String social;
     private String location;
-    //private User creator;
 
     public Mood(String email, String date, String time, String emotion, String reason, String social, String location) {
-        //this.creator = creator;
         this.email = email;
         this.emotion = emotion;
         this.date = date;
@@ -77,12 +75,4 @@ public class Mood{
         this.reason = reason;
     }
 
-
-    //public User getCreator() {
-    //    return creator;
-    // }
-
-    //public void setCreator(User creator) {
-    //    this.creator = creator;
-    //}
 }
