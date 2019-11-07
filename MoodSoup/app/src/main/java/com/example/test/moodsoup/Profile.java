@@ -48,9 +48,12 @@ import com.google.firebase.firestore.auth.User;
 import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import io.opencensus.metrics.export.Summary;
@@ -73,7 +76,7 @@ public class Profile extends AppCompatActivity  implements PendingContext.SheetL
     private static final String KEY_TIME = "Time";
     private static int RESULT_LOAD_IMG = 1;
     private ListView event;
-
+    private ArrayList<String> datelist;
     private ArrayList<String> event_list;
     private ArrayAdapter<String> event_listAdapter;
 
@@ -136,14 +139,18 @@ public class Profile extends AppCompatActivity  implements PendingContext.SheetL
 
         final ListView event = findViewById(R.id.event_list_self);
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final CollectionReference colRef = db.collection("Users").document(email).collection("moodHistory");
         event_list = new ArrayList<>();
         final Context context = this;
         final PendingContext.SheetListener listener = this;
 
 
+        datelist = new ArrayList<>();
 
 
+
+
+
+        CollectionReference colRef = db.collection("Users").document(email).collection("moodHistory");
         colRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -152,11 +159,11 @@ public class Profile extends AppCompatActivity  implements PendingContext.SheetL
 
                     for (QueryDocumentSnapshot document : task.getResult())
                     {
-
-
                         event_list.add(document.getId());
 
                     }
+
+
 
                     event_listAdapter = new PendingContext(context , event_list, listener);
                     event.setAdapter(event_listAdapter);
@@ -169,6 +176,13 @@ public class Profile extends AppCompatActivity  implements PendingContext.SheetL
                 }
             }
         });
+
+
+
+
+        datelist.add(colRef.document("2019-11-03").getId().toString());
+        Log.d(datelist.toString(),"LOL");
+
 
 
 
