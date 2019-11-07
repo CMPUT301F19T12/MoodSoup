@@ -8,10 +8,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-profileBranch
+
 import android.view.MenuItem;
 import android.util.Log;
-INDEV
+
 import android.view.View;
 
 import androidx.annotation.NonNull;

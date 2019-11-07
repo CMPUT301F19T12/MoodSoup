@@ -1,5 +1,6 @@
 package com.example.test.moodsoup;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
 import android.nfc.Tag;
@@ -39,24 +40,27 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
 
 import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import io.opencensus.metrics.export.Summary;
 
-public class Profile extends AppCompatActivity {
+public class Profile extends AppCompatActivity  implements PendingContext.SheetListener{
     private ArrayList<String> moods = new ArrayList<String>();
     private ArrayAdapter<String> adapter;
     private FirebaseAuth mAuth;
     private AppBarConfiguration mAppBarConfiguration;
-
+    private String TAG = "ERROR HERE!";
     private ListView moodList;
     private TextView profileName;
     private ImageButton toFollowing;
@@ -68,13 +72,16 @@ public class Profile extends AppCompatActivity {
     private static final String KEY_SOCIAL = "Social";
     private static final String KEY_TIME = "Time";
     private static int RESULT_LOAD_IMG = 1;
+    private ListView event;
 
+    private ArrayList<String> event_list;
+    private ArrayAdapter<String> event_listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile);
-
+        event = findViewById(R.id.event_list_self);
         ///Set profile picture
         final ImageButton button = (ImageButton)findViewById(R.id.imageButton2);
 
@@ -98,21 +105,13 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-
-
-
-
-
-
-
-
         // View ID
         profileName = findViewById(R.id.ProfileName);
         moodList = findViewById(R.id.event_list_self);
         toFollowing = findViewById(R.id.imageButton);
 
         // User Instance
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         //User info
@@ -126,7 +125,7 @@ public class Profile extends AppCompatActivity {
 
         String uid = user.getUid();
         String name = user.getDisplayName();
-        String email = user.getEmail();
+        final String email = user.getEmail();
 
 
         // Set user name on profile layout display view
@@ -134,76 +133,62 @@ public class Profile extends AppCompatActivity {
         display_name.setText("User email: "+email);
 
 
-        //User moods stuff /////////////
-        CollectionReference moodRef = db.collection("Users").document(email).collection("moodHistory");
-        Log.d("MOODREF",moodRef.toString());
+
+        final ListView event = findViewById(R.id.event_list_self);
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final CollectionReference colRef = db.collection("Users").document(email).collection("moodHistory");
+        event_list = new ArrayList<>();
+        final Context context = this;
+        final PendingContext.SheetListener listener = this;
 
 
 
-        ListView moodListview = findViewById(R.id.event_list_self);
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference moodref = ref.child("moodHistory");
 
-
-        ///////////
-
-        ValueEventListener eventListener = new ValueEventListener() {
+        colRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                List<String> list = new ArrayList<>();
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    String name = ds.child("moodHistory").getValue(String.class);
-                    list.add(name);
-                    Log.d("TAG", name);
-                }
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
 
 
-                Log.d("TAG", list.toString());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        };
-        moodref.addListenerForSingleValueEvent(eventListener);
+                    for (QueryDocumentSnapshot document : task.getResult())
+                    {
 
 
-        // Error?
+                        event_list.add(document.getId());
 
-        /*public void LoadHistory(ListView moodList)) {
-            moodRef.get()
-                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>(){
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            if (documentSnapshot.exists()){
-                                String date = documentSnapshot.getString(KEY_DATE);
-                                String emotion = documentSnapshot.getString(KEY_EMOTION);
-                                String location = documentSnapshot.getString(KEY_LOCATION);
-                                String reason = documentSnapshot.getString(KEY_REASON);
-                                String social = documentSnapshot.getString(KEY_SOCIAL);
-                                String time = documentSnapshot.getString(KEY_TIME);
-                            } else {
-                                Toast.makeText(MainActivity.this, "Mood Event does not exist");
-                            }
-                        }
-                    });
-        }
+                    }
 
-        /*db.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                for (DocumentSnapshot snapshot : queryDocumentSnapshots){
-                    moods.add(snapshot.getString("date"));
-                    moods.add(snapshot.getString("emotions"));
-                    moods.add(snapshot.getString("location"));
-                    moods.add(snapshot.getString("reason"));
-                    moods.add(snapshot.getString("social"));
-                    moods.add(snapshot.getString("time"));
+                    event_listAdapter = new PendingContext(context , event_list, listener);
+                    event.setAdapter(event_listAdapter);
+
+
+
+
+                } else {
+                    Log.d(TAG, "FAIL", task.getException());
                 }
             }
         });
-         */
+
+
+
     }
 
-
+    @Override
+    public void onButtonClicked(String state, int position) {
+        event.setAdapter(event_listAdapter);
+        if (state.equals("delete"))
+        {
+            event_list.remove(position);
+            Toast.makeText(getApplicationContext(),"Mood Deleted",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Profile.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
 }
