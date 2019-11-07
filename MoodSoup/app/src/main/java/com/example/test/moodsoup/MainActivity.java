@@ -69,12 +69,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationUI.setupWithNavController(navigationView, navController);
 
         db = FirebaseFirestore.getInstance();
-        // Check if user is logged in
+        // Get logged in user
         FirebaseUser cUser = mAuth.getCurrentUser();
-        if (cUser == null) {
-            Intent intent = new Intent(MainActivity.this, Login.class);
-            startActivity(intent);
-        }
         if (cUser != null) {
             String email = cUser.getEmail();
             DocumentReference docRef = db.collection("Users").document(email);
@@ -122,5 +118,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    /**
+     * Checks to see if user is logged in at launch
+     */
+    @Override
+    public void onStart(){
+        super.onStart();
+        if (mAuth.getCurrentUser() == null){
+            Intent intent = new Intent(this, Login.class);
+            startActivity(intent);
+        }
     }
 }

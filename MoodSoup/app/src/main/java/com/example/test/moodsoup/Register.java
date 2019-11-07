@@ -37,6 +37,7 @@ import java.util.List;
 /**
  * @author Richard Qin
  * @author Darian Chen
+ * This activity deals with registering the user if they choose to create a new account
  */
 public class Register extends AppCompatActivity {
 
@@ -67,10 +68,10 @@ public class Register extends AppCompatActivity {
         registerBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Get strings from TextView
+                // Reset error messages
                 findViewById(R.id.register_invalid_username).setVisibility(View.INVISIBLE);
                 findViewById(R.id.register_invalid_email).setVisibility(View.INVISIBLE);
-
+                // Get strings from TextView
                 final String email = emailTV.getText().toString();
                 final String password = passwordTV.getText().toString();
                 final String username = usernameTV.getText().toString();
@@ -99,6 +100,7 @@ public class Register extends AppCompatActivity {
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
+                                                    // Failure to add user to database
                                                     Log.d(TAG,"Data Addition Failed" + e.toString());
                                                     findViewById(R.id.register_invalid_username).setVisibility(View.VISIBLE);
                                                 }
