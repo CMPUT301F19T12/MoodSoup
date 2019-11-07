@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Calendar;
 
 /**
+ * Handles creating a new mood
  * @author Sanae Mayer
  * @author Richard Qin
  */
@@ -58,10 +59,11 @@ public class NewMood extends AppCompatActivity{
         socialSituationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         social.setAdapter(socialSituationAdapter);
 
+        // Get current date and time
         Calendar calendar = Calendar.getInstance();
         final String currentDate = getDateString(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
         final String currentTime = getTimeString(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
-        final String uploadTime = currentDate+ ' ' + currentTime;
+        final String uploadTime = currentDate+ ' ' + currentTime; // Stored as YYYY-MM-DD HH:MM
         date.setText(uploadTime);
 
         ImageButton cancel = findViewById(R.id.cancel);
@@ -76,24 +78,29 @@ public class NewMood extends AppCompatActivity{
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Gets text from each field
                 String emotionText = emotion.getSelectedItem().toString();
                 String reasonText = reason.getText().toString();
                 String socialText = social.getSelectedItem().toString();
                 String locationText = location.getText().toString();
+                // Resets Error messages
                 findViewById(R.id.new_mood_error_emotion).setVisibility(View.INVISIBLE);
+                // Social Situation is optional so text gets set to nothing
                 if (socialText.equals("Choose a social situation:")){
                     socialText = "";
                 }
+                // Emotion is mandatory so error message is displayed if not chosen
                 if (emotionText.equals("Choose an emotion:")){
                     findViewById(R.id.new_mood_error_emotion).setVisibility(View.VISIBLE);
                     Toast.makeText(NewMood.this, "Please Fill out the Required Fields",
                             Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    //IMPLEMENT USER CLASS
+                    // Adds mood to Firebase
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     CollectionReference collectionReference = db.collection("Users");
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    // Mood gets stored under user's email in the database
                     String email = mAuth.getCurrentUser().getEmail();
                     Mood mood = new Mood(email,currentDate, currentTime,emotionText,reasonText,socialText,locationText);
                     collectionReference
@@ -173,6 +180,9 @@ public class NewMood extends AppCompatActivity{
         return temptime;
     }
 
+    /**
+     * Navigates back to previous location on back button press
+     */
     @Override
     public void onBackPressed() {
         finish();

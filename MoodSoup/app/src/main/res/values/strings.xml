@@ -43,4 +43,11 @@
     <string name="menu_profile">Profile</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+
+    <!-- activity_follower.xml -->
+    <string name="requests">Requests</string>
+    <string name="followers">Followers</string>
+
+    <!-- following.xml -->
+    <string name="following">Following</string>
 </resources>
