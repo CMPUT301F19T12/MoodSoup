@@ -19,6 +19,13 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
+/**
+ * @author Atilla Ackbay
+ * @author Richard Qin
+ * @author Darian Chen
+ * This activity handles logging in the user using an existing account
+ * Logs user in using Firebase Authentication
+ */
 public class Login extends AppCompatActivity {
 
     // Initialize Variables
@@ -59,7 +66,9 @@ public class Login extends AppCompatActivity {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d(TAG, "signInWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
-                                    finish();
+                                    Intent intent = new Intent(Login.this, MainActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -85,6 +94,9 @@ public class Login extends AppCompatActivity {
 
     }
 
+    /**
+     * Disables back button on Login Activity
+     */
     @Override
     public void onBackPressed(){
         ;
