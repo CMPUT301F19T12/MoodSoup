@@ -37,7 +37,8 @@ import java.util.List;
 /**
  * @author Richard Qin
  * @author Darian Chen
- * This activity deals with registering the user if they choose to create a new account
+ * This activity deals with creating a new account
+ * Creates new account using Firebase Authentication
  */
 public class Register extends AppCompatActivity {
 

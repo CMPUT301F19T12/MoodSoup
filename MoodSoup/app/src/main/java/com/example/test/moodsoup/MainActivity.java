@@ -33,6 +33,13 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.widget.TextView;
 
+/**
+ * @author Richard Qin
+ * @author Darian Chen
+ * @author Sanae Mayer
+ * Handles navigating to the different fragments and activities
+ * Hosts the user's information and passes it to the different fragments and activities
+ */
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private FirebaseAuth mAuth;
     private AppBarConfiguration mAppBarConfiguration;
@@ -46,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
 
+        // Floating button in bottom right corner
+        // Used to add a new mood
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,7 +63,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 finish();
             }
         });
+        // Initialize Database information
+        db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
+        // Initialize Sidebar and navigation
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -68,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        db = FirebaseFirestore.getInstance();
+
         // Get logged in user
         FirebaseUser cUser = mAuth.getCurrentUser();
         if (cUser != null) {
@@ -81,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
+                            // Changes username in the sidebar panel
                             TextView username = findViewById(R.id.nav_header_Username);
                             String usern = (String) document.getData().get("username");
                             username.setText(usern);
@@ -93,6 +106,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /**
+     * Changes between fragments
+     * @param item
+     * item is the fragment to be changed to
+     * @return
+     * returns true on success
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item){
         switch(item.getItemId()){
@@ -106,13 +126,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-
+    /**
+     * creates a menu list in top right corner
+     * (currently not in use)
+     * @param menu
+     * menu item to be put in top right corner
+     * @return
+     * returns true on success
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         return true;
     }
 
+    /**
+     * Handles back button press
+     * Navigates to previous fragment on back button press
+     * @return
+     * returns true on success
+     */
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);

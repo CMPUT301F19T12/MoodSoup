@@ -19,6 +19,13 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
+/**
+ * @author Atilla Ackbay
+ * @author Richard Qin
+ * @author Darian Chen
+ * This activity handles logging in the user using an existing account
+ * Logs user in using Firebase Authentication
+ */
 public class Login extends AppCompatActivity {
 
     // Initialize Variables
@@ -87,6 +94,9 @@ public class Login extends AppCompatActivity {
 
     }
 
+    /**
+     * Disables back button on Login Activity
+     */
     @Override
     public void onBackPressed(){
         ;
