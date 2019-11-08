@@ -13,8 +13,8 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
- * @author Sanae Mayer
- * @author Peter Spiers
+ A interface that will pass on state with its position
+ if "delete' then delete the ith position in array
  */
 
 public class FollowerContext extends ArrayAdapter<String> {

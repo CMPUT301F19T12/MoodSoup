@@ -25,6 +25,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
+/**
+ * @author Sanae Mayer
+ * @author Peter Spiers
+ * This fragment will be used to search a user to request a follow
+ */
 public class SearchFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,6 +42,12 @@ public class SearchFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
+        /*
+         * These will check for the following:
+         *   - Is the field empty
+         *   - Are you trying to add yourslef
+         *   - Are you already following a user
+         * */
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

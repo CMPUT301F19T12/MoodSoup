@@ -34,8 +34,9 @@ import java.util.ArrayList;
 import static androidx.navigation.Navigation.findNavController;
 
 /**
- * @author Sanae Mayer
- * @author Peter Spiers
+ * @author Sanae Mayer <smayer@ualberta.ca>
+ * @author Peter Spiers <pspiers@ualberta.ca>
+ * This fragment handles Displaying follower and accepting/denying follow requests
  */
 
 public class Follower extends Fragment implements PendingContext.SheetListener {
@@ -111,10 +112,9 @@ public class Follower extends Fragment implements PendingContext.SheetListener {
         return root;
     }
 
-    /*
-    These two functions are called when a menu is long-clicked.
-    A "remove" will show where you can remove your follower
-    */
+    /**
+     * The function will dispaly a context menu if the listView is long-clicked.
+     */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         MenuInflater inflater = getActivity().getMenuInflater();
@@ -123,6 +123,10 @@ public class Follower extends Fragment implements PendingContext.SheetListener {
         }
     }
 
+    /**
+     * The function will handle events when a item in context menu is clicked.
+     * It will handles removing the follower from the list and firebase.
+     * */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -174,10 +178,10 @@ public class Follower extends Fragment implements PendingContext.SheetListener {
         }
     }
 
-    /*
-    A interface that will pass on state with its positipn
-    if "delete' then delete the ith position in array
-    */
+    /**
+     A interface that will pass on state with its position
+     if "delete' then delete the ith position in array
+     */
     @Override
     public void onButtonClicked(String state, int position) {
         pending.setAdapter(pendingListAdapter);

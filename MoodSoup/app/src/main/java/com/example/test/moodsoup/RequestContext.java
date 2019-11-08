@@ -27,6 +27,7 @@ import java.util.HashMap;
 /**
  * @author Sanae Mayer
  * @author Peter Spiers
+ * This class handles the arrayAdapyer of the pending Listview
  */
 
 public class RequestContext extends ArrayAdapter<String> {
@@ -181,7 +182,9 @@ public class RequestContext extends ArrayAdapter<String> {
         return view;
     }
 
-    //Interface that will be used in MainActivity
+    /**
+     * Interface that will be used in MainActivity
+     */
     public interface RequestSheetListener {
         void onButtonClicked(String state, final int position);
     }

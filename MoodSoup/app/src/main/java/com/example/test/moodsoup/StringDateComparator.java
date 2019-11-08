@@ -7,13 +7,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 
-/*
-@author Sanae Mayer
-*/
-
-/*
-The function is used to compare moods and sort it by date and time
-*/
+/**
+ @author Sanae Mayer
+ The function is used to compare moods and sort it by date and time
+ */
 public class StringDateComparator implements Comparator<Mood> {
     @SuppressLint("SimpleDateFormat")
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");

@@ -25,6 +25,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
+/**
+ * @author Sanae Mayer <smayer@ualberta.ca>
+ * @author Peter Spiers <pspiers@ualberta.ca>
+ * This class will handle the arrayAdapter of the mainpage/profile
+ * where it sets how listview is displayed
+ */
 public class MoodList extends ArrayAdapter<Mood>{
     private ArrayList<Mood> moods;
     private Context context;

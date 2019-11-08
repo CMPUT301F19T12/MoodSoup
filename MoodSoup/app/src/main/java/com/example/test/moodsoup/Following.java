@@ -33,8 +33,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 /**
- * @author Sanae Mayer
- * @author Peter Spiers
+ * @author Sanae Mayer <smayer@ualberta.ca>
+ * @author Peter Spiers <pspiers@ualberta.ca>
+ * This fragment handles Displaying follower and accepting/denying follow requests
  */
 
 public class Following extends Fragment implements RequestContext.RequestSheetListener {
@@ -103,10 +104,9 @@ public class Following extends Fragment implements RequestContext.RequestSheetLi
         return root;
     }
 
-    /*
-    These two functions are called when a menu is long-clicked.
-    A "remove" will show where you can remove your follower
-    */
+    /**
+     * The function will dispaly a context menu if the listView is long-clicked.
+     */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
     {
@@ -116,6 +116,10 @@ public class Following extends Fragment implements RequestContext.RequestSheetLi
         }
     }
 
+    /**
+     * The function will handle events when a item in context menu is clicked.
+     * It will handles removing the following from the list and firebase.
+     * */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()){
