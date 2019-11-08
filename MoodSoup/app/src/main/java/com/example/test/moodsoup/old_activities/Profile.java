@@ -1,3 +1,4 @@
+/*
 package com.example.test.moodsoup.old_activities;
 
 import android.content.Context;
@@ -216,3 +217,4 @@ public class Profile extends AppCompatActivity  implements PendingContext.SheetL
     }
 
 }
+*/
