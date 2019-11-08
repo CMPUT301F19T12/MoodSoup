@@ -1,4 +1,13 @@
         /**
+ * This Fragment class handles the profile View, and allows viewing of Profile for the user itself, and other users
+ * This includes their mood history, and (not implemented yet) their profile picture
+ * All other mood related stuff will appear here, such as their detailed mood event History.
+ *
+ */
+        
+        
+        
+        **
          * Getting Firebase information for a arbitrary profile (Can be yourself, or other users. Other users not implemented yet)
          *
          *Parameters: Collection Reference to firebase path
