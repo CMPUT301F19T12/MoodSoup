@@ -1,0 +1,20 @@
+        /**
+         * Getting Firebase information for a arbitrary profile (Can be yourself, or other users. Other users not implemented yet)
+         *
+         *Parameters: Collection Reference to firebase path
+         * Returns: None
+         * For Profile View
+         */
+
+
+
+    /**
+     * Option to delete mood, affecting it in the Firebase Database
+     *
+     * State- > state of the mood list
+     * Position - > Which  mood to delete?
+     * Returns -> None
+     *  OnButtonClicked -> "X" position
+     *  Affects the Profile View
+     */
+
