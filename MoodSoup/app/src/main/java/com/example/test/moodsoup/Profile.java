@@ -76,7 +76,6 @@ public class Profile extends AppCompatActivity  implements PendingContext.SheetL
     private static final String KEY_TIME = "Time";
     private static int RESULT_LOAD_IMG = 1;
     private ListView event;
-    private ArrayList<String> datelist;
     private ArrayList<String> event_list;
     private ArrayAdapter<String> event_listAdapter;
 
@@ -87,6 +86,9 @@ public class Profile extends AppCompatActivity  implements PendingContext.SheetL
         event = findViewById(R.id.event_list_self);
         ///Set profile picture
         final ImageButton button = (ImageButton)findViewById(R.id.imageButton2);
+
+
+        // Set a user profile image (For self only!) -- > Needs testing
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,11 +146,13 @@ public class Profile extends AppCompatActivity  implements PendingContext.SheetL
         final PendingContext.SheetListener listener = this;
 
 
-        datelist = new ArrayList<>();
 
 
 
 
+
+
+        // Get the moodHistory for the user in profile --> Not finished yet since we are just pulling the dates, will fix later.
 
         CollectionReference colRef = db.collection("Users").document(email).collection("moodHistory");
         colRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -159,7 +163,9 @@ public class Profile extends AppCompatActivity  implements PendingContext.SheetL
 
                     for (QueryDocumentSnapshot document : task.getResult())
                     {
+
                         event_list.add(document.getId());
+
 
                     }
 
@@ -180,14 +186,16 @@ public class Profile extends AppCompatActivity  implements PendingContext.SheetL
 
 
 
-        datelist.add(colRef.document("2019-11-03").getId().toString());
-        Log.d(datelist.toString(),"LOL");
+        //event_list.add(colRef.document().getFirestore().toString());
+
 
 
 
 
     }
 
+
+    // Removing a mood from the mood list ---> Not connected to firebase yet, so this is just CLIENT-SIDE only.
     @Override
     public void onButtonClicked(String state, int position) {
         event.setAdapter(event_listAdapter);
