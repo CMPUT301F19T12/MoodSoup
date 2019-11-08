@@ -1,5 +1,6 @@
 package com.example.test.moodsoup;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,7 +11,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -20,6 +24,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +35,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.ui.AppBarConfiguration;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements PendingContext.SheetListener {
     private ArrayList<String> moods = new ArrayList<String>();
     private ArrayAdapter<String> adapter;
     private FirebaseAuth mAuth;
     private AppBarConfiguration mAppBarConfiguration;
-
+    private String TAG = "ERROR HERE!";
     private ListView moodList;
     private TextView profileName;
     private ImageButton toFollowing;
@@ -46,11 +52,17 @@ public class ProfileFragment extends Fragment {
     private static final String KEY_SOCIAL = "Social";
     private static final String KEY_TIME = "Time";
     private static int RESULT_LOAD_IMG = 1;
+    private ListView event;
+    private ArrayList<String> event_list;
+    private ArrayAdapter<String> event_listAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.profile,container,false);
+        event = root.findViewById(R.id.event_list_self);
         ///Set profile picture
         final ImageButton button = (ImageButton)root.findViewById(R.id.imageButton2);
+
+        // Set a user profile image (For self only!) -- > Needs testing
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +90,7 @@ public class ProfileFragment extends Fragment {
         toFollowing = root.findViewById(R.id.imageButton);
 
         // User Instance
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         //User info
@@ -92,41 +104,35 @@ public class ProfileFragment extends Fragment {
 
         String uid = user.getUid();
         String name = user.getDisplayName();
-        String email = user.getEmail();
-
+        final String email = user.getEmail();
 
         // Set user name on profile layout display view
         final TextView display_name =  profileName;
         display_name.setText("User email: "+email);
 
+        final ListView event = root.findViewById(R.id.event_list_self);
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        event_list = new ArrayList<>();
+        final Context context = getActivity();
+        final PendingContext.SheetListener listener = this;
 
-        //User moods stuff /////////////
-        CollectionReference moodRef = db.collection("Users").document(email).collection("moodHistory");
-        Log.d("MOODREF",moodRef.toString());
+        // Get the moodHistory for the user in profile --> Not finished yet since we are just pulling the dates, will fix later.
 
-
-
-        ListView moodListview = root.findViewById(R.id.event_list_self);
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference moodref = ref.child("moodHistory");
-
-
-        ///////////
-
-        ValueEventListener eventListener = new ValueEventListener() {
+        CollectionReference colRef = db.collection("Users").document(email).collection("moodHistory");
+        colRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                List<String> list = new ArrayList<>();
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    String name = ds.child("moodHistory").getValue(String.class);
-                    list.add(name);
-                    Log.d("TAG", name);
-                }
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
 
 
-                Log.d("TAG", list.toString());
-            }
+                    for (QueryDocumentSnapshot document : task.getResult())
+                    {
+                        event_list.add(document.getId());
+                    }
+                    event_listAdapter = new PendingContext(context , event_list, listener);
+                    event.setAdapter(event_listAdapter);
 
+<<<<<<< Updated upstream
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         };
@@ -164,11 +170,32 @@ public class ProfileFragment extends Fragment {
                     moods.add(snapshot.getString("reason"));
                     moods.add(snapshot.getString("social"));
                     moods.add(snapshot.getString("time"));
+=======
+                } else {
+                    Log.d(TAG, "FAIL", task.getException());
+>>>>>>> Stashed changes
                 }
             }
         });
-         */
+
+        //event_list.add(colRef.document().getFirestore().toString());
+
         return root;
 
     }
+<<<<<<< Updated upstream
 }
+=======
+
+    @Override
+    public void onButtonClicked(String state, int position) {
+        event.setAdapter(event_listAdapter);
+        if (state.equals("delete"))
+        {
+            event_list.remove(position);
+            Toast.makeText(getActivity(),"Mood Deleted",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+}
+>>>>>>> Stashed changes

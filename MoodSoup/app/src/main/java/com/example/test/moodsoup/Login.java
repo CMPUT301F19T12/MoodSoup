@@ -56,6 +56,12 @@ public class Login extends AppCompatActivity {
             public void onClick(View view) {
                 String email = usernameTV.getText().toString();
                 String password = passwordTV.getText().toString();
+                if (email.equals("")){
+                    email = " ";
+                }
+                if (password.equals("")){
+                    password = " ";
+                }
                 // Login with FireStore
                 mAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {

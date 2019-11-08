@@ -1,3 +1,4 @@
+/*
 package com.example.test.moodsoup.old_activities;
 
 import android.content.Intent;
@@ -201,3 +202,4 @@ public class Profile extends AppCompatActivity {
 
 
 }
+*/
