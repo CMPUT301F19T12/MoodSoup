@@ -26,7 +26,17 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-
+/*
+ * Follower
+ * V1.1
+ * 2019-11-07
+ *
+ * This page contains a list of all the people who are following you and a list of all the requests
+ * that you have active. You may delete a follower and you may accept or reject a request.
+ *
+ *@author smayer
+ *@author pspiers
+ */
 public class Follower extends AppCompatActivity implements RequestContext.RequestSheetListener {
 
     private ArrayList<String> pendingList;
@@ -52,6 +62,7 @@ public class Follower extends AppCompatActivity implements RequestContext.Reques
         final FirebaseUser user = mAuth.getCurrentUser();
         final Context context = this;
         final RequestContext.RequestSheetListener listener = this;
+        //Reject
         CollectionReference pendingColRef = db.collection("Users").document(user.getEmail()).collection("request");
         pendingColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -70,7 +81,7 @@ public class Follower extends AppCompatActivity implements RequestContext.Reques
                 }
             }
         });
-
+        //Add a follower
         CollectionReference followerColRef = db.collection("Users").document(user.getEmail()).collection("follower");
         followerColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

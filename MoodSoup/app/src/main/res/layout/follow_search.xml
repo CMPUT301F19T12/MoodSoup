@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="108dp"
-    android:background="#0C000000">
+    android:layout_height="408dp"
+    android:background="#0C000000"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="103dp"
-        android:orientation="vertical"
+        android:layout_height="393dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp">
+        android:layout_marginRight="16dp"
+        android:orientation="vertical">
 
         <EditText
             android:id="@+id/Search_User"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edittextborder"
             android:ems="10"
             android:hint="Enter Name"
             android:inputType="textShortMessage"
-            android:background="@drawable/edittextborder"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
             android:paddingStart="10dp"
-            android:layout_marginTop="16dp"/>
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp" />
 
         <Button
             android:id="@+id/search_button"
@@ -32,13 +32,18 @@
             android:onClick="Search_button"
             android:text="Search" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/Search_list"
+            android:layout_width="match_parent"
+            android:layout_height="295dp" />
+
     </LinearLayout>
 
     <View
         android:id="@+id/divider_reg"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#696969"
-        android:layout_marginTop="5dp"/>
+        android:layout_marginTop="5dp"
+        android:background="#696969" />
 
 </LinearLayout>

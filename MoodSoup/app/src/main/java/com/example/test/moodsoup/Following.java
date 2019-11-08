@@ -29,7 +29,17 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-
+/*
+ * Following
+ * V1.1
+ * 2019-11-07
+ *
+ * This page contains a list of all pending follow requests, a list of all users the current user
+ * is following and a button which leads to follow_search to find users to add.
+ *
+ *@author pspiers
+ *@author smayer
+ */
 public class Following extends AppCompatActivity  implements PendingContext.SheetListener{
     private ArrayList<String> pendingList;
     private ArrayList<String> followingList;
@@ -64,6 +74,7 @@ public class Following extends AppCompatActivity  implements PendingContext.Shee
         final FirebaseUser user = mAuth.getCurrentUser();
         final Context context = this;
         final PendingContext.SheetListener listener = this;
+        //Get pending requests and add them to the list
         CollectionReference colRef = db.collection("Users").document(user.getEmail()).collection("pending");
         colRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -81,7 +92,7 @@ public class Following extends AppCompatActivity  implements PendingContext.Shee
                 }
             }
         });
-
+        //get current followed users and add them to the list
         CollectionReference followerColRef = db.collection("Users").document(user.getEmail()).collection("following");
         followerColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

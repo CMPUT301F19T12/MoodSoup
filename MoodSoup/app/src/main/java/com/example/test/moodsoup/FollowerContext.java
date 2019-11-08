@@ -16,7 +16,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-
+/*
+ * FollowerContext
+ * V1.1
+ * 2019-11-07
+ *
+ * This is a context meant to be used by the follower list. It contains a button to delete that
+ * follower.
+ *
+ *@author smayer
+ *@author pspiers
+ */
 public class FollowerContext extends ArrayAdapter<String> {
     private ArrayList<String> emails;
     private Context context;
