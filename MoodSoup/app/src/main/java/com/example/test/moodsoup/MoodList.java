@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,7 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-public class MoodList extends ArrayAdapter<Mood> {
+public class MoodList extends ArrayAdapter<Mood>{
     private ArrayList<Mood> moods;
     private Context context;
 
@@ -52,25 +54,8 @@ public class MoodList extends ArrayAdapter<Mood> {
         TextView location = view.findViewById(R.id.new_mood_location);
         ImageView image = view.findViewById(R.id.image);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("Users").document(mood.getEmail());
-        final String TAG = "DOCUMENT ";
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        //name.setText(document.getData().get("firstName").toString());
-                        info.setText(String.format("@%s - %s - %s", document.getData().get("username"), mood.getDate(), mood.getTime()));
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
+
+        info.setText(String.format("@%s - %s - %s", mood.getUsername(), mood.getDate(), mood.getTime()));
         emotion.setText(mood.getEmotion());
         if (mood.getEmotion().toUpperCase().equals("HAPPY")) {
             image.setImageResource(R.drawable.moodsoup_happy);
@@ -83,5 +68,23 @@ public class MoodList extends ArrayAdapter<Mood> {
         location.setText(mood.getLocation());
         name.setText(mood.getEmail());
         return view;
+    }
+
+    public ArrayList<Mood> getMoods() {
+        return moods;
+    }
+
+    public void setMoods(ArrayList<Mood> moods) {
+        this.moods = moods;
+    }
+
+    @NonNull
+    @Override
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 }

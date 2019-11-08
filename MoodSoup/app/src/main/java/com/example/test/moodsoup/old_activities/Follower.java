@@ -1,23 +1,19 @@
+/*
 package com.example.test.moodsoup;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,35 +28,30 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-/**
- * @author Sanae Mayer
- * @author Peter Spiers
- */
+public class Follower extends AppCompatActivity implements RequestContext.RequestSheetListener {
 
-public class Following extends Fragment implements RequestContext.RequestSheetListener {
-    private ArrayList<String> requestList;
-    private ArrayList<String> followingList;
+    private ArrayList<String> pendingList;
+    private ArrayList<String> followerList;
     private ListView request;
-    private ListView following;
+    private ListView follower;
     private ArrayAdapter<String> listAdapter;
-    private ArrayAdapter followingAdapter;
-
+    private ArrayAdapter followerAdapter;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_following, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_follower);
 
-        requestList = new ArrayList<>();
-        followingList = new ArrayList<>();
-        request = root.findViewById(R.id.requests);
-        following = root.findViewById(R.id.following);
+        pendingList = new ArrayList<>();
+        followerList = new ArrayList<>();
+        request = findViewById(R.id.requests);
+        follower = findViewById(R.id.follower);
 
         final FirebaseFirestore db;
         final String TAG = "Sample";
         db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
-        final Context context = getContext();
+        final Context context = this;
         final RequestContext.RequestSheetListener listener = this;
         CollectionReference pendingColRef = db.collection("Users").document(user.getEmail()).collection("request");
         pendingColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -70,9 +61,9 @@ public class Following extends Fragment implements RequestContext.RequestSheetLi
 
                     for (QueryDocumentSnapshot document : task.getResult())
                     {
-                        requestList.add(document.getId());
+                        pendingList.add(document.getId());
                     }
-                    listAdapter = new RequestContext(context , requestList, listener);
+                    listAdapter = new RequestContext(context , pendingList, listener);
                     request.setAdapter(listAdapter);
 
                 } else {
@@ -81,7 +72,7 @@ public class Following extends Fragment implements RequestContext.RequestSheetLi
             }
         });
 
-        CollectionReference followerColRef = db.collection("Users").document(user.getEmail()).collection("following");
+        CollectionReference followerColRef = db.collection("Users").document(user.getEmail()).collection("follower");
         followerColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -89,30 +80,23 @@ public class Following extends Fragment implements RequestContext.RequestSheetLi
 
                     for (QueryDocumentSnapshot document : task.getResult())
                     {
-                        followingList.add(document.getId());
+                        followerList.add(document.getId());
                     }
-                    followingAdapter = new FollowerContext(context , followingList);
-                    following.setAdapter(followingAdapter);
-                    registerForContextMenu(following);
+                    followerAdapter = new FollowerContext(context , followerList);
+                    follower.setAdapter(followerAdapter);
+                    registerForContextMenu(follower);
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
                 }
             }
         });
-
-        return root;
     }
 
-    /*
-    These two functions are called when a menu is long-clicked.
-    A "remove" will show where you can remove your follower
-    */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
     {
-        MenuInflater inflater = getActivity().getMenuInflater();
-        if (v.getId() == R.id.following) {
-            inflater.inflate(R.menu.following_menu,menu);
+        if (v.getId() == R.id.follower) {
+            getMenuInflater().inflate(R.menu.follower_menu,menu);
         }
     }
 
@@ -121,14 +105,14 @@ public class Following extends Fragment implements RequestContext.RequestSheetLi
         switch (item.getItemId()){
             case R.id.remove:
                 AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-                String email = followingList.get(info.position);
+                String email = followerList.get(info.position);
                 final String TAG = "Remove Follower";
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 final FirebaseUser user = mAuth.getCurrentUser();
                 if (user != null) {
-                    //Remove user from my following
-                    db.collection("Users").document(user.getEmail()).collection("following").document(email)
+                    //Remove user from my follower
+                    db.collection("Users").document(user.getEmail()).collection("follower").document(email)
                             .delete()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -143,8 +127,8 @@ public class Following extends Fragment implements RequestContext.RequestSheetLi
                                 }
                             });
 
-                    //Remove me from user's follower list
-                    db.collection("Users").document(email).collection("follower").document(user.getEmail())
+                    //Remove me from user's following list
+                    db.collection("Users").document(email).collection("following").document(user.getEmail())
                             .delete()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -159,30 +143,33 @@ public class Following extends Fragment implements RequestContext.RequestSheetLi
                                 }
                             });
                 }
-                following.setAdapter(followingAdapter);
-                followingList.remove(info.position);
+                follower.setAdapter(followerAdapter);
+                followerList.remove(info.position);
                 return true;
             default:
                 return super.onContextItemSelected(item);
         }
     }
 
-
-    /*
-    A interface that will pass on state with its position
-    if "remove" then delete the ith position in array
-    */
     @Override
     public void onButtonClicked(String state, int position) {
         request.setAdapter(listAdapter);
-        following.setAdapter(followingAdapter);
+        follower.setAdapter(followerAdapter);
         if (state.equals("delete"))
         {
-            requestList.remove(position);
+            pendingList.remove(position);
         }
         else
         {
-            followingList.add(state);
+            followerList.add(state);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Follower.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }
+*/

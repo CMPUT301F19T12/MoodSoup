@@ -10,17 +10,16 @@
         android:name="com.example.test.moodsoup.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
-    <activity
+    <fragment
         android:id="@+id/nav_following"
         android:name="com.example.test.moodsoup.Following"
         android:label="@string/menu_following"
         tools:layout="@layout/following" />
-    <activity
+    <fragment
         android:id="@+id/nav_follower"
         android:name="com.example.test.moodsoup.Follower"
         android:label="Follower"
-        tools:layout="@layout/activity_follower"
-        />
+        tools:layout="@layout/profile" />
     <activity
         android:id="@+id/nav_logout"
         android:name="com.example.test.moodsoup.Login"
