@@ -23,7 +23,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
+/*
+ * RequestContext
+ * V1.1
+ * 2019-11-07
+ *
+ * This is meant to allow the user to accept or deny a follow request. An accepted request will add
+ * the other user to the current user's follows and the current user to the other user's following.
+ * In both the cases of accepting or rejecting, the requesting user will be removed from the
+ * current user's requests and the current user will be removed from the other user's pending.
+ * The other user will not be notified.
+ *
+ * @author pspiers
+ * @author smayer
+ */
 public class RequestContext extends ArrayAdapter<String> {
     private ArrayList<String> emails;
     private Context context;
