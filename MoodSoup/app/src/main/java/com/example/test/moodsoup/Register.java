@@ -106,7 +106,9 @@ public class Register extends AppCompatActivity {
                                                     findViewById(R.id.register_invalid_username).setVisibility(View.VISIBLE);
                                                 }
                                             });
-                                    finish();
+                                    Intent intent = new Intent(Register.this, MainActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
