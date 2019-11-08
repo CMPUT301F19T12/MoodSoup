@@ -63,7 +63,7 @@ public class AndroidTest {
         solo.assertCurrentActivity("Wrong Activity: Expected Login",Login.class);
         solo.clickOnView(solo.getView(R.id.register_btn));
         solo.assertCurrentActivity("Wrong Activity: Expected Register",Register.class);
-        final String email = "omniguardian@gmail.com";
+        final String email = "test@gmail.com";
         solo.enterText((EditText)solo.getView(R.id.email_new_user_tv),email);
         final String username = "test";
         solo.enterText((EditText)solo.getView(R.id.username_new_user_tv),username);
@@ -84,6 +84,71 @@ public class AndroidTest {
         solo.sleep(2000);
         assertTrue(solo.waitForText(username,1,2000));
     }
+
+    @Test
+    public void checkFollows(){
+        solo.assertCurrentActivity("Wrong Activity: Expected Login",Login.class);
+        solo.clickOnView(solo.getView(R.id.register_btn));
+        solo.assertCurrentActivity("Wrong Activity: Expected Register",Register.class);
+        final String email = "test@gmail.com";
+        solo.enterText((EditText)solo.getView(R.id.email_new_user_tv),email);
+        final String username = "test";
+        solo.enterText((EditText)solo.getView(R.id.username_new_user_tv),username);
+        final String password = "test123";
+        solo.enterText((EditText)solo.getView(R.id.password_new_user_tv),password);
+        solo.clickOnButton("Register");
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        solo.clickOnView(solo.getView(R.id.fab));
+        solo.assertCurrentActivity("Wrong Activity: Expected NewMood",NewMood.class);
+        solo.clickOnView(solo.getView(R.id.new_mood_emotion));
+        solo.clickOnMenuItem("Happy");
+        final String reason = "This is a test.";
+        solo.enterText((EditText)solo.getView(R.id.new_mood_reason),reason);
+        solo.clickOnView(solo.getView(R.id.post));
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Logout");
+        // Create Second User
+        solo.assertCurrentActivity("Wrong Activity: Expected Login",Login.class);
+        solo.clickOnView(solo.getView(R.id.register_btn));
+        solo.assertCurrentActivity("Wrong Activity: Expected Register",Register.class);
+        final String email2 = "test2@gmail.com";
+        solo.enterText((EditText)solo.getView(R.id.email_new_user_tv),email2);
+        final String username2 = "test2";
+        solo.enterText((EditText)solo.getView(R.id.username_new_user_tv),username2);
+        final String password2 = "test123";
+        solo.enterText((EditText)solo.getView(R.id.password_new_user_tv),password2);
+        solo.clickOnButton("Register");
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Search");
+        //solo.assertCurrentActivity("Wrong Fragment: Expected SearchFragment", SearchFragment.class);
+        solo.enterText((EditText)solo.getView(R.id.Search_User),email);
+        solo.clickOnView(solo.getView(R.id.search_button));
+        //solo.assertCurrentActivity("Wrong Fragment: Expected Following", Following.class);
+        solo.waitForText(email);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Logout");
+        solo.assertCurrentActivity("Wrong Activity: Expected Login",Login.class);
+        solo.enterText((EditText)solo.getView(R.id.username),email);
+        solo.enterText((EditText)solo.getView(R.id.password),password);
+        solo.clickOnView(solo.getView(R.id.login));
+        solo.waitForActivity(MainActivity.class);
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Followers");
+        solo.clickOnView(solo.getView(R.id.accept));
+        solo.waitForText(email2);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Logout");
+        solo.assertCurrentActivity("Wrong Activity: Expected Login",Login.class);
+        solo.enterText((EditText)solo.getView(R.id.username),email2);
+        solo.enterText((EditText)solo.getView(R.id.password),password2);
+        solo.clickOnView(solo.getView(R.id.login));
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        solo.waitForText(reason);
+    }
+
 
     /**
      * Close activity after each test

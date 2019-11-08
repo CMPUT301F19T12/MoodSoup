@@ -81,7 +81,7 @@ public class Following extends Fragment implements RequestContext.RequestSheetLi
             }
         });
 
-        CollectionReference followerColRef = db.collection("Users").document(user.getEmail()).collection("following");
+        CollectionReference followerColRef = db.collection("Users").document(user.getEmail()).collection("follower");
         followerColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

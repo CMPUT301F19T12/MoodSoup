@@ -90,7 +90,7 @@ public class Follower extends Fragment implements PendingContext.SheetListener {
             }
         });
 
-        CollectionReference followerColRef = db.collection("Users").document(user.getEmail()).collection("follower");
+        CollectionReference followerColRef = db.collection("Users").document(user.getEmail()).collection("following");
         followerColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
