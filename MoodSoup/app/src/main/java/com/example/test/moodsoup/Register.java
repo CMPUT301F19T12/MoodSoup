@@ -50,6 +50,9 @@ public class Register extends AppCompatActivity {
     String TAG = "Sample";
     FirebaseFirestore db;
     private FirebaseAuth mAuth;
+    private String email;
+    private String username;
+    private String password;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Initialize Firebase Auth
@@ -73,9 +76,18 @@ public class Register extends AppCompatActivity {
                 findViewById(R.id.register_invalid_username).setVisibility(View.INVISIBLE);
                 findViewById(R.id.register_invalid_email).setVisibility(View.INVISIBLE);
                 // Get strings from TextView
-                final String email = emailTV.getText().toString();
-                final String password = passwordTV.getText().toString();
-                final String username = usernameTV.getText().toString();
+                email = emailTV.getText().toString();
+                password = passwordTV.getText().toString();
+                username = usernameTV.getText().toString();
+                if (email.equals("")){
+                    email = " ";
+                }
+                if (username.equals("")){
+                    username = " ";
+                }
+                if (password.equals("")){
+                    password = " ";
+                }
                 // Creates a new user with email and password input by user
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {

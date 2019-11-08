@@ -85,8 +85,16 @@ public class AndroidTest {
         assertTrue(solo.waitForText(username,1,2000));
     }
 
+    /**
+     * This tests the followers and following feature
+     * Makes an account which makes a mood post
+     * Makes another account to request a follow to first account
+     * Logs back into first account to accept request
+     * Logs back into second account to check successfully following
+     */
     @Test
     public void checkFollows(){
+        // Create first account
         solo.assertCurrentActivity("Wrong Activity: Expected Login",Login.class);
         solo.clickOnView(solo.getView(R.id.register_btn));
         solo.assertCurrentActivity("Wrong Activity: Expected Register",Register.class);
@@ -97,6 +105,7 @@ public class AndroidTest {
         final String password = "test123";
         solo.enterText((EditText)solo.getView(R.id.password_new_user_tv),password);
         solo.clickOnButton("Register");
+        // Create post
         solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
         solo.clickOnView(solo.getView(R.id.fab));
         solo.assertCurrentActivity("Wrong Activity: Expected NewMood",NewMood.class);
@@ -106,6 +115,7 @@ public class AndroidTest {
         solo.enterText((EditText)solo.getView(R.id.new_mood_reason),reason);
         solo.clickOnView(solo.getView(R.id.post));
         solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        // Logs out
         ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
         solo.clickOnMenuItem("Logout");
         // Create Second User
@@ -121,32 +131,48 @@ public class AndroidTest {
         solo.clickOnButton("Register");
         solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
         ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        // Searches for first user and makes a follow request
         solo.clickOnMenuItem("Search");
-        //solo.assertCurrentActivity("Wrong Fragment: Expected SearchFragment", SearchFragment.class);
         solo.enterText((EditText)solo.getView(R.id.Search_User),email);
         solo.clickOnView(solo.getView(R.id.search_button));
-        //solo.assertCurrentActivity("Wrong Fragment: Expected Following", Following.class);
         solo.waitForText(email);
         ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
         solo.clickOnMenuItem("Logout");
+        // Logs into first account
         solo.assertCurrentActivity("Wrong Activity: Expected Login",Login.class);
         solo.enterText((EditText)solo.getView(R.id.username),email);
         solo.enterText((EditText)solo.getView(R.id.password),password);
         solo.clickOnView(solo.getView(R.id.login));
         solo.waitForActivity(MainActivity.class);
         solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        // Accepts follow request
         ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
         solo.clickOnMenuItem("Followers");
         solo.clickOnView(solo.getView(R.id.accept));
         solo.waitForText(email2);
         ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
         solo.clickOnMenuItem("Logout");
+        // Logs into second account
         solo.assertCurrentActivity("Wrong Activity: Expected Login",Login.class);
         solo.enterText((EditText)solo.getView(R.id.username),email2);
         solo.enterText((EditText)solo.getView(R.id.password),password2);
         solo.clickOnView(solo.getView(R.id.login));
         solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        // Checks to see if post made by first account appears
         solo.waitForText(reason);
+        // Clean up: deletes both accounts
+        FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getEmail()).delete();
+        FirebaseAuth.getInstance().getCurrentUser().delete();
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Logout");
+        solo.assertCurrentActivity("Wrong Activity: Expected Login",Login.class);
+        solo.enterText((EditText)solo.getView(R.id.username),email);
+        solo.enterText((EditText)solo.getView(R.id.password),password);
+        solo.clickOnView(solo.getView(R.id.login));
+        FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getEmail()).delete();
+        FirebaseAuth.getInstance().getCurrentUser().delete();
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Logout");
     }
 
 

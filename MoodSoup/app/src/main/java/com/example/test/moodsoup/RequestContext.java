@@ -66,7 +66,7 @@ public class RequestContext extends ArrayAdapter<String> {
                     //Add user to my follower
                     HashMap<String,String> follower = new HashMap<>();
                     follower.put("following",email);
-                    db.collection("Users").document(user.getEmail()).collection("follower").document(email)
+                    db.collection("Users").document(user.getEmail()).collection("following").document(email)
                             .set(follower)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -84,7 +84,7 @@ public class RequestContext extends ArrayAdapter<String> {
                     //Add me to user's follower
                     HashMap<String,String> following = new HashMap<>();
                     following.put("following",user.getEmail());
-                    db.collection("Users").document(email).collection("following").document(user.getEmail())
+                    db.collection("Users").document(email).collection("follower").document(user.getEmail())
                             .set(following)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override

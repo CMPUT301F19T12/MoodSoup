@@ -15,24 +15,25 @@
         <item>Choose an emotion:</item>
         <item>Happy</item>
         <item>Sad</item>
+        <!-- No emoticons for
         <item>Excited</item>
         <item>Angry</item>
         <item>Bored</item>
         <item>Tired</item>
         <item>Scared</item>
-        <item>Surprised</item>
+        <item>Surprised</item>-->
     </string-array>
 
     <string-array name="emotionFilter">
         <item>No Filter</item>
         <item>Happy</item>
         <item>Sad</item>
-        <item>Excited</item>
+        <!--<item>Excited</item>
         <item>Angry</item>
         <item>Bored</item>
         <item>Tired</item>
         <item>Scared</item>
-        <item>Surprised</item>
+        <item>Surprised</item>-->
     </string-array>
 
     <string-array name="social_situation">
