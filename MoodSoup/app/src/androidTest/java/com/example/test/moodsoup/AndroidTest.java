@@ -22,6 +22,9 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import static junit.framework.TestCase.assertTrue;
 
+/**
+ * Test start on the Login Page and deletes the user that is last logged in
+ */
 @RunWith(AndroidJUnit4.class)
 public class AndroidTest {
     private Solo solo;
