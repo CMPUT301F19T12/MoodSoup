@@ -36,6 +36,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.ui.AppBarConfiguration;
 
+
+/**
+ * This Fragment class handles the profile View, and allows viewing of Profile for the user itself, and other users
+ * This includes their mood history, and (not implemented yet) their profile picture
+ * All other mood related stuff will appear here, such as their detailed mood event History.
+ *
+ */
+
 public class ProfileFragment extends Fragment implements PendingContext.SheetListener{
     private ArrayList<String> moods = new ArrayList<String>();
     private ArrayAdapter<String> adapter;
@@ -122,6 +130,15 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
 
         // Get the moodHistory for the user in profile --> Not finished yet since we are just pulling the dates, will fix later.
 
+
+        /**
+         * Getting Firebase information for a arbitrary profile (Can be yourself, or other users. Other users not implemented yet)
+         *
+         *Parameters: Collection Reference to firebase path
+         * Returns: None
+         * For Profile View
+         */
+
         CollectionReference colRef = db.collection("Users").document(email).collection("moodHistory");
         colRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -145,7 +162,15 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
         return root;
 
     }
-
+    /**
+     * Option to delete mood, affecting it in the Firebase Database
+     *
+     * State- > state of the mood list
+     * Position - > Which  mood to delete?
+     * Returns -> None
+     *  OnButtonClicked -> "X" position
+     *  Affects the Profile View
+     */
     @Override
     public void onButtonClicked(String state, int position) {
         event.setAdapter(event_listAdapter);
