@@ -1,22 +1,17 @@
 package com.example.test.moodsoup;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
-import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
-/*
+/**
  * FollowerContext
  * V1.1
  * 2019-11-07
@@ -45,8 +40,8 @@ public class FollowerContext extends ArrayAdapter<String> {
         if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.activity_follower_context, parent, false);
         }
-        View itemLayout = view;
-        itemLayout.setLongClickable(true);
+        //Enable long click so that it can be removed
+        view.setLongClickable(true);
 
         final String email = emails.get(position);
         final TextView emailView = view.findViewById(R.id.email);

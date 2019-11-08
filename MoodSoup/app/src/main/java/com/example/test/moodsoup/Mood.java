@@ -2,6 +2,7 @@ package com.example.test.moodsoup;
 
 public class Mood{
     private String email;
+    private String username;
     private String emotion;
     private String date;
     private String time;
@@ -9,14 +10,23 @@ public class Mood{
     private String social;
     private String location;
 
-    public Mood(String email, String date, String time, String emotion, String reason, String social, String location) {
+    public Mood(String email, String username, String date, String time, String emotion, String reason, String social, String location) {
         this.email = email;
+        this.username = username;
         this.emotion = emotion;
         this.date = date;
         this.time = time;
         this.reason = reason;
         this.social = social;
         this.location = location;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {

@@ -11,6 +11,8 @@ import com.example.test.moodsoup.R;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+// This is a template for making fragments
+
 public class TemplateFragment extends Fragment {
 
     private String test;

@@ -28,6 +28,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -53,8 +54,8 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
     private static final String KEY_TIME = "Time";
     private static int RESULT_LOAD_IMG = 1;
     private ListView event;
-    private ArrayList<String> event_list;
-    private ArrayAdapter<String> event_listAdapter;
+    private ArrayList<Mood> event_list;
+    private ArrayAdapter<Mood> event_listAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.profile,container,false);
@@ -113,13 +114,11 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
         display_name.setText("User email: "+email);
 
 
-
         final ListView event = root.findViewById(R.id.event_list_self);
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         event_list = new ArrayList<>();
         final Context context = getActivity();
         final PendingContext.SheetListener listener = this;
-
 
         // Get the moodHistory for the user in profile --> Not finished yet since we are just pulling the dates, will fix later.
 
@@ -128,36 +127,20 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-
-
                     for (QueryDocumentSnapshot document : task.getResult())
                     {
-
-                        event_list.add(document.getId());
-
-
+                        Mood mood = new Mood(document.get("email").toString(),document.get("username").toString(),document.get("date").toString(),document.get("time").toString(),document.get("emotion").toString(),document.get("reason").toString(),document.get("social").toString(),document.get("location").toString());
+                        event_list.add(mood);
                     }
-
-
-
-                    event_listAdapter = new PendingContext(context , event_list, listener);
-                    event.setAdapter(event_listAdapter);
-
-
-
 
                 } else {
                     Log.d(TAG, "FAIL", task.getException());
                 }
+                Collections.sort(event_list,new StringDateComparator());
+                event_listAdapter = new MoodList(context,event_list);
+                moodList.setAdapter(event_listAdapter);
             }
         });
-
-
-
-
-        //event_list.add(colRef.document().getFirestore().toString());
-
-
 
         return root;
 
@@ -168,6 +151,8 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
         event.setAdapter(event_listAdapter);
         if (state.equals("delete"))
         {
+            String uploadTime = event_list.get(position).getDate() +" "+event_list.get(position).getTime();
+            FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getEmail()).collection("moodHistory").document().delete();
             event_list.remove(position);
             Toast.makeText(getActivity(),"Mood Deleted",
                     Toast.LENGTH_SHORT).show();

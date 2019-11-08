@@ -13,12 +13,13 @@
             android:icon="@mipmap/moodsoup_logo_round"
             android:title="@string/menu_search" />
         <item
+            android:id="@+id/nav_follower"
+            android:icon="@mipmap/moodsoup_logo_round"
+            android:title="@string/menu_follower" />
+        <item
             android:id="@+id/nav_following"
             android:icon="@mipmap/moodsoup_logo_round"
-            android:title="@string/menu_following" />
-        <item
-            android:id="@+id/nav_follower"
-            android:title="Follower"/>
+            android:title="@string/following" />
         <item
             android:id="@+id/nav_profile"
             android:icon="@mipmap/moodsoup_logo_round"
