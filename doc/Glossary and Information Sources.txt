@@ -2,6 +2,8 @@ Competitive Products: FaceBook like feature that allows user to express their em
 			on a post, but main purpose for expressing emotions.
 		      - Mood is like a tweet or post on Facebook, which tracks your social media presence,
 			mood is shown as a emoticon which the user can add details attached alongside.
+		      - Also very similar to Instagram with the ability to follow your friends
+		      - Geolocation and maps is a function that can be visiblily seen on Snapchat and Instagram showing where the user sent their latest moods
 
 Glossary:
 	emoticon: different types of emotions available that expresses user's current mood.
@@ -15,3 +17,7 @@ Glossary:
 			to follow other people. 
 
 	participant: students or staffs that attend the university.
+
+Resource:
+	Map/location feature help: https://developers.google.com/maps/documentation/android-sdk/start
+	Following/Follower function: Very similar to the following and follower function on instagram
