@@ -1,0 +1,269 @@
+{\rtf1\ansi\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\colortbl ;\red255\green0\blue0;\red0\green77\blue187;\red0\green176\blue80;}
+{\*\generator Riched20 10.0.18362}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang9\par
+\par
+\cf1 Red --> Not complete!\par
+\cf2 Blue --> In progress! \par
+\cf3 Green --> Complete, or very near completion!\cf0\par
+\par
+\cf3 US 01.01.01   --  > Just need to reflect in \cf2 Profile \cf3 - that part is in progress.\par
+As a participant, I want to add a mood event to my mood history, each event with the current date and time, a required emotional state, optional reason, and optional social situation.\par
+\par
+\par
+**The amount of work to do:  Have a working mood history (functionality), corresponding date and time, entered emotional state, (optional) reason, (optional) social situation. Testing.\par
+Login -- > main, recentEvent --> new_event  \par
+  Event --> getDate() and getTime() , emotional_state, reason, social_situation \par
+\par
+**Complexity : Working mood history, with it's current date and time functions. Working emotional state (String). OPTIONAL reason & social situation. Successfully adding this event works with\par
+or without reason & social situation.\par
+\par
+**Risk & Uncertainty: Mood history saved on Cloud per distinct user. Includes date/time, emotional state, and optional reason/social situation.\par
+  \par
+**Story points for US 01.01.01 = f(amount of work to do, risk & uncertainity, complexity):  5\par
+\cf0\par
+\par
+\par
+\par
+\cf1 US 01.02.01\par
+As a participant, I want consistent emoticons and colors to depict and distinguish the emotional states in any view.\par
+\par
+\par
+**The amount of work to do: Emoticon functionality for corresponding emotional states. Color options. Available in all views. Testing.\par
+\par
+emotional_state, colors\par
+\par
+**Complexity : All emoticons must be consistent with the users' chosen color, in their view. New event must abide this rule, and any \par
+existing events/history.\par
+\par
+**Risk & Uncertainty: Updating on cloud. Updating on old history events? \par
+\par
+**Story points for US 01.02.01 = f(amount of work to do, risk & uncertainity, complexity): 2\par
+\par
+\cf0\par
+\par
+\cf2 US 01.03.01   -- > Viewing a mood event is not implemented yet (OnClickListener!)\par
+As a participant, I want to view a given mood event and all its available details.\par
+\par
+**The amount of work to do: All mood events are saved to addtodb(event). A UI that can display a list of these events, as well as \par
+more information about the event if clicked on. Testing.\par
+\par
+addtoHistory(event)\par
+allEvents\par
+\par
+**Complexity : View all information about any mood event.\par
+\par
+**Risk & Uncertainty: Fetching information from cloud, update event(s), view details (emotional state, date & time, optional social situation & reason)\par
+\par
+**Story points for US 01.03.01:  3\par
+\cf0\par
+\par
+\par
+\cf2 US 01.04.01\par
+As a participant, I want to edit the details of a given mood event of mine.\par
+\par
+**The amount of work to do: Check if mood event is login users', allow changes to be made to mood event (button EDIT),\par
+update the cloud after saving changes. Testing. \par
+\par
+date, time of update, emotional_state, reason, social situation. submit as new event.\par
+\par
+**Complexity : Simple changes/update/push to db server.\par
+\par
+**Risk & Uncertainty: Updating information to firebase, make sure we cannot edit other users' moods\par
+\par
+**Story points for US 01.04.01:  2\par
+\cf0\par
+\cf3 US 01.05.01   -> Near complete, just needs to update with Firebase\par
+As a participant, I want to delete a given mood event of mine.\par
+\par
+**The amount of work to do: Delete button/integration into the UI - What view in the UI? Deletion of actual\par
+event from the login users' profile. Testing.\par
+\par
+delete Event[?] from AllEvent\par
+\par
+**Complexity : Event deletion, update to db server. \par
+\par
+**Risk & Uncertainty: More testing required to see if changes are pushed to db server. Relogin with users' username/\par
+password and check after deletion.\par
+\par
+**Story points for US 01.05.01:  3\par
+\cf0\par
+\par
+Other Mood Details\par
+\par
+\cf3 US 02.01.01\par
+As a participant, I want to express the reason why for a mood event using a brief textual explanation (no more than 20 characters or 3 words).\par
+\par
+**The amount of work to do: Reason_EditText ---> Add a reason field. Check if that field has less than 20 characters, \par
+OR three words. Testing.\par
+\par
+reason, getReason()\par
+\par
+**Complexity : Integrate reason into profile. Need to check the conditions are met.\par
+\par
+**Risk & Uncertainty: Test to make sure conditions are met. \par
+\par
+**Story points for US 02.01.01:  2\par
+\cf0\par
+\cf2 US 02.02.01   -- > In progress/Near complete\par
+As a participant, I want to express the reason why for a mood event using a photograph.\par
+\par
+**The amount of work to do: Integrate UI functions to use data/server image from users' phone/library. Testing.\par
+\par
+reason_image\par
+\par
+**Complexity : Integrate UI functions to add a image to a mood event. File size? Image size? \par
+\par
+**Risk & Uncertainty: Upload image to database. Make sure it saves. Testing required for that users' profile.\par
+\par
+\par
+**Story points for US 02.02.01:  4\par
+\cf0\par
+\cf2 US 02.03.01\par
+As a participant, I want to specify the social situation for a mood event to be one of: alone, with one other person, with two to several people, or with a crowd.\par
+\par
+**The amount of work to do: Add selection event for social situation (optional) for the UI (user get's to choose \par
+between the 4 option(s)). Testing.\par
+\par
+social_situation -- > alone, with one other person, with two to several people, with a crowd\par
+\par
+**Complexity : Make sure the user can un-choose a situation if they have pressed on one, since it's optional. \par
+Update to db server. \par
+\par
+**Risk & Uncertainty: Mainly testing the conditions. Remember it's optional.\par
+\par
+**Story points for US 02.03.01:  3\par
+\cf0\par
+\par
+\par
+Profile\par
+\par
+\cf3 US 03.01.01\par
+As a user, I want a profile with a unique username.\par
+\par
+**The amount of work to do: Check username of user to all usernames' entered in the database, before login, after\par
+the user presses login. If not unique, let user know. Testing.\par
+\par
+username\par
+\par
+**Complexity : Check the conditions. If not unique, let user know.\par
+\par
+**Risk & Uncertainty: Mainly testing.\par
+\par
+**Story points for US 03.01.01:  2\par
+\cf0\par
+Mood History\par
+\par
+\cf2 US 04.01.01   --> Need to implement sorting\par
+As a participant, I want to view as a list my mood history, sorted by date and time, in reverse chronological order (most recent coming first).\par
+\par
+**The amount of work to do: Sort function for date / time, in both ways. Mood history View. Add "sorting" button\par
+does either reverse/forward sorting depening on the amount of times pressed. (Once/Twice). Testing.\par
+\par
+self_profile-->allEvents \par
+\par
+**Complexity : Sorter functions pre-built into Java.\par
+\par
+**Risk & Uncertainty: Testing with a large amount of history events\par
+\par
+**Story points for US 04.01.01:  2\par
+\cf0\par
+\cf2 US 04.02.01\par
+As a participant, I want to filter my mood history list to show only mood events with a particular emotional state.\par
+\par
+**The amount of work to do: Filter function for emotional state, in the Mood history view - for the unique user. Testing.\par
+\par
+emotional_state, allEvents\par
+\par
+**Complexity : Make a filter function. UI implementation of a filter button/integration?\par
+\par
+**Risk & Uncertainty: How will the filter look? filter for emotional_state entered. New view UI for filtered events.\par
+Lots of testing required!\par
+\par
+**Story points for US 04.02.01:  5\par
+\cf0\par
+\par
+Mood Following and Sharing\par
+\par
+\cf3 US 05.01.01\par
+As a participant, I want to ask another participant to follow their most recent mood event.\par
+\par
+**The amount of work to do: Send notification to unique user. Accept/Decline UI integration, buttons, code. Testing.\par
+\par
+\par
+getFollowerReq, getFollowing, follow_requests\par
+\par
+**Complexity : Mainly uses the database server to communicate with other users' for follow requests. \par
+\par
+**Risk & Uncertainty: Does following the mood event show it's details? How will the UI look for follow requests? \par
+\par
+**Story points for US 05.01.01:  4\par
+\cf0\par
+\cf3 US 05.02.01\par
+As a participant, I want to grant another participant permission to follow my most recent mood event.\par
+\par
+**The amount of work to do: Check if there is a follower request, accept/decline the request. If accepted, send notification\par
+to other user. Add UI integration. Testing.\par
+\par
+follow_requests , getFollowerReq\par
+\par
+*Complexity : UI integraion of follow granted, display mood event if follow accepted (unlocked)\par
+\par
+**Risk & Uncertainty: testing required to make sure mood details are provided when the user accepts the request only\par
+\par
+**Story points for US 05.02.01:  3\par
+\cf0\par
+\par
+\cf2 US 05.03.01\par
+As a participant, I want to view as a list the most recent mood events of the other participants I am granted to follow, sorted by date and time, in reverse chronological order (most recent coming first).\par
+\par
+**The amount of work to do: Fetch database information for particular user followed/accepted. If accepted, add recent following mood events to list. Allow\par
+sorting as per other Story. (already implemented). Testing\par
+\par
+*Complexity : merge mood events with allowed follower users. sorting should be already implemented in the UI for sorting \par
+events via date/time reverse chronological order\par
+\par
+**Risk & Uncertainty: testing required since we are implementing multiple parts of the UI. slight uncertainty\par
+\par
+**Story points for US 05.03.01:  4\par
+\cf0\par
+\par
+Geolocation and Maps\par
+\par
+\cf1 US 06.01.01\par
+As a participant, I want to optionally attach my current location to a mood event.\par
+\par
+**The amount of work to do: UI integration of current location. Ask for permission. Upload to db. Testing.\par
+\par
+location\par
+\par
+*Complexity :  Most likely a java function to attach location. \par
+\par
+**Risk & Uncertainty: Not much, testing required. UI integration of how it should look, required.\par
+\par
+**Story points for US 06.01.01: 2\par
+\cf0\par
+\cf1 US 06.02.01\par
+As a participant, I want to see a map of the mood events (showing their emotional states) from my mood history list (that have locations).\par
+\par
+**The amount of work to do: Filter out mood events that have locations, display using UI view, for history list. Testing\par
+\par
+*Complexity :  Filter function for map/location entered for mood Event. display using chronological UI implemented before.\par
+\par
+**Risk & Uncertainty: Not much, except for the filtering. \par
+\par
+\par
+**Story points for US 06.02.01: 2\par
+\cf0\par
+\cf1 US 06.03.01\par
+As a participant, I want to see a map of the mood events (showing their emotional states and the username) from my mood following list (that have locations).\par
+\par
+**The amount of work to do: Filter out mood events for following users (That have already accepted the follow), in the following list. testing.\par
+\par
+*Complexity :  Filter function similar to US 06.02.01. display using chronological UI implemented before.\par
+\par
+**Risk & Uncertainty:  Not much, except for filtering in the correct following  list.\par
+\par
+**Story points for US 06.03.01: 2\par
+}
+ 
