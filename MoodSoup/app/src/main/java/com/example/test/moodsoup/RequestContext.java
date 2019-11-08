@@ -24,6 +24,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * @author Sanae Mayer
+ * @author Peter Spiers
+ */
+
 public class RequestContext extends ArrayAdapter<String> {
     private ArrayList<String> emails;
     private Context context;
@@ -58,11 +63,11 @@ public class RequestContext extends ArrayAdapter<String> {
             @Override
             public void onClick(View v) {
                 if (user != null) {
-                    //Add user to my following
-                    HashMap<String,String> following = new HashMap<>();
-                    following.put("following",email);
-                    db.collection("Users").document(user.getEmail()).collection("following").document(email)
-                            .set(following)
+                    //Add user to my follower
+                    HashMap<String,String> follower = new HashMap<>();
+                    follower.put("following",email);
+                    db.collection("Users").document(user.getEmail()).collection("follower").document(email)
+                            .set(follower)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -77,10 +82,10 @@ public class RequestContext extends ArrayAdapter<String> {
                             });
 
                     //Add me to user's follower
-                    HashMap<String,String> follower = new HashMap<>();
-                    follower.put("following",user.getEmail());
-                    db.collection("Users").document(email).collection("follower").document(user.getEmail())
-                            .set(follower)
+                    HashMap<String,String> following = new HashMap<>();
+                    following.put("following",user.getEmail());
+                    db.collection("Users").document(email).collection("following").document(user.getEmail())
+                            .set(following)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -97,7 +102,7 @@ public class RequestContext extends ArrayAdapter<String> {
                     mListener.onButtonClicked(email, -1);
                 }
 
-                //Remove user from my pending list
+                //Remove user from my request list
                 db.collection("Users").document(user.getEmail()).collection("request").document(email)
                         .delete()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -113,7 +118,7 @@ public class RequestContext extends ArrayAdapter<String> {
                             }
                         });
 
-                //Remove me from user's request list
+                //Remove me from user's pending list
                 db.collection("Users").document(email).collection("pending").document(user.getEmail())
                         .delete()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {

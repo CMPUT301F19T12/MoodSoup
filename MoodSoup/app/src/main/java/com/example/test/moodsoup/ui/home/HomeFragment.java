@@ -5,12 +5,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.example.test.moodsoup.Mood;
 import com.example.test.moodsoup.MoodList;
@@ -30,32 +31,28 @@ import java.util.Collections;
 
 public class HomeFragment extends Fragment {
 
-    private HomeViewModel homeViewModel;
+    //private HomeViewModel homeViewModel;
     private FirebaseFirestore db;
     private ListView moodList;
     private ArrayList<String> followerArray;
     private ArrayList<Mood> moodArray;
+    private ArrayList<Mood> filteredMood;
     private ArrayAdapter<Mood> moodAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
+        //homeViewModel =
+        //ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
         //Set adapter for moodList
         db = FirebaseFirestore.getInstance();
         moodList = root.findViewById(R.id.home_mood_list);
         moodArray = new ArrayList<>();
+        filteredMood = new ArrayList<>();
         followerArray = new ArrayList<>();
 
-        //moodList.setAdapter(moodAdapter);
         final String TAG = "GetFollower";
-
-        /*WHAT SHOULD HAPPEN HERE:
-         * get the most recent post from each of the users you are following
-         * add the most recent moods to the arrayadapter*/
-
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
@@ -66,41 +63,86 @@ public class HomeFragment extends Fragment {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             followerArray.add(document.getId());
-                            System.out.println("Size: " + followerArray.size());
                         }
-                        setArrayAdapter();
+                        getFollowerMood();
                     } else {
                         Log.d(TAG, "get failed with ", task.getException());
                     }
                 }
             });
-
         }
+
+        /*
+        Whenever filter is selected
+        - position 0 means no filter
+        - Rest will have its emotion attached to it
+        */
+        Spinner filter = root.findViewById(R.id.filter);
+        filter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    moodAdapter = new MoodList(getActivity(), moodArray);
+                    moodList.setAdapter(moodAdapter);
+                } else {
+                    filteredMood.clear();
+                    setFilter(position);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         return root;
     }
 
-    public void setArrayAdapter(){
-        System.out.println("size " + followerArray.size());
+    /*
+     * This Function will set a filter by setting a new array "filteredMood"
+     * which will be used to display in screen
+     * - Much faster method because we do not have to access firebase.
+     */
+    public void setFilter(final int position) {
+        final String[] emotion = getResources().getStringArray(R.array.emotionFilter);
+        for (int i = 0; i < moodArray.size(); ++i) {
+            if (moodArray.get(i).getEmotion().equals(emotion[position])) {
+                filteredMood.add(moodArray.get(i));
+            }
+        }
+        moodAdapter = new MoodList(getActivity(), filteredMood);
+        moodList.setAdapter(moodAdapter);
+
+    }
+
+    /*
+    when view is initialized, a "followerArray" will be created to track all the users I'm following.
+    After, with the follower's now we will add the moods created by followers into "moodArray"
+    which will be shown in listView
+    */
+    public void getFollowerMood() {
         for (int i = 0; i < followerArray.size(); ++i) {
             CollectionReference followerMoodColRef = db.collection("Users").document(followerArray.get(i)).collection("moodHistory");
-            final int finalI = i;
             followerMoodColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            Mood mood = new Mood(followerArray.get(finalI),document.get("date").toString(),document.get("time").toString(),document.get("emotion").toString(),document.get("reason").toString(),document.get("social").toString(),document.get("location").toString());
+                            System.out.println(document.get("date").toString());
+                            Mood mood = new Mood(document.get("email").toString(),
+                                    document.get("username").toString(), document.get("date").toString(),
+                                    document.get("time").toString(), document.get("emotion").toString(),
+                                    document.get("reason").toString(), document.get("social").toString(),
+                                    document.get("location").toString());
                             moodArray.add(mood);
-                            System.out.println(document.getData());
+                            Collections.sort(moodArray, new StringDateComparator());
+                            moodAdapter = new MoodList(getActivity(), moodArray);
+                            moodList.setAdapter(moodAdapter);
                         }
-                        System.out.println(followerArray.get(finalI));
-                        moodAdapter = new MoodList(getActivity(),moodArray);
-                        Collections.sort(moodArray,new StringDateComparator());
-                        moodList.setAdapter(moodAdapter);
                     }
                 }
             });
         }
     }
-
 }

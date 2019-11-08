@@ -1,8 +1,5 @@
 package com.example.test.moodsoup;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,10 +11,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
@@ -27,6 +31,7 @@ import java.util.Calendar;
  * @author Sanae Mayer
  * @author Richard Qin
  */
+
 public class NewMood extends AppCompatActivity{
     private TextView date;
     private Spinner emotion;
@@ -34,6 +39,8 @@ public class NewMood extends AppCompatActivity{
     private Spinner social;
     private EditText location;
     String TAG = "Sample";
+    String email;
+    String emotionText,reasonText,socialText,locationText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,32 +85,43 @@ public class NewMood extends AppCompatActivity{
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Gets text from each field
-                String emotionText = emotion.getSelectedItem().toString();
-                String reasonText = reason.getText().toString();
-                String socialText = social.getSelectedItem().toString();
-                String locationText = location.getText().toString();
-                // Resets Error messages
+                emotionText = emotion.getSelectedItem().toString();
+                reasonText = reason.getText().toString();
+                socialText = social.getSelectedItem().toString();
+                locationText = location.getText().toString();
                 findViewById(R.id.new_mood_error_emotion).setVisibility(View.INVISIBLE);
-                // Social Situation is optional so text gets set to nothing
-                if (socialText.equals("Choose a social situation:")){
+                if (socialText.equals("Choose a social situation:")) {
                     socialText = "";
                 }
-                // Emotion is mandatory so error message is displayed if not chosen
-                if (emotionText.equals("Choose an emotion:")){
+                if (emotionText.equals("Choose an emotion:")) {
                     findViewById(R.id.new_mood_error_emotion).setVisibility(View.VISIBLE);
                     Toast.makeText(NewMood.this, "Please Fill out the Required Fields",
                             Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    // Adds mood to Firebase
+                } else {
+                    //IMPLEMENT USER CLASS
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    CollectionReference collectionReference = db.collection("Users");
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                    // Mood gets stored under user's email in the database
-                    String email = mAuth.getCurrentUser().getEmail();
-                    Mood mood = new Mood(email,currentDate, currentTime,emotionText,reasonText,socialText,locationText);
-                    collectionReference
+                    email = mAuth.getCurrentUser().getEmail();
+
+                    DocumentReference usernameRef = db.collection("Users").document(email);
+                    usernameRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    createNewMood((String) document.getData().get("username"));
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+            public void createNewMood(String userName){
+                Mood mood = new Mood(email,userName,currentDate, currentTime,emotionText,reasonText,socialText,locationText);
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                CollectionReference collectionReference = db.collection("Users");
+                collectionReference
                             .document(email)
                             .collection("moodHistory")
                             .document(uploadTime)
@@ -124,7 +142,6 @@ public class NewMood extends AppCompatActivity{
                     startActivity(intent);
                     finish();
                 }
-            }
         });
 
     }
