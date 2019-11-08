@@ -168,6 +168,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
         event.setAdapter(event_listAdapter);
         if (state.equals("delete"))
         {
+            FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getEmail()).collection("moodHistory").document(event_list.get(position)).delete();
             event_list.remove(position);
             Toast.makeText(getActivity(),"Mood Deleted",
                     Toast.LENGTH_SHORT).show();
