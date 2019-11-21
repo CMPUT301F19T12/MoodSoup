@@ -45,13 +45,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
     private ListView moodList;
     private TextView profileName;
     private ImageButton toFollowing;
-    private ImageButton imageButton2;
-    private static final String KEY_DATE = "Date";
-    private static final String KEY_EMOTION = "Emotion";
-    private static final String KEY_LOCATION = "Location";
-    private static final String KEY_REASON = "Reason";
-    private static final String KEY_SOCIAL = "Social";
-    private static final String KEY_TIME = "Time";
+    private ImageButton ProfileImage;
     private static int RESULT_LOAD_IMG = 1;
     private ListView event;
     private ArrayList<Mood> event_list;
@@ -61,7 +55,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
         final View root = inflater.inflate(R.layout.profile,container,false);
         event = root.findViewById(R.id.event_list_self);
         ///Set profile picture
-        final ImageButton button = (ImageButton)root.findViewById(R.id.imageButton2);
+        final ImageButton button = (ImageButton)root.findViewById(R.id.ProfileImage);
 
 
         // Set a user profile image (For self only!) -- > Needs testing
