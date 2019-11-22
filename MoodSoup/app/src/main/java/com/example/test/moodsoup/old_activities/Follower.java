@@ -1,22 +1,19 @@
+/*
 package com.example.test.moodsoup;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,80 +27,62 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import static androidx.navigation.Navigation.findNavController;
-/**
- * Follower
- * V1.1
- * 2019-11-07
- *
- * This page contains a list of all the people who are following you and a list of all the requests
- * that you have active. You may delete a follower and you may accept or reject a request.
- *
- *@author smayer <smayer@ualberta.ca>
- * @author Peter Spiers <pspiers@ualberta.ca>
- */
 
-public class Follower extends Fragment implements PendingContext.SheetListener {
+public class Follower extends AppCompatActivity implements RequestContext.RequestSheetListener {
+
     private ArrayList<String> pendingList;
     private ArrayList<String> followerList;
-    private ListView pending;
+    private ListView request;
     private ListView follower;
-    private ArrayAdapter<String> pendingListAdapter;
+    private ArrayAdapter<String> listAdapter;
     private ArrayAdapter followerAdapter;
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        final View root = inflater.inflate(R.layout.fragment_follower, container, false);
-
-        final Button search = root.findViewById(R.id.Search);
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                findNavController(root).navigate(R.id.nav_search );
-            }
-        });
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_follower);
 
         pendingList = new ArrayList<>();
         followerList = new ArrayList<>();
-        pending = root.findViewById(R.id.pending);
-        follower = root.findViewById(R.id.follower);
+        request = findViewById(R.id.requests);
+        follower = findViewById(R.id.follower);
 
-        //registerForContextMenu(following);
         final FirebaseFirestore db;
         final String TAG = "Sample";
         db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
-        final Context context = getContext();
-        final PendingContext.SheetListener listener = this;
-        CollectionReference colRef = db.collection("Users").document(user.getEmail()).collection("pending");
-        colRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        final Context context = this;
+        final RequestContext.RequestSheetListener listener = this;
+        CollectionReference pendingColRef = db.collection("Users").document(user.getEmail()).collection("request");
+        pendingColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
 
-                    for (QueryDocumentSnapshot document : task.getResult()) {
+                    for (QueryDocumentSnapshot document : task.getResult())
+                    {
                         pendingList.add(document.getId());
                     }
-                    pendingListAdapter = new PendingContext(context, pendingList, listener);
-                    pending.setAdapter(pendingListAdapter);
+                    listAdapter = new RequestContext(context , pendingList, listener);
+                    request.setAdapter(listAdapter);
+
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
                 }
             }
         });
-        //Add a follower
+
         CollectionReference followerColRef = db.collection("Users").document(user.getEmail()).collection("follower");
         followerColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
 
-                    for (QueryDocumentSnapshot document : task.getResult()) {
+                    for (QueryDocumentSnapshot document : task.getResult())
+                    {
                         followerList.add(document.getId());
                     }
-                    followerAdapter = new FollowerContext(context, followerList);
+                    followerAdapter = new FollowerContext(context , followerList);
                     follower.setAdapter(followerAdapter);
                     registerForContextMenu(follower);
                 } else {
@@ -111,28 +90,19 @@ public class Follower extends Fragment implements PendingContext.SheetListener {
                 }
             }
         });
-
-        return root;
     }
 
-    /**
-     * The function will dispaly a context menu if the listView is long-clicked.
-     */
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        MenuInflater inflater = getActivity().getMenuInflater();
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+    {
         if (v.getId() == R.id.follower) {
-            inflater.inflate(R.menu.follower_menu, menu);
+            getMenuInflater().inflate(R.menu.follower_menu,menu);
         }
     }
 
-    /**
-     * The function will handle events when a item in context menu is clicked.
-     * It will handles removing the follower from the list and firebase.
-     * */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        switch (item.getItemId()){
             case R.id.remove:
                 AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
                 String email = followerList.get(info.position);
@@ -157,7 +127,7 @@ public class Follower extends Fragment implements PendingContext.SheetListener {
                                 }
                             });
 
-                    //Remove me from user's follower list
+                    //Remove me from user's following list
                     db.collection("Users").document(email).collection("following").document(user.getEmail())
                             .delete()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -181,17 +151,25 @@ public class Follower extends Fragment implements PendingContext.SheetListener {
         }
     }
 
-    /**
-     A interface that will pass on state with its position
-     if "delete' then delete the ith position in array
-     */
     @Override
     public void onButtonClicked(String state, int position) {
-        pending.setAdapter(pendingListAdapter);
-        if (state.equals("delete")) {
+        request.setAdapter(listAdapter);
+        follower.setAdapter(followerAdapter);
+        if (state.equals("delete"))
+        {
             pendingList.remove(position);
-            Toast.makeText(getContext(), "User Deleted",
-                    Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            followerList.add(state);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Follower.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }
+*/

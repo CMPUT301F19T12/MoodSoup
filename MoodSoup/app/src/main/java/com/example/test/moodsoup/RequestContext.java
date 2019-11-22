@@ -24,6 +24,21 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * RequestContext
+ * V1.1
+ * 2019-11-07
+ *
+ * This is meant to allow the user to accept or deny a follow request. An accepted request will add
+ * the other user to the current user's follows and the current user to the other user's following.
+ * In both the cases of accepting or rejecting, the requesting user will be removed from the
+ * current user's requests and the current user will be removed from the other user's pending.
+ * The other user will not be notified.
+ *
+ * @author pspiers
+ * @author smayer
+ */
+
 public class RequestContext extends ArrayAdapter<String> {
     private ArrayList<String> emails;
     private Context context;
@@ -58,11 +73,11 @@ public class RequestContext extends ArrayAdapter<String> {
             @Override
             public void onClick(View v) {
                 if (user != null) {
-                    //Add user to my following
-                    HashMap<String,String> following = new HashMap<>();
-                    following.put("following",email);
+                    //Add user to my follower
+                    HashMap<String,String> follower = new HashMap<>();
+                    follower.put("following",email);
                     db.collection("Users").document(user.getEmail()).collection("following").document(email)
-                            .set(following)
+                            .set(follower)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -77,10 +92,10 @@ public class RequestContext extends ArrayAdapter<String> {
                             });
 
                     //Add me to user's follower
-                    HashMap<String,String> follower = new HashMap<>();
-                    follower.put("following",user.getEmail());
+                    HashMap<String,String> following = new HashMap<>();
+                    following.put("following",user.getEmail());
                     db.collection("Users").document(email).collection("follower").document(user.getEmail())
-                            .set(follower)
+                            .set(following)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -97,7 +112,7 @@ public class RequestContext extends ArrayAdapter<String> {
                     mListener.onButtonClicked(email, -1);
                 }
 
-                //Remove user from my pending list
+                //Remove user from my request list
                 db.collection("Users").document(user.getEmail()).collection("request").document(email)
                         .delete()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -113,7 +128,7 @@ public class RequestContext extends ArrayAdapter<String> {
                             }
                         });
 
-                //Remove me from user's request list
+                //Remove me from user's pending list
                 db.collection("Users").document(email).collection("pending").document(user.getEmail())
                         .delete()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -176,7 +191,9 @@ public class RequestContext extends ArrayAdapter<String> {
         return view;
     }
 
-    //Interface that will be used in MainActivity
+    /**
+     * Interface that will be used in MainActivity
+     */
     public interface RequestSheetListener {
         void onButtonClicked(String state, final int position);
     }

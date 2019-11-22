@@ -23,6 +23,11 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 
+/**
+ * * @author Sanae Mayer <smayer@ualberta.ca>
+ * @author Peter Spiers <pspiers@ualberta.ca>
+ * This class handles the arrayAdapyer of the pending Listview
+ */
 public class PendingContext extends ArrayAdapter<String> {
     private ArrayList<String> emails;
     private Context context;
@@ -97,7 +102,9 @@ public class PendingContext extends ArrayAdapter<String> {
         return view;
     }
 
-    //Interface that will be used in MainActivity
+    /**
+     * Interface that will be used in MainActivity
+     * */
     public interface SheetListener {
         void onButtonClicked(String state, final int position);
     }

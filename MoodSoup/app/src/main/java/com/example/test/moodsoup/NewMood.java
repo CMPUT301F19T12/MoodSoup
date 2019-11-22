@@ -1,9 +1,16 @@
 package com.example.test.moodsoup;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,26 +21,54 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 
+import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Handles creating a new mood
  * @author Sanae Mayer
  * @author Richard Qin
  */
+
 public class NewMood extends AppCompatActivity{
     private TextView date;
     private Spinner emotion;
     private EditText reason;
     private Spinner social;
-    private EditText location;
+    private String addressLocation;
+    private GeoPoint geoPoint;
     String TAG = "Sample";
+    String email;
+    String emotionText,reasonText,socialText,locationText;
+
+    private boolean mLocationPermissionGranted = false;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private static final int ERROR_DIALOG_REQUEST = 9001;
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9002;
+    private static final int PERMISSIONS_REQUEST_ENABLE_GPS = 9003;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +79,8 @@ public class NewMood extends AppCompatActivity{
         emotion = findViewById(R.id.new_mood_emotion);
         reason = findViewById(R.id.new_mood_reason);
         social = findViewById(R.id.new_mood_social);
-        location = findViewById(R.id.new_mood_location);
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(NewMood.this);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<String> adapter = new ArrayAdapter<>(NewMood.this,
@@ -74,36 +110,85 @@ public class NewMood extends AppCompatActivity{
             }
         });
 
+        findViewById(R.id.get_location).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mLocationPermissionGranted = isMapsEnabled();
+                if (mLocationPermissionGranted){
+                    mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Location> task) {
+                            if(task.isSuccessful()){
+                                Location location = task.getResult();
+                                geoPoint = new GeoPoint(location.getLatitude(),location.getLongitude());
+                                Log.d(TAG,"onComplete: latitude: "+geoPoint.getLatitude());
+                                Log.d(TAG,"onComplete: longitude: "+geoPoint.getLongitude());
+                                TextView locationText = findViewById(R.id.get_location);
+                                Geocoder geoCoder = new Geocoder(NewMood.this, Locale.getDefault()); //it is Geocoder
+                                StringBuilder builder = new StringBuilder();
+                                try {
+                                    List<Address> address = geoCoder.getFromLocation(geoPoint.getLatitude(), geoPoint.getLongitude(), 1);
+                                    int maxLines = address.get(0).getMaxAddressLineIndex();
+                                    for (int i=0; i<maxLines; i++) {
+                                        String addressStr = address.get(0).getAddressLine(i);
+                                        builder.append(addressStr);
+                                        builder.append(" ");
+                                    }
+
+                                    addressLocation = builder.toString(); //This is the complete address.
+                                } catch (IOException e) {}
+                                catch (NullPointerException e) {}
+                                locationText.setText(addressLocation);
+                            }
+                        }
+                    });
+                }else{
+                    getLocationPermission();
+                }
+
+            }
+        });
+
         ImageButton post = findViewById(R.id.post);
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Gets text from each field
-                String emotionText = emotion.getSelectedItem().toString();
-                String reasonText = reason.getText().toString();
-                String socialText = social.getSelectedItem().toString();
-                String locationText = location.getText().toString();
-                // Resets Error messages
+                emotionText = emotion.getSelectedItem().toString();
+                reasonText = reason.getText().toString();
+                socialText = social.getSelectedItem().toString();
                 findViewById(R.id.new_mood_error_emotion).setVisibility(View.INVISIBLE);
-                // Social Situation is optional so text gets set to nothing
-                if (socialText.equals("Choose a social situation:")){
+                if (socialText.equals("Choose a social situation:")) {
                     socialText = "";
                 }
-                // Emotion is mandatory so error message is displayed if not chosen
-                if (emotionText.equals("Choose an emotion:")){
+                if (emotionText.equals("Choose an emotion:")) {
                     findViewById(R.id.new_mood_error_emotion).setVisibility(View.VISIBLE);
                     Toast.makeText(NewMood.this, "Please Fill out the Required Fields",
                             Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    // Adds mood to Firebase
+                } else {
+                    //IMPLEMENT USER CLASS
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    CollectionReference collectionReference = db.collection("Users");
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                    // Mood gets stored under user's email in the database
-                    String email = mAuth.getCurrentUser().getEmail();
-                    Mood mood = new Mood(email,currentDate, currentTime,emotionText,reasonText,socialText,locationText);
-                    collectionReference
+                    email = mAuth.getCurrentUser().getEmail();
+
+                    DocumentReference usernameRef = db.collection("Users").document(email);
+                    usernameRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    createNewMood((String) document.getData().get("username"));
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+            public void createNewMood(String userName){
+                Mood mood = new Mood(email,userName,currentDate, currentTime,emotionText,reasonText,socialText,addressLocation,geoPoint);
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                CollectionReference collectionReference = db.collection("Users");
+                collectionReference
                             .document(email)
                             .collection("moodHistory")
                             .document(uploadTime)
@@ -124,7 +209,6 @@ public class NewMood extends AppCompatActivity{
                     startActivity(intent);
                     finish();
                 }
-            }
         });
 
     }
@@ -187,4 +271,77 @@ public class NewMood extends AppCompatActivity{
     public void onBackPressed() {
         finish();
     }
+
+    // GOOGLE MAPS STUFF
+    private boolean checkMapServices(){
+        if(isServicesOK()){
+            if(isMapsEnabled()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("This application requires GPS to work properly, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(enableGpsIntent, PERMISSIONS_REQUEST_ENABLE_GPS);
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public boolean isMapsEnabled(){
+        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+
+        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            buildAlertMessageNoGps();
+            return false;
+        }
+        return true;
+    }
+
+    private void getLocationPermission() {
+        /*
+         * Request location permission, so that we can get the location of the
+         * device. The result of the permission request is handled by a callback,
+         * onRequestPermissionsResult.
+         */
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+    }
+
+    public boolean isServicesOK(){
+        Log.d(TAG, "isServicesOK: checking google services version");
+
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(NewMood.this);
+
+        if(available == ConnectionResult.SUCCESS){
+            //everything is fine and the user can make map requests
+            Log.d(TAG, "isServicesOK: Google Play Services is working");
+            return true;
+        }
+        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
+            //an error occured but we can resolve it
+            Log.d(TAG, "isServicesOK: an error occured but we can fix it");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(NewMood.this, available, ERROR_DIALOG_REQUEST);
+            dialog.show();
+        }else{
+            Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
 }
+

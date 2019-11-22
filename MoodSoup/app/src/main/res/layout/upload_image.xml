@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="35dp"
+            app:srcCompat="@android:drawable/ic_menu_camera" />
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="70dp"
+            android:layout_alignParentLeft="true"
+            android:text="Cancel"/>
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="100dp"
+            android:layout_height="70dp"
+            android:layout_alignParentRight="true"
+            android:text="upload" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/imageToUpload"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_gravity="center_horizontal"
+        app:srcCompat="@mipmap/face_foreground" />
+
+    <Button
+        android:id="@+id/Change_photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select from Gallery" />
+
+</LinearLayout>
+
+

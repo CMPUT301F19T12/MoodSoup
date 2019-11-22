@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">MoodSoup</string>
+    <string name="google_maps_api_key">AIzaSyCOcmxlAK-MyCo4tQVk9FMIklihByKilyA</string>
+
     <string name="username">Username</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -22,6 +24,19 @@
         <item>Scared</item>
         <item>Surprised</item>
     </string-array>
+
+    <string-array name="emotionFilter">
+        <item>No Filter</item>
+        <item>Happy</item>
+        <item>Sad</item>
+        <item>Excited</item>
+        <item>Angry</item>
+        <item>Bored</item>
+        <item>Tired</item>
+        <item>Scared</item>
+        <item>Surprised</item>
+    </string-array>
+
     <string-array name="social_situation">
         <item>Choose a social situation:</item>
         <item>Alone</item>
@@ -40,6 +55,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_search">Search</string>
     <string name="menu_following">Following</string>
+    <string name="menu_follower">Followers</string>
     <string name="menu_profile">Profile</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
@@ -50,4 +66,9 @@
 
     <!-- following.xml -->
     <string name="following">Following</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_mood_locations">Map</string>
+
 </resources>
