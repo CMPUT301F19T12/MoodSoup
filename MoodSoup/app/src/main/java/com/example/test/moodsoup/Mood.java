@@ -89,5 +89,11 @@ public class Mood{
         this.location = location;
     }
 
+    public GeoPoint getCoords() {
+        return coords;
+    }
 
+    public void setCoords(GeoPoint coords) {
+        this.coords = coords;
+    }
 }

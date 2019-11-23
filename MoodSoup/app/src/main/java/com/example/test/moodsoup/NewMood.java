@@ -1,17 +1,12 @@
 package com.example.test.moodsoup;
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.IntentSender;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -20,16 +15,15 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,6 +36,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -58,17 +53,15 @@ public class NewMood extends AppCompatActivity{
     private EditText reason;
     private Spinner social;
     private String addressLocation;
-    private GeoPoint geoPoint;
     private TextView locationTextView;
+
     String TAG = "Sample";
     String email;
     String emotionText,reasonText,socialText,locationText;
+    private GeoPoint geoPoint;
 
-    private boolean mLocationPermissionGranted = false;
     private FusedLocationProviderClient mFusedLocationClient;
-    private static final int ERROR_DIALOG_REQUEST = 9001;
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9002;
-    private static final int PERMISSIONS_REQUEST_ENABLE_GPS = 9003;
+    private static final int REQUEST_CHECK_SETTINGS = 9004;
 
 
     @Override
@@ -115,49 +108,62 @@ public class NewMood extends AppCompatActivity{
         locationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                createLocationRequest();
                 mFusedLocationClient.getLastLocation().addOnSuccessListener(NewMood.this, new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
                         if (location != null){
                             geoPoint = new GeoPoint(location.getLatitude(),location.getLongitude());
-                            addressLocation = "" + geoPoint.getLatitude() + " " + geoPoint.getLongitude();
+                            Geocoder geoCoder = new Geocoder(NewMood.this, Locale.getDefault()); //it is Geocoder
+                            String errorMessage = "";
+                            List<Address> addresses = null;
+
+                            try {
+                                addresses = geoCoder.getFromLocation(
+                                        location.getLatitude(),
+                                        location.getLongitude(),
+                                        // In this sample, get just a single address.
+                                        1);
+                            } catch (IOException ioException) {
+                                // Catch network or other I/O problems.
+                                errorMessage = getString(R.string.service_not_available);
+                                Log.e(TAG, errorMessage, ioException);
+                            } catch (IllegalArgumentException illegalArgumentException) {
+                                // Catch invalid latitude or longitude values.
+                                errorMessage = getString(R.string.invalid_lat_long_used);
+                                Log.e(TAG, errorMessage + ". " +
+                                        "Latitude = " + location.getLatitude() +
+                                        ", Longitude = " +
+                                        location.getLongitude(), illegalArgumentException);
+                            }
+
+                            // Handle case where no address was found.
+                            if (addresses == null || addresses.size()  == 0) {
+                                if (errorMessage.isEmpty()) {
+                                    errorMessage = getString(R.string.no_address_found);
+                                    Log.e(TAG, errorMessage);
+                                }
+                            } else {
+                                Address address = addresses.get(0);
+                                ArrayList<String> addressFragments = new ArrayList<String>();
+
+                                // Fetch the address lines using getAddressLine,
+                                // join them, and send them to the thread.
+                                for(int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+                                    addressFragments.add(address.getAddressLine(i));
+                                }
+                                Log.i(TAG, getString(R.string.address_found));
+                                locationTextView.setText( TextUtils.join(System.getProperty("line.separator"),
+                                        addressFragments));
+                            }
+                            //addressLocation = "" + geoPoint.getLatitude() + " " + geoPoint.getLongitude();
+                            //locationTextView.setText(addressLocation);
                         }
                     }
                 });
 
-                locationTextView.setText(addressLocation);
-                /*mLocationPermissionGranted = isMapsEnabled();
-                if (mLocationPermissionGranted){
-                    mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Location> task) {
-                            if(task.isSuccessful()){
-                                Location location = task.getResult();
-                                geoPoint = new GeoPoint(location.getLatitude(),location.getLongitude());
-                                Log.d(TAG,"onComplete: latitude: "+geoPoint.getLatitude());
-                                Log.d(TAG,"onComplete: longitude: "+geoPoint.getLongitude());
 
-                                Geocoder geoCoder = new Geocoder(NewMood.this, Locale.getDefault()); //it is Geocoder
-                                StringBuilder builder = new StringBuilder();
-                                try {
-                                    List<Address> address = geoCoder.getFromLocation(geoPoint.getLatitude(), geoPoint.getLongitude(), 1);
-                                    int maxLines = address.get(0).getMaxAddressLineIndex();
-                                    for (int i=0; i<maxLines; i++) {
-                                        String addressStr = address.get(0).getAddressLine(i);
-                                        builder.append(addressStr);
-                                        builder.append(" ");
-                                    }
 
-                                    addressLocation = builder.toString(); //This is the complete address.
-                                } catch (IOException e) {}
-                                catch (NullPointerException e) {}
-                                locationTextView.setText(addressLocation);
-                            }
-                        }
-                    });
-                }else{
-                    getLocationPermission();
-                }*/
 
             }
         });
@@ -219,8 +225,8 @@ public class NewMood extends AppCompatActivity{
                                 }
                             });
                     Intent intent = new Intent(NewMood.this,MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
-                    finish();
                 }
         });
 
@@ -286,75 +292,41 @@ public class NewMood extends AppCompatActivity{
     }
 
     // GOOGLE MAPS STUFF
-    private boolean checkMapServices(){
-        if(isServicesOK()){
-            if(isMapsEnabled()){
-                return true;
+    protected void createLocationRequest() {
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+        SettingsClient client = LocationServices.getSettingsClient(this);
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                // All location settings are satisfied. The client can initialize
+                // location requests here.
+                // ...
             }
-        }
-        return false;
-    }
+        });
 
-    private void buildAlertMessageNoGps() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("This application requires GPS to work properly, do you want to enable it?")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivityForResult(enableGpsIntent, PERMISSIONS_REQUEST_ENABLE_GPS);
+        task.addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e instanceof ResolvableApiException) {
+                    // Location settings are not satisfied, but this can be fixed
+                    // by showing the user a dialog.
+                    try {
+                        // Show the dialog by calling startResolutionForResult(),
+                        // and check the result in onActivityResult().
+                        ResolvableApiException resolvable = (ResolvableApiException) e;
+                        resolvable.startResolutionForResult(NewMood.this,
+                                REQUEST_CHECK_SETTINGS);
+                    } catch (IntentSender.SendIntentException sendEx) {
+                        // Ignore the error.
                     }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    public boolean isMapsEnabled(){
-        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
-
-        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
-            buildAlertMessageNoGps();
-            return false;
-        }
-        return true;
-    }
-
-    private void getLocationPermission() {
-        /*
-         * Request location permission, so that we can get the location of the
-         * device. The result of the permission request is handled by a callback,
-         * onRequestPermissionsResult.
-         */
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mLocationPermissionGranted = true;
-        } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-        }
-    }
-
-    public boolean isServicesOK(){
-        Log.d(TAG, "isServicesOK: checking google services version");
-
-        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(NewMood.this);
-
-        if(available == ConnectionResult.SUCCESS){
-            //everything is fine and the user can make map requests
-            Log.d(TAG, "isServicesOK: Google Play Services is working");
-            return true;
-        }
-        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
-            //an error occured but we can resolve it
-            Log.d(TAG, "isServicesOK: an error occured but we can fix it");
-            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(NewMood.this, available, ERROR_DIALOG_REQUEST);
-            dialog.show();
-        }else{
-            Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
-        }
-        return false;
+                }
+            }
+        });
     }
 }
 

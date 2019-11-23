@@ -71,4 +71,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_mood_locations">Map</string>
 
+
+    <!-- Error messages -->
+    <string name="service_not_available">Service not available</string>
+    <string name="invalid_lat_long_used">Invalid Latitude Long Used</string>
+    <string name="no_address_found">No Address Found</string>
+    <string name="address_found">Address Found</string>
 </resources>

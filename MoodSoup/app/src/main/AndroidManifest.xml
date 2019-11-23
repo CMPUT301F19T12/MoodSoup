@@ -43,6 +43,9 @@
         <activity android:name=".old_activities.Following" />
         <activity android:name=".old_activities.Profile" />
         <activity android:name=".old_activities.FollowSearch" />
+        <service
+            android:name=".FetchAddressIntentService"
+            android:exported="false"/>
     </application>
 
 </manifest>
