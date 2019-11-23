@@ -59,6 +59,7 @@ public class NewMood extends AppCompatActivity{
     private Spinner social;
     private String addressLocation;
     private GeoPoint geoPoint;
+    private TextView locationTextView;
     String TAG = "Sample";
     String email;
     String emotionText,reasonText,socialText,locationText;
@@ -79,8 +80,9 @@ public class NewMood extends AppCompatActivity{
         emotion = findViewById(R.id.new_mood_emotion);
         reason = findViewById(R.id.new_mood_reason);
         social = findViewById(R.id.new_mood_social);
+        locationTextView = findViewById(R.id.get_location);
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(NewMood.this);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<String> adapter = new ArrayAdapter<>(NewMood.this,
@@ -110,10 +112,21 @@ public class NewMood extends AppCompatActivity{
             }
         });
 
-        findViewById(R.id.get_location).setOnClickListener(new View.OnClickListener() {
+        locationTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mLocationPermissionGranted = isMapsEnabled();
+                mFusedLocationClient.getLastLocation().addOnSuccessListener(NewMood.this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null){
+                            geoPoint = new GeoPoint(location.getLatitude(),location.getLongitude());
+                            addressLocation = "" + geoPoint.getLatitude() + " " + geoPoint.getLongitude();
+                        }
+                    }
+                });
+
+                locationTextView.setText(addressLocation);
+                /*mLocationPermissionGranted = isMapsEnabled();
                 if (mLocationPermissionGranted){
                     mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                         @Override
@@ -123,7 +136,7 @@ public class NewMood extends AppCompatActivity{
                                 geoPoint = new GeoPoint(location.getLatitude(),location.getLongitude());
                                 Log.d(TAG,"onComplete: latitude: "+geoPoint.getLatitude());
                                 Log.d(TAG,"onComplete: longitude: "+geoPoint.getLongitude());
-                                TextView locationText = findViewById(R.id.get_location);
+
                                 Geocoder geoCoder = new Geocoder(NewMood.this, Locale.getDefault()); //it is Geocoder
                                 StringBuilder builder = new StringBuilder();
                                 try {
@@ -138,13 +151,13 @@ public class NewMood extends AppCompatActivity{
                                     addressLocation = builder.toString(); //This is the complete address.
                                 } catch (IOException e) {}
                                 catch (NullPointerException e) {}
-                                locationText.setText(addressLocation);
+                                locationTextView.setText(addressLocation);
                             }
                         }
                     });
                 }else{
                     getLocationPermission();
-                }
+                }*/
 
             }
         });

@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -134,7 +135,7 @@ public class HomeFragment extends Fragment {
                                     document.get("username").toString(), document.get("date").toString(),
                                     document.get("time").toString(), document.get("emotion").toString(),
                                     document.get("reason").toString(), document.get("social").toString(),
-                                    document.get("location").toString());
+                                    document.get("location").toString(), (GeoPoint)document.get("coords"));
                             moodArray.add(mood);
                             Collections.sort(moodArray, new StringDateComparator());
                             moodAdapter = new MoodList(getActivity(), moodArray);
