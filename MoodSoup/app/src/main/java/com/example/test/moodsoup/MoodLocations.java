@@ -43,8 +43,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
+/**
+ * @author Richard Qin
+ * Handles putting markers on a Google Maps View
+ */
 public class MoodLocations extends Fragment implements OnMapReadyCallback {
 
+    // Variable Declaration
     private MapView mMapView;
     private Spinner options;
     private GoogleMap mMap;
@@ -56,6 +61,7 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.activity_mood_locations, container, false);
 
+        // Variable initialization
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -63,6 +69,7 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
         mMapView = root.findViewById(R.id.mapView);
         initGoogleMap(savedInstanceState);
 
+        // Zooms map to location of user, if gps is on
         mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
@@ -79,6 +86,7 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
                     }
                 });
 
+        // Initialize drop down menu
         options = root.findViewById(R.id.map_options_spinner);
         ArrayAdapter<String> mapOptions = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.map_options));
@@ -88,9 +96,12 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
         options.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                // If first option is selected: Own Moods
                 if (i == 0){
+                    // Cleans off all markers from map
                     mMap.clear();
                     if (user != null){
+                        // Gets all moods events in own mood history
                         CollectionReference moodHistoryRef = db.collection("Users").document(user.getEmail()).collection("moodHistory");
                         moodHistoryRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
@@ -102,6 +113,7 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
                                                 document.get("time").toString(),document.get("emotion").toString(),
                                                 document.get("reason").toString(),document.get("social").toString(),
                                                 document.get("location").toString(),(GeoPoint)document.get("coords"));
+                                        // Creates a marker for moods with a gps coordinate
                                         if (mood.getCoords() != null) {
                                             LatLng coordinates = new LatLng(mood.getCoords().getLatitude(), mood.getCoords().getLongitude());
                                             String title = mood.getDate()+" "+mood.getTime()+ ": "+mood.getUsername()+ " was " +mood.getEmotion();
@@ -115,14 +127,19 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
                         });
 
                     }
-                }else if (i == 1){
+                }
+                // If second option is selected: Other's Moods
+                else if (i == 1){
+                    // Cleans up all markers from map view
                     mMap.clear();
                     if (user != null){
+                        // Gets all users that the user is following
                         CollectionReference followerColRef = db.collection("Users").document(user.getEmail()).collection("follower");
                         followerColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
+                                    // Gets all moods of users that are being followed
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         CollectionReference followerMoodColRef = db.collection("Users").document(document.getId()).collection("moodHistory");
                                         followerMoodColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -135,6 +152,7 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
                                                                 document.get("time").toString(), document.get("emotion").toString(),
                                                                 document.get("reason").toString(), document.get("social").toString(),
                                                                 document.get("location").toString(), (GeoPoint)document.get("coords"));
+                                                        // Creates a marker for moods with a gps coordinate
                                                         if (mood.getCoords() != null) {
                                                             LatLng coordinates = new LatLng(mood.getCoords().getLatitude(), mood.getCoords().getLongitude());
                                                             String title = mood.getDate()+" "+mood.getTime()+ ": "+mood.getUsername()+ " was " +mood.getEmotion();
@@ -162,6 +180,7 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
         return root;
     }
 
+    // Various Google Map View related functions
     private void initGoogleMap(Bundle savedInstanceState){
         // *** IMPORTANT ***
         // MapView requires that the Bundle you pass contain _ONLY_ MapView SDK
