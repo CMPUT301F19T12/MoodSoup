@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">MoodSoup</string>
+    <string name="google_maps_api_key">AIzaSyCOcmxlAK-MyCo4tQVk9FMIklihByKilyA</string>
+
     <string name="username">Username</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -15,25 +17,24 @@
         <item>Choose an emotion:</item>
         <item>Happy</item>
         <item>Sad</item>
-        <!-- No emoticons for
         <item>Excited</item>
         <item>Angry</item>
         <item>Bored</item>
         <item>Tired</item>
         <item>Scared</item>
-        <item>Surprised</item>-->
+        <item>Surprised</item>
     </string-array>
 
     <string-array name="emotionFilter">
         <item>No Filter</item>
         <item>Happy</item>
         <item>Sad</item>
-        <!--<item>Excited</item>
+        <item>Excited</item>
         <item>Angry</item>
         <item>Bored</item>
         <item>Tired</item>
         <item>Scared</item>
-        <item>Surprised</item>-->
+        <item>Surprised</item>
     </string-array>
 
     <string-array name="social_situation">
@@ -43,6 +44,13 @@
         <item>With two to several people</item>
         <item>With a crowd</item>
     </string-array>
+
+    <string-array name="map_options">
+        <item>Own Moods</item>
+        <item>Other\'s moods</item>
+    </string-array>
+
+
     <string name="title_activity_main">MoodSoup</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -56,7 +64,7 @@
     <string name="menu_following">Following</string>
     <string name="menu_follower">Followers</string>
     <string name="menu_profile">Profile</string>
-    <string name="menu_share">Share</string>
+    <string name="menu_map">Maps</string>
     <string name="menu_send">Send</string>
 
     <!-- activity_follower.xml -->
@@ -68,5 +76,12 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_mood_locations">Map</string>
 
+
+    <!-- Error messages -->
+    <string name="service_not_available">Service not available</string>
+    <string name="invalid_lat_long_used">Invalid Latitude Long Used</string>
+    <string name="no_address_found">No Address Found</string>
+    <string name="address_found">Address Found</string>
 </resources>

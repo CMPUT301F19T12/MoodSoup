@@ -1,7 +1,12 @@
 package com.example.test.moodsoup;
 
 import android.content.Intent;
+import android.content.IntentSender;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -10,10 +15,15 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -23,8 +33,13 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Handles creating a new mood
@@ -37,10 +52,17 @@ public class NewMood extends AppCompatActivity{
     private Spinner emotion;
     private EditText reason;
     private Spinner social;
-    private EditText location;
+    private String addressLocation;
+    private TextView locationTextView;
+
     String TAG = "Sample";
     String email;
     String emotionText,reasonText,socialText,locationText;
+    private GeoPoint geoPoint;
+
+    private FusedLocationProviderClient mFusedLocationClient;
+    private static final int REQUEST_CHECK_SETTINGS = 9004;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +73,9 @@ public class NewMood extends AppCompatActivity{
         emotion = findViewById(R.id.new_mood_emotion);
         reason = findViewById(R.id.new_mood_reason);
         social = findViewById(R.id.new_mood_social);
-        location = findViewById(R.id.new_mood_location);
+        locationTextView = findViewById(R.id.get_location);
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<String> adapter = new ArrayAdapter<>(NewMood.this,
@@ -81,6 +105,69 @@ public class NewMood extends AppCompatActivity{
             }
         });
 
+        locationTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createLocationRequest();
+                mFusedLocationClient.getLastLocation().addOnSuccessListener(NewMood.this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null){
+                            geoPoint = new GeoPoint(location.getLatitude(),location.getLongitude());
+                            Geocoder geoCoder = new Geocoder(NewMood.this, Locale.getDefault()); //it is Geocoder
+                            String errorMessage = "";
+                            List<Address> addresses = null;
+
+                            try {
+                                addresses = geoCoder.getFromLocation(
+                                        location.getLatitude(),
+                                        location.getLongitude(),
+                                        // In this sample, get just a single address.
+                                        1);
+                            } catch (IOException ioException) {
+                                // Catch network or other I/O problems.
+                                errorMessage = getString(R.string.service_not_available);
+                                Log.e(TAG, errorMessage, ioException);
+                            } catch (IllegalArgumentException illegalArgumentException) {
+                                // Catch invalid latitude or longitude values.
+                                errorMessage = getString(R.string.invalid_lat_long_used);
+                                Log.e(TAG, errorMessage + ". " +
+                                        "Latitude = " + location.getLatitude() +
+                                        ", Longitude = " +
+                                        location.getLongitude(), illegalArgumentException);
+                            }
+
+                            // Handle case where no address was found.
+                            if (addresses == null || addresses.size()  == 0) {
+                                if (errorMessage.isEmpty()) {
+                                    errorMessage = getString(R.string.no_address_found);
+                                    Log.e(TAG, errorMessage);
+                                }
+                            } else {
+                                Address address = addresses.get(0);
+                                ArrayList<String> addressFragments = new ArrayList<String>();
+
+                                // Fetch the address lines using getAddressLine,
+                                // join them, and send them to the thread.
+                                for(int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+                                    addressFragments.add(address.getAddressLine(i));
+                                }
+                                Log.i(TAG, getString(R.string.address_found));
+                                addressLocation = addresses.get(0).getLocality()+", "+addresses.get(0).getAdminArea()+", "+addresses.get(0).getCountryName();
+                                //addressLocation = TextUtils.join(System.getProperty("line.separator"),addressFragments);
+                                locationTextView.setText(addressLocation);
+                            }
+
+                        }
+                    }
+                });
+
+
+
+
+            }
+        });
+
         ImageButton post = findViewById(R.id.post);
         post.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +175,9 @@ public class NewMood extends AppCompatActivity{
                 emotionText = emotion.getSelectedItem().toString();
                 reasonText = reason.getText().toString();
                 socialText = social.getSelectedItem().toString();
-                locationText = location.getText().toString();
+                if (addressLocation==null){
+                    addressLocation = "";
+                }
                 findViewById(R.id.new_mood_error_emotion).setVisibility(View.INVISIBLE);
                 if (socialText.equals("Choose a social situation:")) {
                     socialText = "";
@@ -118,7 +207,7 @@ public class NewMood extends AppCompatActivity{
                 }
             }
             public void createNewMood(String userName){
-                Mood mood = new Mood(email,userName,currentDate, currentTime,emotionText,reasonText,socialText,locationText);
+                Mood mood = new Mood(email,userName,currentDate, currentTime,emotionText,reasonText,socialText,addressLocation,geoPoint);
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 CollectionReference collectionReference = db.collection("Users");
                 collectionReference
@@ -139,8 +228,8 @@ public class NewMood extends AppCompatActivity{
                                 }
                             });
                     Intent intent = new Intent(NewMood.this,MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
-                    finish();
                 }
         });
 
@@ -204,4 +293,43 @@ public class NewMood extends AppCompatActivity{
     public void onBackPressed() {
         finish();
     }
+
+    // GOOGLE MAPS STUFF
+    protected void createLocationRequest() {
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+        SettingsClient client = LocationServices.getSettingsClient(this);
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                // All location settings are satisfied. The client can initialize
+                // location requests here.
+                // ...
+            }
+        });
+
+        task.addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e instanceof ResolvableApiException) {
+                    // Location settings are not satisfied, but this can be fixed
+                    // by showing the user a dialog.
+                    try {
+                        // Show the dialog by calling startResolutionForResult(),
+                        // and check the result in onActivityResult().
+                        ResolvableApiException resolvable = (ResolvableApiException) e;
+                        resolvable.startResolutionForResult(NewMood.this,
+                                REQUEST_CHECK_SETTINGS);
+                    } catch (IntentSender.SendIntentException sendEx) {
+                        // Ignore the error.
+                    }
+                }
+            }
+        });
+    }
 }
+

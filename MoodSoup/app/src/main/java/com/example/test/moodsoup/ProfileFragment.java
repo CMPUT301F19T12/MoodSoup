@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -123,7 +124,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult())
                     {
-                        Mood mood = new Mood(document.get("email").toString(),document.get("username").toString(),document.get("date").toString(),document.get("time").toString(),document.get("emotion").toString(),document.get("reason").toString(),document.get("social").toString(),document.get("location").toString());
+                        Mood mood = new Mood(document.get("email").toString(),document.get("username").toString(),document.get("date").toString(),document.get("time").toString(),document.get("emotion").toString(),document.get("reason").toString(),document.get("social").toString(),document.get("location").toString(),(GeoPoint)document.get("coords"));
                         event_list.add(mood);
                     }
 

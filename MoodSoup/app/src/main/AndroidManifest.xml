@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.test.moodsoup">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
@@ -11,7 +13,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FollowerFragment"></activity>
+        <activity android:name=".MoodLocations"></activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity android:name=".FollowerFragment" />
         <activity android:name=".RequestContext" />
         <activity android:name=".PendingContext" />
         <activity android:name=".FollowerContext" />
@@ -32,6 +43,9 @@
         <activity android:name=".old_activities.Following" />
         <activity android:name=".old_activities.Profile" />
         <activity android:name=".old_activities.FollowSearch" />
+        <service
+            android:name=".FetchAddressIntentService"
+            android:exported="false"/>
     </application>
 
 </manifest>

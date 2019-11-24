@@ -1,5 +1,7 @@
 package com.example.test.moodsoup;
 
+import com.google.firebase.firestore.GeoPoint;
+
 public class Mood{
     private String email;
     private String username;
@@ -9,8 +11,9 @@ public class Mood{
     private String reason;
     private String social;
     private String location;
+    private GeoPoint coords;
 
-    public Mood(String email, String username, String date, String time, String emotion, String reason, String social, String location) {
+    public Mood(String email, String username, String date, String time, String emotion, String reason, String social, String location, GeoPoint coords) {
         this.email = email;
         this.username = username;
         this.emotion = emotion;
@@ -19,6 +22,7 @@ public class Mood{
         this.reason = reason;
         this.social = social;
         this.location = location;
+        this.coords = coords;
     }
 
     public String getUsername() {
@@ -43,14 +47,6 @@ public class Mood{
 
     public void setSocial(String social) {
         this.social = social;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public String getEmotion() {
@@ -85,4 +81,19 @@ public class Mood{
         this.reason = reason;
     }
 
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public GeoPoint getCoords() {
+        return coords;
+    }
+
+    public void setCoords(GeoPoint coords) {
+        this.coords = coords;
+    }
 }
