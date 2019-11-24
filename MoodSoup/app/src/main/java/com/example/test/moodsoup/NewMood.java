@@ -156,8 +156,7 @@ public class NewMood extends AppCompatActivity{
                                 locationTextView.setText( TextUtils.join(System.getProperty("line.separator"),
                                         addressFragments));
                             }
-                            //addressLocation = "" + geoPoint.getLatitude() + " " + geoPoint.getLongitude();
-                            //locationTextView.setText(addressLocation);
+
                         }
                     }
                 });
