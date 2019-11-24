@@ -102,7 +102,7 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
-        mFusedLocationClient.getLastLocation().addOnSuccessListener(NewMood.this, new OnSuccessListener<Location>() {
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
                 if (location != null){
@@ -116,8 +116,7 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
         map.setMyLocationEnabled(true);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(curLoc, 13));
         map.addMarker(new MarkerOptions()
-                .title("Augsburg Zoo")
-                .snippet("Der coolste Zoo der Welt")
+                .title("Current Location")
                 .position(curLoc));
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
