@@ -153,8 +153,9 @@ public class NewMood extends AppCompatActivity{
                                     addressFragments.add(address.getAddressLine(i));
                                 }
                                 Log.i(TAG, getString(R.string.address_found));
-                                locationTextView.setText( TextUtils.join(System.getProperty("line.separator"),
-                                        addressFragments));
+                                addressLocation = TextUtils.join(System.getProperty("line.separator"),
+                                        addressFragments);
+                                locationTextView.setText(addressLocation);
                             }
 
                         }
@@ -174,6 +175,9 @@ public class NewMood extends AppCompatActivity{
                 emotionText = emotion.getSelectedItem().toString();
                 reasonText = reason.getText().toString();
                 socialText = social.getSelectedItem().toString();
+                if (addressLocation==null){
+                    addressLocation = "";
+                }
                 findViewById(R.id.new_mood_error_emotion).setVisibility(View.INVISIBLE);
                 if (socialText.equals("Choose a social situation:")) {
                     socialText = "";

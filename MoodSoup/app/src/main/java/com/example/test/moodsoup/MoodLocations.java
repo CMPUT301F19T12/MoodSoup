@@ -17,6 +17,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -26,10 +29,19 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,20 +49,88 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import static androidx.constraintlayout.widget.Constraints.TAG;
+
 public class MoodLocations extends Fragment implements OnMapReadyCallback {
 
     private MapView mMapView;
+    private Spinner options;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
-    private LatLng curLoc;
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+    private ArrayList<Mood> moods;
+    private FirebaseFirestore db;
+    private FirebaseUser user;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.activity_mood_locations, container, false);
 
+        db = FirebaseFirestore.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        moods = new ArrayList<>();
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         mMapView = root.findViewById(R.id.mapView);
         initGoogleMap(savedInstanceState);
+
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            LatLng curPos = new LatLng(location.getLatitude(),location.getLongitude());
+                            CameraPosition cameraPosition = new CameraPosition.Builder()
+                                    .target(curPos)
+                                    .zoom(17)
+                                    .bearing(0)
+                                    .tilt(0)
+                                    .build();
+                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                        }
+                    }
+                });
+
+        options = root.findViewById(R.id.map_options_spinner);
+        ArrayAdapter<String> mapOptions = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.map_options));
+        mapOptions.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        options.setAdapter(mapOptions);
+
+        options.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i == 0){
+                    mMap.clear();
+                    if (user != null){
+                        CollectionReference moodHistoryRef = db.collection("Users").document(user.getEmail()).collection("moodHistory");
+                        moodHistoryRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Mood mood = new Mood(document.get("email").toString(),document.get("username").toString(),document.get("date").toString(),document.get("time").toString(),document.get("emotion").toString(),document.get("reason").toString(),document.get("social").toString(),document.get("location").toString(),(GeoPoint)document.get("coords"));
+                                        moods.add(mood);
+                                    }
+                                    for (int ii = 0; ii < moods.size(); ii++ ){
+                                        if (moods.get(ii).getCoords() != null) {
+                                            LatLng coordinates = new LatLng(moods.get(ii).getCoords().getLatitude(), moods.get(ii).getCoords().getLongitude());
+                                            String title = moods.get(ii).getDate()+" "+moods.get(ii).getTime()+ ": " +moods.get(ii).getEmotion();
+                                            mMap.addMarker(new MarkerOptions().position(coordinates).title(title));
+                                        }
+                                    }
+                                } else {
+                                    Log.d(TAG, "get failed with ", task.getException());
+                                }
+                            }
+                        });
+
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
 
         return root;
     }
@@ -102,22 +182,6 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
-        mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if (location != null){
-                        curLoc = new LatLng(location.getLatitude(),location.getLongitude());
-                    }
-
-            }
-        });
-        MapsInitializer.initialize(Objects.requireNonNull(getContext()));
-        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        map.setMyLocationEnabled(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(curLoc, 13));
-        map.addMarker(new MarkerOptions()
-                .title("Current Location")
-                .position(curLoc));
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
