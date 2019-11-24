@@ -26,9 +26,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -43,12 +41,6 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class MoodLocations extends Fragment implements OnMapReadyCallback {
@@ -58,7 +50,6 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
-    private ArrayList<Mood> moods;
     private FirebaseFirestore db;
     private FirebaseUser user;
 
@@ -67,7 +58,6 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
 
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
-        moods = new ArrayList<>();
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         mMapView = root.findViewById(R.id.mapView);
@@ -107,13 +97,14 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
-                                        Mood mood = new Mood(document.get("email").toString(),document.get("username").toString(),document.get("date").toString(),document.get("time").toString(),document.get("emotion").toString(),document.get("reason").toString(),document.get("social").toString(),document.get("location").toString(),(GeoPoint)document.get("coords"));
-                                        moods.add(mood);
-                                    }
-                                    for (int ii = 0; ii < moods.size(); ii++ ){
-                                        if (moods.get(ii).getCoords() != null) {
-                                            LatLng coordinates = new LatLng(moods.get(ii).getCoords().getLatitude(), moods.get(ii).getCoords().getLongitude());
-                                            String title = moods.get(ii).getDate()+" "+moods.get(ii).getTime()+ ": " +moods.get(ii).getEmotion();
+                                        Mood mood = new Mood(document.get("email").toString(),
+                                                document.get("username").toString(),document.get("date").toString(),
+                                                document.get("time").toString(),document.get("emotion").toString(),
+                                                document.get("reason").toString(),document.get("social").toString(),
+                                                document.get("location").toString(),(GeoPoint)document.get("coords"));
+                                        if (mood.getCoords() != null) {
+                                            LatLng coordinates = new LatLng(mood.getCoords().getLatitude(), mood.getCoords().getLongitude());
+                                            String title = mood.getDate()+" "+mood.getTime()+ ": "+mood.getUsername()+ " was " +mood.getEmotion();
                                             mMap.addMarker(new MarkerOptions().position(coordinates).title(title));
                                         }
                                     }
@@ -123,6 +114,42 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
                             }
                         });
 
+                    }
+                }else if (i == 1){
+                    mMap.clear();
+                    if (user != null){
+                        CollectionReference followerColRef = db.collection("Users").document(user.getEmail()).collection("follower");
+                        followerColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        CollectionReference followerMoodColRef = db.collection("Users").document(document.getId()).collection("moodHistory");
+                                        followerMoodColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                                        Mood mood = new Mood(document.get("email").toString(),
+                                                                document.get("username").toString(), document.get("date").toString(),
+                                                                document.get("time").toString(), document.get("emotion").toString(),
+                                                                document.get("reason").toString(), document.get("social").toString(),
+                                                                document.get("location").toString(), (GeoPoint)document.get("coords"));
+                                                        if (mood.getCoords() != null) {
+                                                            LatLng coordinates = new LatLng(mood.getCoords().getLatitude(), mood.getCoords().getLongitude());
+                                                            String title = mood.getDate()+" "+mood.getTime()+ ": "+mood.getUsername()+ " was " +mood.getEmotion();
+                                                            mMap.addMarker(new MarkerOptions().position(coordinates).title(title));
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                } else {
+                                    Log.d(TAG, "get failed with ", task.getException());
+                                }
+                            }
+                        });
                     }
                 }
             }
