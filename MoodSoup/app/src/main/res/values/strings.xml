@@ -74,6 +74,9 @@
     <!-- following.xml -->
     <string name="following">Following</string>
 
+    <!-- fragment_follower.xml -->
+    <string name="requested">Requested</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_mood_locations">Map</string>
@@ -84,4 +87,5 @@
     <string name="invalid_lat_long_used">Invalid Latitude Long Used</string>
     <string name="no_address_found">No Address Found</string>
     <string name="address_found">Address Found</string>
+
 </resources>

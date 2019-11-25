@@ -7,6 +7,26 @@
     tools:context=".Following">
 
     <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/addnew_tv"
+        android:layout_width="422dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:paddingStart="175dp"
+        android:text="@string/followers"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="16sp">
+
+    </TextView>
+
+    <View
+        android:id="@+id/empty_space2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#0C000000" />
     <Button
         android:id="@+id/Search"
         android:layout_width="match_parent"
@@ -16,13 +36,13 @@
     <ListView
         android:id="@+id/follower"
         android:layout_width="match_parent"
-        android:layout_height="400dp">
+        android:layout_height="300dp">
 
     </ListView>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="1dp"
         android:background="#c0c0c0" />
 
     <TextView
@@ -30,7 +50,8 @@
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:gravity="bottom"
-        android:text="          Requested" />
+        android:text="@string/requested"
+        android:paddingStart="175dp"/>
 
     <ListView
         android:id="@+id/pending"
