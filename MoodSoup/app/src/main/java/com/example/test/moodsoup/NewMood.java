@@ -153,7 +153,7 @@ public class NewMood extends AppCompatActivity{
                                     addressFragments.add(address.getAddressLine(i));
                                 }
                                 Log.i(TAG, getString(R.string.address_found));
-                                addressLocation = addresses.get(0).getLocality()+", "+addresses.get(0).getAdminArea()+", "+addresses.get(0).getCountryName();
+                                addressLocation = addresses.get(0).getLocality()+", "+addresses.get(0).getAdminArea();//+", "+addresses.get(0).getCountryName();
                                 //addressLocation = TextUtils.join(System.getProperty("line.separator"),addressFragments);
                                 locationTextView.setText(addressLocation);
                             }
