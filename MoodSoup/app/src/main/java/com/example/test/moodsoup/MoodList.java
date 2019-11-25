@@ -1,6 +1,7 @@
 package com.example.test.moodsoup;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,16 @@ public class MoodList extends ArrayAdapter<Mood>{
         social.setText(mood.getSocial());
         location.setText(mood.getLocation());
         name.setText(mood.getEmail());
+
+        name.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent change = new Intent(view.getContext(), ProfileFragment.class);
+                context.startActivity(change);
+
+
+            }
+        });
+
         return view;
     }
 
