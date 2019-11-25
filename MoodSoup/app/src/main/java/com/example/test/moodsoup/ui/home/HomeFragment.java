@@ -57,7 +57,7 @@ public class HomeFragment extends Fragment {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            CollectionReference followerColRef = db.collection("Users").document(user.getEmail()).collection("follower");
+            CollectionReference followerColRef = db.collection("Users").document(user.getEmail()).collection("following");
             followerColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
