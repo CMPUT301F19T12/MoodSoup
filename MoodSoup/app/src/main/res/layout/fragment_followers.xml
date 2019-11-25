@@ -7,18 +7,11 @@
     tools:context=".Following">
 
     <!-- TODO: Update blank fragment layout -->
-    <Button
-        android:id="@+id/Search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Add" />
 
     <ListView
-        android:id="@+id/follower"
+        android:id="@+id/following"
         android:layout_width="match_parent"
-        android:layout_height="400dp">
-
-    </ListView>
+        android:layout_height="400dp" />
 
     <View
         android:layout_width="match_parent"
@@ -28,15 +21,12 @@
     <TextView
         android:id="@+id/requestText"
         android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:gravity="bottom"
-        android:text="          Requested" />
+        android:layout_height="wrap_content"
+        android:text="    Requests" />
 
     <ListView
-        android:id="@+id/pending"
+        android:id="@+id/requests"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </ListView>
+        android:layout_height="200dp" />
 
 </LinearLayout>

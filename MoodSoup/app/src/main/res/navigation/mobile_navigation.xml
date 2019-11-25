@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/nav_follower"
-        android:name="com.example.test.moodsoup.Following"
+        android:name="com.example.test.moodsoup.Followers"
         android:label="@string/menu_following"
         tools:layout="@layout/following" />
     <activity
@@ -32,9 +32,9 @@
         tools:layout="@layout/follow_search" />
     <fragment
         android:id="@+id/nav_following"
-        android:name="com.example.test.moodsoup.Follower"
+        android:name="com.example.test.moodsoup.Following"
         android:label="fragment_following"
-        tools:layout="@layout/fragment_following" />
+        tools:layout="@layout/fragment_followers" />
     <fragment
         android:id="@+id/nav_map"
         android:name="com.example.test.moodsoup.MoodLocations"

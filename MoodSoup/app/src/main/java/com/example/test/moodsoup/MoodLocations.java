@@ -134,7 +134,7 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
                     mMap.clear();
                     if (user != null){
                         // Gets all users that the user is following
-                        CollectionReference followerColRef = db.collection("Users").document(user.getEmail()).collection("follower");
+                        CollectionReference followerColRef = db.collection("Users").document(user.getEmail()).collection("following");
                         followerColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {

@@ -11,7 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.test.moodsoup.Following;
+import com.example.test.moodsoup.Followers;
 import com.example.test.moodsoup.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -94,13 +94,13 @@ public class FollowSearch extends AppCompatActivity {
                                                     }
                                                 });
 
-                                        Intent FollowingIntent = new Intent(getApplicationContext(), Following.class);
+                                        Intent FollowingIntent = new Intent(getApplicationContext(), Followers.class);
                                         startActivity(FollowingIntent);
                                         finish();
                                     } else {
                                         Toast.makeText(getApplicationContext(), "Failed to find user",
                                                 Toast.LENGTH_SHORT).show();
-                                        Intent FollowingIntent = new Intent(getApplicationContext(), Following.class);
+                                        Intent FollowingIntent = new Intent(getApplicationContext(), Followers.class);
                                         startActivity(FollowingIntent);
                                         finish();
                                     }

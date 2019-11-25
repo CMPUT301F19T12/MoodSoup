@@ -26,7 +26,7 @@
         <activity android:name=".RequestContext" />
         <activity android:name=".PendingContext" />
         <activity android:name=".FollowerContext" />
-        <activity android:name=".Follower" />
+        <activity android:name=".Following" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"

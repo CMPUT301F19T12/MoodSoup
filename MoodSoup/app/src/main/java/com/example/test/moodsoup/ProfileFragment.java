@@ -94,7 +94,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
         toFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent FollowingIntent = new Intent(getActivity(), Following.class);
+                Intent FollowingIntent = new Intent(getActivity(), Followers.class);
                 startActivity(FollowingIntent);
             }
         });
