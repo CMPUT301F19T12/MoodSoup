@@ -40,7 +40,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/moodsoup_word" />
+            android:src="@drawable/moodsoup_word"
+            android:paddingRight="15dp"/>
 
     </androidx.appcompat.widget.Toolbar>
 

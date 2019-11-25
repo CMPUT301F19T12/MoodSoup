@@ -16,6 +16,7 @@ import java.util.ArrayList;
 /**
  * @author Sanae Mayer <smayer@ualberta.ca>
  * @author Peter Spiers <pspiers@ualberta.ca>
+ * @author Darian Chen <dchen@ualberta.ca>
  * This class will handle the arrayAdapter of the mainpage/profile
  * where it sets how listview is displayed
  */
@@ -53,8 +54,20 @@ public class MoodList extends ArrayAdapter<Mood>{
         emotion.setText(mood.getEmotion());
         if (mood.getEmotion().toUpperCase().equals("HAPPY")) {
             image.setImageResource(R.drawable.moodsoup_happy);
-        } else {
+        } else if (mood.getEmotion().toUpperCase().equals("SAD")){
             image.setImageResource(R.drawable.moodsoup_sad);
+        } else if (mood.getEmotion().toUpperCase().equals("EXCITED")){
+            image.setImageResource(R.drawable.moodsoup_excited);
+        } else if (mood.getEmotion().toUpperCase().equals("ANGRY")){
+            image.setImageResource(R.drawable.moodsoup_angry);
+        } else if (mood.getEmotion().toUpperCase().equals("BORED")){
+            image.setImageResource(R.drawable.moodsoup_bored);
+        } else if (mood.getEmotion().toUpperCase().equals("TIRED")){
+            image.setImageResource(R.drawable.moodsoup_tired);
+        } else if (mood.getEmotion().toUpperCase().equals("SCARED")){
+            image.setImageResource(R.drawable.moodsoup_scared);
+        } else if (mood.getEmotion().toUpperCase().equals("SURPRISED")) {
+            image.setImageResource(R.drawable.moodsoup_surprised);
         }
 
         reason.setText(mood.getReason());
