@@ -37,6 +37,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.ui.AppBarConfiguration;
 
+import static android.app.Service.START_STICKY;
+
 public class ProfileOther extends Fragment implements PendingContext.SheetListener{
     private ArrayList<String> moods = new ArrayList<String>();
     private ArrayAdapter<String> adapter;
@@ -51,6 +53,7 @@ public class ProfileOther extends Fragment implements PendingContext.SheetListen
     private ListView event;
     private ArrayList<Mood> event_list;
     private ArrayAdapter<Mood> event_listAdapter;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.profile,container,false);
@@ -115,9 +118,15 @@ public class ProfileOther extends Fragment implements PendingContext.SheetListen
         final Context context = getActivity();
         final PendingContext.SheetListener listener = this;
 
-        // Get the moodHistory for the user in profile --> Not finished yet since we are just pulling the dates, will fix later.
+        // Since we are retrieving other user info, we need to get intent information from MoodList activity here
 
-        CollectionReference colRef = db.collection("Users").document(email).collection("moodHistory");
+        Intent i = getActivity().getIntent();
+        String Otheremail = i.getStringExtra("emailOther");
+
+
+
+        // Get the moodHistory for the user in profile --> Not finished yet since we are just pulling the dates, will fix later.
+        CollectionReference colRef = db.collection("Users").document(Otheremail).collection("moodHistory");
         colRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

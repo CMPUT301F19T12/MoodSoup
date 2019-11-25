@@ -69,8 +69,7 @@ public class MoodList extends ArrayAdapter<Mood>{
         name.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent change = new Intent(view.getContext(), ProfileOther.class);
-                change.putExtra("usernameOther",name.toString());
-
+                change.putExtra("emailOther",name.toString());
                 context.startActivity(change);
 
 
