@@ -25,6 +25,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.Calendar;
 import java.util.HashMap;
 
 import androidx.annotation.NonNull;
@@ -39,14 +40,35 @@ class ProfileFragmentTest {
     private FirebaseAuth mAuth;
     String email = "test@test.com";
     String password = "test";
+    String currentDate;
+    String currentTime;
+    String emotionText;
+    String reasonText;
+    String socialText;
+    String locationText;
 
     // Initialize Firebase
     protected void onCreate(Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        currentDate = "2019-08-08";
+        currentTime = "10:30";
         final CollectionReference collectionReference = db.collection("Users");
         mAuth.createUserWithEmailAndPassword(email, password);
         FirebaseUser user = mAuth.getCurrentUser();
+        Mood mood = new Mood(email,currentDate, currentTime,emotionText,reasonText,socialText,locationText);
+
+    };
+
+    @Test
+    void testProfilePosts() {
+        CollectionReference moodRef = db.collection("Users").document(email).collection("moodHistory");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference moodref = ref.child("moodHistory");
+
+        // Create a post and compare it to the post on Firebase
+        // Create a post
 
     }
+
 }
