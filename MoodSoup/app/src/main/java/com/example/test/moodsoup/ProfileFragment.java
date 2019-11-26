@@ -152,10 +152,11 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
             }
         });
 
+
+
         return root;
 
     }
-
     @Override
     public void onButtonClicked(String state, int position) {
         event.setAdapter(event_listAdapter);
