@@ -57,6 +57,10 @@ public class Following extends Fragment implements PendingContext.SheetListener 
                              Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.fragment_following, container, false);
 
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).hideFloatingActionButton(); // hide the FAB
+        }
+
         final Button search = root.findViewById(R.id.Search);
         search.setOnClickListener(new View.OnClickListener() {
             @Override

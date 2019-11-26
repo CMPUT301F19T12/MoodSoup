@@ -52,6 +52,10 @@ public class Followers extends Fragment implements RequestContext.RequestSheetLi
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_followers, container, false);
 
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).hideFloatingActionButton(); // hide the FAB
+        }
+
         requestList = new ArrayList<>();
         followingList = new ArrayList<>();
         request = root.findViewById(R.id.requests);

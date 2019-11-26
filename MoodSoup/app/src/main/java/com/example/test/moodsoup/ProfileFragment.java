@@ -58,6 +58,10 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
         ///Set profile picture
         final ImageButton button = (ImageButton)root.findViewById(R.id.ProfileImage);
 
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).hideFloatingActionButton(); // hide the FAB
+        }
+
         ProfileFragmentArgs profileFragmentArgs = ProfileFragmentArgs.fromBundle(getArguments());
         String emailFromBundle = profileFragmentArgs.getEmail();
         // Set a user profile image (For self only!) -- > Needs testing
