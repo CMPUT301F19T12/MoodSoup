@@ -23,9 +23,9 @@
         android:id="@+id/ProfileName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="14dp"
+        android:layout_marginBottom="16dp"
         android:layout_gravity="center"
-        android:textStyle="bold" />
+        />
 
     <View
         android:id="@+id/empty_space2"
