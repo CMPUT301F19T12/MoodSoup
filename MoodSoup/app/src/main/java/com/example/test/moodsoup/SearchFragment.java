@@ -1,5 +1,6 @@
 package com.example.test.moodsoup;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,11 +9,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -22,10 +27,17 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,9 +61,32 @@ public class SearchFragment extends Fragment {
         final View root = inflater.inflate(R.layout.follow_search, container, false);
         final EditText UserName = (EditText) root.findViewById(R.id.Search_User);
         final Button search = root.findViewById(R.id.search_button);
+        final CheckBox username = root.findViewById(R.id.usernameCheck);
+        final CheckBox email = root.findViewById(R.id.emailCheck);
 
         final String TAG = "Sample";
         final FirebaseFirestore db;
+
+        final ListView emailList = root.findViewById(R.id.search_result);
+        final ArrayList<String> emailArray = new ArrayList<>();
+        username.setChecked(true);
+
+        username.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    email.setChecked(false);
+            }
+        });
+
+        email.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    username.setChecked(false);
+            }
+        });
+
 
         db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -81,6 +116,7 @@ public class SearchFragment extends Fragment {
                         final FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
                             final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
                             DocumentReference pendingRef = db.collection("Users").document(user.getEmail()).collection("pending").document(toSearch);
                             pendingRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
@@ -106,69 +142,58 @@ public class SearchFragment extends Fragment {
                                                                     Toast.makeText(getActivity(), "User already exists in your following",
                                                                             Toast.LENGTH_SHORT).show();
                                                                 } else {
-                                                                    db.collection("Users")
-                                                                            .document(toSearch)
-                                                                            .get()
-                                                                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                                                @Override
-                                                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                                                    if (task.isSuccessful()) {
-                                                                                        if (task.getResult().exists()) {
-                                                                                            Toast.makeText(getActivity(), "User Found",
-                                                                                                    Toast.LENGTH_SHORT).show();
-                                                                                            //Add searched user to my pending
-                                                                                            HashMap<String, String> pendingData = new HashMap<>();
-                                                                                            pendingData.put("pending", toSearch);
-                                                                                            db.collection("Users")
-                                                                                                    .document(user.getEmail())
-                                                                                                    .collection("pending")
-                                                                                                    .document(toSearch)
-                                                                                                    .set(pendingData)
-                                                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                                        @Override
-                                                                                                        public void onSuccess(Void aVoid) {
-                                                                                                            Log.d(TAG, "Data Addition Successful");
-                                                                                                        }
-                                                                                                    })
-                                                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                                                        @Override
-                                                                                                        public void onFailure(@NonNull Exception e) {
-                                                                                                            Log.d(TAG, "Data Addition Failed" + e.toString());
-                                                                                                        }
-                                                                                                    });
-                                                                                            //Add me to searched user's request
-                                                                                            HashMap<String, String> requestData = new HashMap<>();
-                                                                                            requestData.put("request", user.getEmail());
-                                                                                            db.collection("Users")
-                                                                                                    .document(toSearch)
-                                                                                                    .collection("request")
-                                                                                                    .document(user.getEmail())
-                                                                                                    .set(requestData)
-                                                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                                        @Override
-                                                                                                        public void onSuccess(Void aVoid) {
-                                                                                                            Log.d(TAG, "Data Addition Successful");
-                                                                                                        }
-                                                                                                    })
-                                                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                                                        @Override
-                                                                                                        public void onFailure(@NonNull Exception e) {
-                                                                                                            Log.d(TAG, "Data Addition Failed" + e.toString());
-                                                                                                        }
-                                                                                                    });
-                                                                                            Navigation.findNavController(root).navigate(R.id.nav_following);
+                                                                    emailArray.clear();
+                                                                    //Search by username
+                                                                    if (username.isChecked()) {
+                                                                        db.collection("Users").whereEqualTo("username", toSearch).get()
+                                                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                                    @Override
+                                                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                                        if (task.isSuccessful()) {
+                                                                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                                                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                                                                                emailArray.add(document.getId());
+                                                                                            }
+                                                                                            ArrayAdapter<String> emailAdapter = new SearchContext(getContext(), emailArray);
+                                                                                            emailList.setAdapter(emailAdapter);
                                                                                         } else {
-                                                                                            Toast.makeText(getActivity(), "Failed to find user",
-                                                                                                    Toast.LENGTH_SHORT).show();
-                                                                                            Navigation.findNavController(root).navigate(R.id.nav_following);
+                                                                                            Log.d(TAG, "Error getting documents: ", task.getException());
                                                                                         }
-                                                                                    } else {
-                                                                                        Toast.makeText(getActivity(), "Error: " + task.getException().getMessage(),
-                                                                                                Toast.LENGTH_SHORT).show();
-                                                                                        Navigation.findNavController(root).navigate(R.id.nav_following);
+
                                                                                     }
-                                                                                }
-                                                                            });
+                                                                                }).addOnFailureListener(new OnFailureListener() {
+                                                                            @Override
+                                                                            public void onFailure(@NonNull Exception e) {
+                                                                                Log.d(TAG, "no data found");
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                    //Search by email
+                                                                    else if (email.isChecked()) {
+                                                                        db.collection("Users").document(toSearch).get()
+                                                                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                                                    @Override
+                                                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                                        if (task.isSuccessful()) {
+                                                                                            DocumentSnapshot document = task.getResult();
+                                                                                            emailArray.add(document.getId());
+                                                                                            ArrayAdapter<String> emailAdapter = new SearchContext(getContext(), emailArray);
+                                                                                            emailList.setAdapter(emailAdapter);
+                                                                                        } else {
+                                                                                            Log.d(TAG, "Error getting documents: ", task.getException());
+                                                                                        }
+
+                                                                                    }
+                                                                                }).addOnFailureListener(new OnFailureListener() {
+                                                                            @Override
+                                                                            public void onFailure(@NonNull Exception e) {
+                                                                                Log.d(TAG, "no data found");
+                                                                                Toast.makeText(getActivity(), "Failed to find user",
+                                                                                        Toast.LENGTH_SHORT).show();
+                                                                            }
+                                                                        });
+                                                                    }
+
                                                                 }
                                                             }
                                                         }
@@ -182,14 +207,6 @@ public class SearchFragment extends Fragment {
                 }
             }
         });
-/*
-        UserName.setOnClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Navigation.findNavController(root).navigate(SearchFragmentDirections.actionNavSearchToNavProfile().setEmail();
-            }
-        });
- */
         return root;
     }
 }

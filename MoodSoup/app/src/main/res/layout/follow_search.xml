@@ -25,6 +25,34 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/usernameCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Search By Username" />
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent" />
+
+            <CheckBox
+                android:id="@+id/emailCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Search By Email" />
+
+        </LinearLayout>
+
         <Button
             android:id="@+id/search_button"
             android:layout_width="match_parent"
@@ -32,10 +60,10 @@
             android:onClick="Search_button"
             android:text="Search" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/Search_list"
+        <ListView
+            android:id="@+id/search_result"
             android:layout_width="match_parent"
-            android:layout_height="295dp" />
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
