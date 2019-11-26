@@ -104,16 +104,6 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
             emailFromBundle = mAuth.getCurrentUser().getEmail();
         }
 
-        if (emailFromBundle.equals(mAuth.getCurrentUser().getEmail())){
-            if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).showFloatingActionButton(); // hide the FAB
-            }
-        } else {
-            if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).hideFloatingActionButton() hjFloatingActionButton(); // hide the FAB
-            }
-        }
-
         String uid = user.getUid();
         String name = user.getDisplayName();
         final String email = emailFromBundle;
