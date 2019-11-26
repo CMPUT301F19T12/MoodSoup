@@ -76,20 +76,6 @@ public class MoodList extends ArrayAdapter<Mood>{
         location.setText(mood.getLocation());
         name.setText(mood.getEmail());
 
-        // Getting Profile for other users.
-        // New ProfileOther Class
-
-        name.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent change = new Intent(view.getContext(), ProfileOther.class);
-                change.putExtra("emailOther",name.toString());
-                context.startActivity(change);
-
-
-
-            }
-        });
-
         return view;
     }
 
