@@ -7,26 +7,26 @@
     tools:context=".Followers">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/addnew_tv"
-        android:layout_width="422dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:paddingStart="175dp"
-        android:text="@string/following"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        android:textColor="@color/common_google_signin_btn_text_dark_focused"
-        android:textSize="16sp">
-
-    </TextView>
 
     <View
         android:id="@+id/empty_space2"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#0C000000" />
+
+    <TextView
+        android:id="@+id/addnew_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:text="@string/following"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textColor="@color/common_google_signin_btn_text_light_default"
+        android:textSize="14sp"
+        android:layout_gravity="center">
+
+    </TextView>
+
     <Button
         android:id="@+id/Search"
         android:layout_width="match_parent"
@@ -36,22 +36,22 @@
     <ListView
         android:id="@+id/follower"
         android:layout_width="match_parent"
-        android:layout_height="300dp">
+        android:layout_height="350dp">
 
     </ListView>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#c0c0c0" />
+        android:layout_height="0.5dp"
+        android:background="#000000" />
 
     <TextView
         android:id="@+id/requestText"
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="bottom"
         android:text="@string/requested"
-        android:paddingStart="175dp"/>
+        android:layout_gravity="center"/>
 
     <ListView
         android:id="@+id/pending"
