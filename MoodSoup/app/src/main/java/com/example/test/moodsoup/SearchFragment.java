@@ -66,7 +66,6 @@ public class SearchFragment extends Fragment {
 
         final String TAG = "Sample";
         final FirebaseFirestore db;
-
         final ListView emailList = root.findViewById(R.id.search_result);
         final ArrayList<String> emailArray = new ArrayList<>();
         username.setChecked(true);
@@ -87,6 +86,9 @@ public class SearchFragment extends Fragment {
             }
         });
 
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).hideFloatingActionButton(); // hide the FAB
+        }
 
         db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -94,7 +96,7 @@ public class SearchFragment extends Fragment {
         /*
          * These will check for the following:
          *   - Is the field empty
-         *   - Are you trying to add yourslef
+         *   - Are you trying to add yourself
          *   - Are you already following a user
          * */
         search.setOnClickListener(new View.OnClickListener() {
