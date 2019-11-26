@@ -112,7 +112,7 @@ public class NewMood extends AppCompatActivity{
         // Get current date and time
         Calendar calendar = Calendar.getInstance();
         final String currentDate = getDateString(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
-        final String currentTime = getTimeString(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+        final String currentTime = getTimeString(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
         final String uploadTime = currentDate+ ' ' + currentTime; // Stored as YYYY-MM-DD HH:MM
         date.setText(uploadTime);
 
@@ -172,7 +172,7 @@ public class NewMood extends AppCompatActivity{
                                     addressFragments.add(address.getAddressLine(i));
                                 }
                                 Log.i(TAG, getString(R.string.address_found));
-                                addressLocation = addresses.get(0).getLocality()+", "+addresses.get(0).getAdminArea()+", "+addresses.get(0).getCountryName();
+                                addressLocation = addresses.get(0).getLocality()+", "+addresses.get(0).getAdminArea();//+", "+addresses.get(0).getCountryName();
                                 //addressLocation = TextUtils.join(System.getProperty("line.separator"),addressFragments);
                                 locationTextView.setText(addressLocation);
                             }
@@ -407,7 +407,7 @@ public class NewMood extends AppCompatActivity{
      * @return
      * Returns a string with time format hh:mm
      */
-    public String getTimeString( int hourOfDay, int minute) {
+    public String getTimeString( int hourOfDay, int minute, int second) {
         String temptime;
         String hour;
         if (hourOfDay<10){
@@ -421,6 +421,12 @@ public class NewMood extends AppCompatActivity{
         }
         else {
             temptime = hour + ":" + minute;
+        }
+        if (second<10){
+            temptime = temptime + ":0" + second;
+        }
+        else{
+            temptime = temptime + ":" + second;
         }
         return temptime;
     }

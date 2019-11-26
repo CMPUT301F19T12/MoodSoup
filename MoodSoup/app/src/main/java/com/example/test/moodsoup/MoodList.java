@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,17 +32,25 @@ import java.util.ArrayList;
 /**
  * @author Sanae Mayer <smayer@ualberta.ca>
  * @author Peter Spiers <pspiers@ualberta.ca>
+ * @author Darian Chen <dchen@ualberta.ca>
+ * @author Belton He <jinzhou@ulaberta.ca>
+ * @author Atilla Ackbay
  * This class will handle the arrayAdapter of the mainpage/profile
  * where it sets how listview is displayed
  */
-public class MoodList extends ArrayAdapter<Mood>{
+public class MoodList extends ArrayAdapter<Mood> {
     private ArrayList<Mood> moods;
     private Context context;
+    private SheetListener Elistener;
 
     public MoodList(@NonNull Context context, ArrayList<Mood> moods) {
         super(context, 0, moods);
         this.moods = moods;
         this.context = context;
+    }
+
+    public interface SheetListener {
+        void onButtonClicked(String state, final int position);
     }
 
     @NonNull
@@ -67,8 +77,20 @@ public class MoodList extends ArrayAdapter<Mood>{
         emotion.setText(mood.getEmotion());
         if (mood.getEmotion().toUpperCase().equals("HAPPY")) {
             image.setImageResource(R.drawable.moodsoup_happy);
-        } else {
+        } else if (mood.getEmotion().toUpperCase().equals("SAD")){
             image.setImageResource(R.drawable.moodsoup_sad);
+        } else if (mood.getEmotion().toUpperCase().equals("EXCITED")){
+            image.setImageResource(R.drawable.moodsoup_excited);
+        } else if (mood.getEmotion().toUpperCase().equals("ANGRY")){
+            image.setImageResource(R.drawable.moodsoup_angry);
+        } else if (mood.getEmotion().toUpperCase().equals("BORED")){
+            image.setImageResource(R.drawable.moodsoup_bored);
+        } else if (mood.getEmotion().toUpperCase().equals("TIRED")){
+            image.setImageResource(R.drawable.moodsoup_tired);
+        } else if (mood.getEmotion().toUpperCase().equals("SCARED")){
+            image.setImageResource(R.drawable.moodsoup_scared);
+        } else if (mood.getEmotion().toUpperCase().equals("SURPRISED")) {
+            image.setImageResource(R.drawable.moodsoup_surprised);
         }
 
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
@@ -109,9 +131,7 @@ public class MoodList extends ArrayAdapter<Mood>{
 
         name.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent change = new Intent(view.getContext(), ProfileOther.class);
-                change.putExtra("usernameOther",name.toString());
-                //context.startActivity(change);
+                Navigation.findNavController(view).navigate(R.id.nav_profileOthers);
             }
         });
 

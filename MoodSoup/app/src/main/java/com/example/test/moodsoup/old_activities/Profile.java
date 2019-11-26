@@ -23,7 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.ui.AppBarConfiguration;
 
-import com.example.test.moodsoup.Following;
+import com.example.test.moodsoup.Followers;
 import com.example.test.moodsoup.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -127,7 +127,7 @@ public class Profile extends AppCompatActivity  implements PendingContext.SheetL
         toFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent FollowingIntent = new Intent(getApplicationContext(), Following.class);
+                Intent FollowingIntent = new Intent(getApplicationContext(), Followers.class);
                 startActivity(FollowingIntent);
             }
         });

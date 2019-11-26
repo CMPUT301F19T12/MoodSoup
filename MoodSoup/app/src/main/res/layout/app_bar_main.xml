@@ -32,14 +32,14 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="90dp"
         app:popupTheme="@style/AppTheme.PopupOverlay">
 
         <ImageView
             android:id="@+id/tv_header_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:paddingRight="30dp"
             android:src="@drawable/moodsoup_word" />
 
     </androidx.appcompat.widget.Toolbar>
