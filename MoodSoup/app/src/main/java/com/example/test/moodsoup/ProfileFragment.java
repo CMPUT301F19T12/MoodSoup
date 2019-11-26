@@ -58,7 +58,8 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
         ///Set profile picture
         final ImageButton button = (ImageButton)root.findViewById(R.id.ProfileImage);
 
-
+        ProfileFragmentArgs profileFragmentArgs = ProfileFragmentArgs.fromBundle(getArguments());
+        String emailFromBundle = profileFragmentArgs.getEmail();
         // Set a user profile image (For self only!) -- > Needs testing
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -99,9 +100,13 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
             }
         });
 
+        if (emailFromBundle.equals("No Email")){
+            emailFromBundle = mAuth.getCurrentUser().getEmail();
+        }
+
         String uid = user.getUid();
         String name = user.getDisplayName();
-        final String email = user.getEmail();
+        final String email = emailFromBundle;
 
 
         // Set user name on profile layout display view

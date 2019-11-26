@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -109,6 +110,13 @@ public class Following extends Fragment implements PendingContext.SheetListener 
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
                 }
+            }
+        });
+
+        follower.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Navigation.findNavController(root).navigate(FollowingDirections.actionNavFollowingToNavProfile().setEmail(followerList.get(i)));
             }
         });
 

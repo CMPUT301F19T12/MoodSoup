@@ -9,12 +9,20 @@
         android:id="@+id/nav_home"
         android:name="com.example.test.moodsoup.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_nav_profile"
+            app:destination="@id/nav_profile" />
+    </fragment>
     <fragment
         android:id="@+id/nav_follower"
         android:name="com.example.test.moodsoup.Followers"
         android:label="@string/menu_following"
-        tools:layout="@layout/following" />
+        tools:layout="@layout/following" >
+        <action
+            android:id="@+id/action_nav_follower_to_nav_profile"
+            app:destination="@id/nav_profile" />
+    </fragment>
     <activity
         android:id="@+id/nav_logout"
         android:name="com.example.test.moodsoup.Login"
@@ -24,17 +32,30 @@
         android:id="@+id/nav_profile"
         android:name="com.example.test.moodsoup.ProfileFragment"
         android:label="profile"
-        tools:layout="@layout/profile" />
+        tools:layout="@layout/profile" >
+        <argument
+            android:name="email"
+            app:argType="string"
+            android:defaultValue="No Email" />
+    </fragment>
     <fragment
         android:id="@+id/nav_search"
         android:name="com.example.test.moodsoup.SearchFragment"
         android:label="follow_search"
-        tools:layout="@layout/follow_search" />
+        tools:layout="@layout/follow_search" >
+        <action
+            android:id="@+id/action_nav_search_to_nav_profile"
+            app:destination="@id/nav_profile" />
+    </fragment>
     <fragment
         android:id="@+id/nav_following"
         android:name="com.example.test.moodsoup.Following"
         android:label="fragment_following"
-        tools:layout="@layout/fragment_followers" />
+        tools:layout="@layout/fragment_followers" >
+        <action
+            android:id="@+id/action_nav_following_to_nav_profile"
+            app:destination="@id/nav_profile" />
+    </fragment>
     <fragment
         android:id="@+id/nav_map"
         android:name="com.example.test.moodsoup.MoodLocations"
