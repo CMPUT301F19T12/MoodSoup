@@ -184,9 +184,14 @@ public class Following extends Fragment implements PendingContext.SheetListener 
                 follower.setAdapter(followerAdapter);
                 followerList.remove(info.position);
                 return true;
+            case R.id.move_to_profile:
+                info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                email = followerList.get(info.position);
+                Navigation.findNavController(getView()).navigate(FollowingDirections.actionNavFollowingToNavProfile().setEmail(email));
             default:
                 return super.onContextItemSelected(item);
         }
+
     }
 
     /**
