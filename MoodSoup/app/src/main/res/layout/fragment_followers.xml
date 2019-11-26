@@ -8,6 +8,25 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+    <View
+        android:id="@+id/empty_space2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#0C000000" />
+
+    <TextView
+        android:id="@+id/addnew_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/followers"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textColor="@color/common_google_signin_btn_text_light_default"
+        android:textSize="14sp"
+        android:layout_marginBottom="2dp"
+        android:layout_gravity="center">
+
+    </TextView>
+
     <ListView
         android:id="@+id/following"
         android:layout_width="match_parent"
@@ -15,18 +34,18 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#c0c0c0" />
+        android:layout_height="0.5dp"
+        android:background="#000000" />
 
     <TextView
         android:id="@+id/requestText"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="    Requests" />
-
+        android:text="@string/requests"
+        android:layout_gravity="center"/>
     <ListView
         android:id="@+id/requests"
         android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>
