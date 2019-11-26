@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -50,7 +51,7 @@ public class Followers extends Fragment implements RequestContext.RequestSheetLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_followers, container, false);
+        final View root = inflater.inflate(R.layout.fragment_followers, container, false);
 
         requestList = new ArrayList<>();
         followingList = new ArrayList<>();
@@ -101,8 +102,12 @@ public class Followers extends Fragment implements RequestContext.RequestSheetLi
                 }
             }
         });
-
-
+        following.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Navigation.findNavController(root).navigate(FollowersDirections.actionNavFollowerToNavProfile().setEmail(followingList.get(i)));
+            }
+        });
 
         return root;
     }

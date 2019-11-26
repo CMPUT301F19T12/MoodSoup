@@ -33,24 +33,17 @@ import java.util.ArrayList;
  * @author Sanae Mayer <smayer@ualberta.ca>
  * @author Peter Spiers <pspiers@ualberta.ca>
  * @author Darian Chen <dchen@ualberta.ca>
- * @author Belton He <jinzhou@ulaberta.ca>
- * @author Atilla Ackbay
  * This class will handle the arrayAdapter of the mainpage/profile
  * where it sets how listview is displayed
  */
 public class MoodList extends ArrayAdapter<Mood> {
     private ArrayList<Mood> moods;
     private Context context;
-    private SheetListener Elistener;
 
     public MoodList(@NonNull Context context, ArrayList<Mood> moods) {
         super(context, 0, moods);
         this.moods = moods;
         this.context = context;
-    }
-
-    public interface SheetListener {
-        void onButtonClicked(String state, final int position);
     }
 
     @NonNull
@@ -125,15 +118,6 @@ public class MoodList extends ArrayAdapter<Mood> {
         social.setText(mood.getSocial());
         location.setText(mood.getLocation());
         name.setText(mood.getEmail());
-
-        // Getting Profile for other users.
-        // New ProfileOther Class
-
-        name.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.nav_profileOthers);
-            }
-        });
 
         return view;
     }

@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -181,6 +182,14 @@ public class SearchFragment extends Fragment {
                 }
             }
         });
+/*
+        UserName.setOnClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Navigation.findNavController(root).navigate(SearchFragmentDirections.actionNavSearchToNavProfile().setEmail();
+            }
+        });
+ */
         return root;
     }
 }
