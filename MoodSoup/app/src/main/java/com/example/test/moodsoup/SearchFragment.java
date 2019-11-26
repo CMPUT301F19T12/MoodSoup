@@ -69,7 +69,6 @@ public class SearchFragment extends Fragment {
 
         final ListView emailList = root.findViewById(R.id.search_result);
         final ArrayList<String> emailArray = new ArrayList<>();
-        ArrayAdapter<String> emailAdapter;
         username.setChecked(true);
 
         username.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -101,7 +100,6 @@ public class SearchFragment extends Fragment {
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                emailArray.clear();
                 final String toSearch = UserName.getText().toString();
                 if (user != null) {
                     //Cannot be empty
@@ -118,7 +116,6 @@ public class SearchFragment extends Fragment {
                         final FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
                             final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
 
                             DocumentReference pendingRef = db.collection("Users").document(user.getEmail()).collection("pending").document(toSearch);
                             pendingRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -145,6 +142,7 @@ public class SearchFragment extends Fragment {
                                                                     Toast.makeText(getActivity(), "User already exists in your following",
                                                                             Toast.LENGTH_SHORT).show();
                                                                 } else {
+                                                                    emailArray.clear();
                                                                     //Search by username
                                                                     if (username.isChecked()) {
                                                                         db.collection("Users").whereEqualTo("username", toSearch).get()
@@ -156,9 +154,12 @@ public class SearchFragment extends Fragment {
                                                                                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                                                                                 emailArray.add(document.getId());
                                                                                             }
+                                                                                            ArrayAdapter<String> emailAdapter = new SearchContext(getContext(), emailArray);
+                                                                                            emailList.setAdapter(emailAdapter);
                                                                                         } else {
                                                                                             Log.d(TAG, "Error getting documents: ", task.getException());
                                                                                         }
+
                                                                                     }
                                                                                 }).addOnFailureListener(new OnFailureListener() {
                                                                             @Override
@@ -176,10 +177,12 @@ public class SearchFragment extends Fragment {
                                                                                         if (task.isSuccessful()) {
                                                                                             DocumentSnapshot document = task.getResult();
                                                                                             emailArray.add(document.getId());
-
+                                                                                            ArrayAdapter<String> emailAdapter = new SearchContext(getContext(), emailArray);
+                                                                                            emailList.setAdapter(emailAdapter);
                                                                                         } else {
                                                                                             Log.d(TAG, "Error getting documents: ", task.getException());
                                                                                         }
+
                                                                                     }
                                                                                 }).addOnFailureListener(new OnFailureListener() {
                                                                             @Override
@@ -190,6 +193,7 @@ public class SearchFragment extends Fragment {
                                                                             }
                                                                         });
                                                                     }
+
                                                                 }
                                                             }
                                                         }
@@ -203,9 +207,6 @@ public class SearchFragment extends Fragment {
                 }
             }
         });
-
-        emailAdapter = new SearchContext(getContext(), emailArray);
-        emailList.setAdapter(emailAdapter);
         return root;
     }
 }
