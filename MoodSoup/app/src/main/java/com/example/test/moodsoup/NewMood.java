@@ -1,10 +1,18 @@
 package com.example.test.moodsoup;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,11 +20,15 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -34,7 +46,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -54,10 +70,12 @@ public class NewMood extends AppCompatActivity{
     private Spinner social;
     private String addressLocation;
     private TextView locationTextView;
+    private ImageButton addPhoto;
 
     String TAG = "Sample";
     String email;
     String emotionText,reasonText,socialText,locationText;
+    int reqCode = -1;
     private GeoPoint geoPoint;
 
     private FusedLocationProviderClient mFusedLocationClient;
@@ -74,6 +92,7 @@ public class NewMood extends AppCompatActivity{
         reason = findViewById(R.id.new_mood_reason);
         social = findViewById(R.id.new_mood_social);
         locationTextView = findViewById(R.id.get_location);
+        addPhoto = findViewById(R.id.add_photo);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -200,6 +219,7 @@ public class NewMood extends AppCompatActivity{
                                 DocumentSnapshot document = task.getResult();
                                 if (document.exists()) {
                                     createNewMood((String) document.getData().get("username"));
+                                    createNewImage();
                                 }
                             }
                         }
@@ -231,9 +251,128 @@ public class NewMood extends AppCompatActivity{
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 }
+
+            public void createNewImage(){
+                if (reqCode != -1) {
+                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    email = mAuth.getCurrentUser().getEmail();
+
+                    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+                    // Create a storage reference from our app
+                    StorageReference storageRef = firebaseStorage.getReference();
+                    // Create a reference to "mountains.jpg"
+                    StorageReference imageRef = storageRef.child(email + "/" +currentDate + " " + currentTime + ".jpg");
+
+                    StorageReference imageReference = storageRef.child("images/" + email + "/" +currentDate + " " + currentTime + ".jpg");
+
+                    // While the file names are the same, the references point to different files
+                    imageRef.getName().equals(imageReference.getName());    // true
+                    imageRef.getPath().equals(imageReference.getPath());    // false
+
+                    Bitmap bm = ((BitmapDrawable) addPhoto.getDrawable()).getBitmap();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bm.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+                    byte[] data = baos.toByteArray();
+
+                    UploadTask uploadTask = imageRef.putBytes(data);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                            // ...
+                        }
+                    });
+                }
+            }
         });
 
+
+        addPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
+
+                if (ContextCompat.checkSelfPermission(NewMood.this , Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
+                    ActivityCompat.requestPermissions(NewMood.this, new String[]{Manifest.permission.CAMERA}, 100);
+                }
+
+                if (ContextCompat.checkSelfPermission(NewMood.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
+                {
+                    ActivityCompat.requestPermissions(NewMood.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
+                }
+
+                if (ContextCompat.checkSelfPermission(NewMood.this , Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED)
+                {}
+                else if (ContextCompat.checkSelfPermission(NewMood.this , Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED)
+                {}
+                else
+                {
+                    selectImage(NewMood.this);
+                }
+            }
+        });
     }
+
+    private void selectImage(Context context) {
+        final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Choose your profile picture");
+
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+
+                if (options[item].equals("Take Photo")) {
+                    Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    reqCode = 0;
+                    startActivityForResult(takePicture, reqCode);
+                    dialog.dismiss();
+
+                } else if (options[item].equals("Choose from Gallery")) {
+                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    reqCode = 1;
+                    startActivityForResult(pickPhoto , reqCode);
+                    dialog.dismiss();
+
+                } else if (options[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        super.onActivityResult(requestCode, resultCode, data);
+        ImageView photo = findViewById(R.id.add_photo);
+        if (requestCode == 0) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                // The user picked a contact.
+                // The Intent's data Uri identifies which contact was selected.
+
+                // Do something with the contact here (bigger example below)
+                Bitmap photoBit = (Bitmap) data.getExtras().get("data");
+                photo.setImageBitmap(photoBit);
+            }
+        }
+        else if (requestCode == 1)
+        {
+            if (resultCode == RESULT_OK) {
+                photo.setImageURI(data.getData());
+            }
+        }
+    }
+
 
     /**
      * formats a date
