@@ -110,7 +110,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
             }
         } else {
             if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).hideFloatingActionButton() hjFloatingActionButton(); // hide the FAB
+                ((MainActivity) getActivity()).hideFloatingActionButton(); // hide the FAB
             }
         }
 
@@ -121,7 +121,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
 
         // Set user name on profile layout display view
         final TextView display_name =  profileName;
-        display_name.setText("User email: "+email);
+        display_name.setText("User Email: "+email);
 
 
         final ListView event = root.findViewById(R.id.event_list_self);

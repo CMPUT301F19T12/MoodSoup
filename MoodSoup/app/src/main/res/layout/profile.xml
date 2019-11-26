@@ -15,14 +15,23 @@
     <ImageButton
         android:id="@+id/imageButton"
         android:layout_width="match_parent"
-        android:layout_height="18dp"
+        android:layout_height="6dp"
         android:visibility="invisible"
         app:srcCompat="@drawable/follow" />
 
     <TextView
         android:id="@+id/ProfileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="center"
+        />
+
+    <View
+        android:id="@+id/empty_space2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="1dp"
+        android:background="#000000" />
 
     <ListView
         android:id="@+id/event_list_self"

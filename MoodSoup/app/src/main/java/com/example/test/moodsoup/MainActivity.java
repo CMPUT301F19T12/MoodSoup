@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         fab = findViewById(R.id.fab);
 
+        showFloatingActionButton(); // Show the FAB
+
         // Floating button in bottom right corner
         // Used to add a new mood
 
