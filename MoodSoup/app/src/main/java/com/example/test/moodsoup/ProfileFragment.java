@@ -58,10 +58,6 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
         ///Set profile picture
         final ImageButton button = (ImageButton)root.findViewById(R.id.ProfileImage);
 
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).hideFloatingActionButton(); // hide the FAB
-        }
-
         ProfileFragmentArgs profileFragmentArgs = ProfileFragmentArgs.fromBundle(getArguments());
         String emailFromBundle = profileFragmentArgs.getEmail();
         // Set a user profile image (For self only!) -- > Needs testing
@@ -106,6 +102,16 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
 
         if (emailFromBundle.equals("No Email")){
             emailFromBundle = mAuth.getCurrentUser().getEmail();
+        }
+
+        if (emailFromBundle.equals(mAuth.getCurrentUser().getEmail())){
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).showFloatingActionButton(); // hide the FAB
+            }
+        } else {
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).hideFloatingActionButton() hjFloatingActionButton(); // hide the FAB
+            }
         }
 
         String uid = user.getUid();
