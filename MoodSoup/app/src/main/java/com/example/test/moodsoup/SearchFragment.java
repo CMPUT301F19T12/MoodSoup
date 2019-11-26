@@ -100,6 +100,7 @@ public class SearchFragment extends Fragment {
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                emailArray.clear();
                 final String toSearch = UserName.getText().toString();
                 if (user != null) {
                     //Cannot be empty
