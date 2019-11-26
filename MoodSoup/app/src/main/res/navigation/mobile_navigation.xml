@@ -26,6 +26,11 @@
         android:label="profile"
         tools:layout="@layout/profile" />
     <fragment
+        android:id="@+id/nav_profileOthers"
+        android:name="com.example.test.moodsoup.ProfileOther"
+        android:label="ProfileOthers"
+        tools:layout="@layout/profile_other" />
+    <fragment
         android:id="@+id/nav_search"
         android:name="com.example.test.moodsoup.SearchFragment"
         android:label="follow_search"
