@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.example.test.moodsoup.ui.home.HomeFragmentDirections;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -106,10 +107,17 @@ public class Followers extends Fragment implements RequestContext.RequestSheetLi
                 }
             }
         });
+
         following.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Navigation.findNavController(root).navigate(FollowersDirections.actionNavFollowerToNavProfile().setEmail(followingList.get(i)));
+            }
+        });
+        request.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Navigation.findNavController(root).navigate(FollowersDirections.actionNavFollowerToNavProfile().setEmail(requestList.get(i)));
             }
         });
 

@@ -23,6 +23,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -51,13 +53,16 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
     private ListView event;
     private ArrayList<Mood> event_list;
     private ArrayAdapter<Mood> event_listAdapter;
+    private boolean isFollowing;
+
+    private String test;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.profile,container,false);
         event = root.findViewById(R.id.event_list_self);
         ///Set profile picture
         final ImageButton button = (ImageButton)root.findViewById(R.id.ProfileImage);
-
+        isFollowing = false;
         ProfileFragmentArgs profileFragmentArgs = ProfileFragmentArgs.fromBundle(getArguments());
         String emailFromBundle = profileFragmentArgs.getEmail();
         // Set a user profile image (For self only!) -- > Needs testing
@@ -121,7 +126,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
 
         // Set user name on profile layout display view
         final TextView display_name =  profileName;
-        display_name.setText(email);
+        display_name.setText("User Email: "+email);
 
 
         final ListView event = root.findViewById(R.id.event_list_self);
@@ -133,24 +138,40 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
         // Get the moodHistory for the user in profile --> Not finished yet since we are just pulling the dates, will fix later.
 
         CollectionReference colRef = db.collection("Users").document(email).collection("moodHistory");
-        colRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        /*CollectionReference followRef = db.collection("Users").document(mAuth.getCurrentUser().getEmail()).collection("following");
+        followRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult())
-                    {
-                        Mood mood = new Mood(document.get("email").toString(),document.get("username").toString(),document.get("date").toString(),document.get("time").toString(),document.get("emotion").toString(),document.get("reason").toString(),document.get("social").toString(),document.get("location").toString(),(GeoPoint)document.get("coords"));
-                        event_list.add(mood);
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (email.equals(document.get("email"))){
+                            isFollowing = true;
+                        }
                     }
-
-                } else {
-                    Log.d(TAG, "FAIL", task.getException());
                 }
-                Collections.sort(event_list,new StringDateComparator());
-                event_listAdapter = new MoodList(context,event_list);
-                moodList.setAdapter(event_listAdapter);
             }
-        });
+        });*/
+
+        isFollowing = true;
+        if (emailFromBundle.equals(mAuth.getCurrentUser().getEmail()) || isFollowing) {
+            colRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Mood mood = new Mood(document.get("email").toString(), document.get("username").toString(), document.get("date").toString(), document.get("time").toString(), document.get("emotion").toString(), document.get("reason").toString(), document.get("social").toString(), document.get("location").toString(), (GeoPoint) document.get("coords"));
+                            event_list.add(mood);
+                        }
+
+                    } else {
+                        Log.d(TAG, "FAIL", task.getException());
+                    }
+                    Collections.sort(event_list, new StringDateComparator());
+                    event_listAdapter = new MoodList(context, event_list);
+                    moodList.setAdapter(event_listAdapter);
+                }
+            });
+        }
 
 
 

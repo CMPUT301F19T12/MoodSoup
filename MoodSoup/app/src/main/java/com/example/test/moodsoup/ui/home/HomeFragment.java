@@ -12,7 +12,9 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
+import com.example.test.moodsoup.FollowingDirections;
 import com.example.test.moodsoup.MainActivity;
 import com.example.test.moodsoup.Mood;
 import com.example.test.moodsoup.MoodList;
@@ -45,7 +47,7 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         //homeViewModel =
         //ViewModelProviders.of(this).get(HomeViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        final View root = inflater.inflate(R.layout.fragment_home, container, false);
 
         //Set adapter for moodList
         db = FirebaseFirestore.getInstance();
@@ -101,6 +103,13 @@ public class HomeFragment extends Fragment {
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).showFloatingActionButton(); // show the FAB
         }
+
+        moodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Navigation.findNavController(root).navigate(HomeFragmentDirections.actionNavHomeToNavProfile().setEmail(moodArray.get(i).getEmail()));
+            }
+        });
 
         return root;
     }
