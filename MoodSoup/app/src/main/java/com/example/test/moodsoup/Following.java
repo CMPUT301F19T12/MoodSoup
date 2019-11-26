@@ -57,6 +57,10 @@ public class Following extends Fragment implements PendingContext.SheetListener 
                              Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.fragment_following, container, false);
 
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).hideFloatingActionButton(); // hide the FAB
+        }
+
         final Button search = root.findViewById(R.id.Search);
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,9 +188,14 @@ public class Following extends Fragment implements PendingContext.SheetListener 
                 follower.setAdapter(followerAdapter);
                 followerList.remove(info.position);
                 return true;
+            case R.id.move_to_profile:
+                info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                email = followerList.get(info.position);
+                Navigation.findNavController(getView()).navigate(FollowingDirections.actionNavFollowingToNavProfile().setEmail(email));
             default:
                 return super.onContextItemSelected(item);
         }
+
     }
 
     /**
