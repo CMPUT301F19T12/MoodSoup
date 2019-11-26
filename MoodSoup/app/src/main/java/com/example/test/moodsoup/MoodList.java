@@ -2,6 +2,10 @@ package com.example.test.moodsoup;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +16,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 /**
@@ -48,7 +61,7 @@ public class MoodList extends ArrayAdapter<Mood>{
         TextView social = view.findViewById(R.id.new_mood_social);
         TextView location = view.findViewById(R.id.new_mood_location);
         ImageView image = view.findViewById(R.id.image);
-
+        final ImageView photo = view.findViewById(R.id.photo);
 
         info.setText(String.format("@%s - %s - %s", mood.getUsername(), mood.getDate(), mood.getTime()));
         emotion.setText(mood.getEmotion());
@@ -57,6 +70,37 @@ public class MoodList extends ArrayAdapter<Mood>{
         } else {
             image.setImageResource(R.drawable.moodsoup_sad);
         }
+
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+        // Create a storage reference from our app
+        StorageReference storageRef = firebaseStorage.getReference();
+        // Create a reference to "mountains.jpg"
+        StorageReference mountainsRef = storageRef.child(mood.getEmail() + "/" + mood.getDate() + " " + mood.getTime() + ".jpg");
+        // Create a reference to 'images/mountains.jpg'
+        StorageReference mountainImagesRef = storageRef.child("images/" + mood.getEmail() + "/" + mood.getDate() + " " + mood.getTime() + ".jpg");
+
+        // While the file names are the same, the references point to different files
+        mountainsRef.getName().equals(mountainImagesRef.getName());    // true
+        mountainsRef.getPath().equals(mountainImagesRef.getPath());    // false
+
+        mountainsRef.getBytes(1024 * 1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                System.out.println("got the image");
+                photo.setVisibility(View.VISIBLE);
+
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+                photo.setImageBitmap(Bitmap.createScaledBitmap(bmp, photo.getWidth(),
+                        photo.getHeight(), false));
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                System.out.println("Did not get the image");
+                photo.setVisibility(View.GONE);
+            }
+        });
 
         reason.setText(mood.getReason());
         social.setText(mood.getSocial());

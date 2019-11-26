@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="bb1a660d-7125-4568-8e54-07149e419bf5" name="Default Changelist" comment="" />
+    <list default="true" id="bb1a660d-7125-4568-8e54-07149e419bf5" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DefaultGradleProjectSettings">
+    <option name="testRunner" value="GRADLE" />
+    <option name="delegatedBuild" value="true" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+    <option name="x" value="-9" />
+    <option name="y" value="-9" />
     <option name="width" value="1440" />
     <option name="height" value="810" />
   </component>
@@ -22,6 +28,23 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope">
+        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
+          <expand>
+            <path>
+              <item name="MoodSoup" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="C:\Users\mayer\Desktop\UofA\CMPUT301\MoodSoup clone\2019-11-24 smayer2\MoodSoup" type="442cc68d:ScopeViewTreeModel$RootNode" />
+            </path>
+            <path>
+              <item name="MoodSoup" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="C:\Users\mayer\Desktop\UofA\CMPUT301\MoodSoup clone\2019-11-24 smayer2\MoodSoup" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="doc" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -33,41 +56,6 @@
               <item name="MoodSoup" type="b2602c69:ProjectViewProjectNode" />
               <item name="MoodSoup" type="462c0819:PsiDirectoryNode" />
               <item name="MoodSoup" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope">
-        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
-          <expand>
-            <path>
-              <item name="MoodSoup" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="C:\Users\PRSpi\Desktop\301 Search\MoodSoup" type="442cc68d:ScopeViewTreeModel$RootNode" />
-            </path>
-            <path>
-              <item name="MoodSoup" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="C:\Users\PRSpi\Desktop\301 Search\MoodSoup" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="MoodSoup" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="MoodSoup" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="C:\Users\PRSpi\Desktop\301 Search\MoodSoup" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="MoodSoup" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name=".idea" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="MoodSoup" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="C:\Users\PRSpi\Desktop\301 Search\MoodSoup" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="MoodSoup" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="app" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="MoodSoup" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="C:\Users\PRSpi\Desktop\301 Search\MoodSoup" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="MoodSoup" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="gradle" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
           </expand>
           <select />
@@ -117,10 +105,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="59" y="-7" width="1229" height="735" extended-state="6" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" sideWeight="0.49945828" visible="true" weight="0.24341412" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" sideWeight="0.49945828" visible="true" weight="0.24328859" />
       <window_info id="Structure" order="2" sideWeight="0.5005417" side_tool="true" weight="0.24341412" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
@@ -128,9 +116,9 @@
       <window_info id="Capture Tool" order="6" />
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="0" weight="0.32936078" />
-      <window_info anchor="bottom" id="TODO" order="1" visible="true" weight="0.32936078" />
+      <window_info anchor="bottom" id="TODO" order="1" visible="true" weight="0.3283582" />
       <window_info anchor="bottom" id="Find" order="2" />
-      <window_info anchor="bottom" id="Terminal" order="3" weight="0.32936078" />
+      <window_info anchor="bottom" id="Terminal" order="3" weight="0.3283582" />
       <window_info anchor="bottom" id="Event Log" order="4" side_tool="true" />
       <window_info anchor="right" id="Capture Analysis" order="0" />
       <window_info anchor="right" id="Theme Preview" order="1" />
