@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.test.moodsoup.MainActivity;
 import com.example.test.moodsoup.Mood;
 import com.example.test.moodsoup.MoodList;
 import com.example.test.moodsoup.R;
@@ -96,6 +97,10 @@ public class HomeFragment extends Fragment {
 
             }
         });
+
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).showFloatingActionButton(); // show the FAB
+        }
 
         return root;
     }

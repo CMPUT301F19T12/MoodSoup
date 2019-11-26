@@ -41,7 +41,6 @@ public class FollowerContext extends ArrayAdapter<String> {
             view = LayoutInflater.from(context).inflate(R.layout.activity_follower_context, parent, false);
         }
         //Enable long click so that it can be removed
-        view.setLongClickable(true);
 
         final String email = emails.get(position);
         final TextView emailView = view.findViewById(R.id.email);

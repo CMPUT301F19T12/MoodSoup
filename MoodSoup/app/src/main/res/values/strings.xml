@@ -87,4 +87,7 @@
     <string name="no_address_found">No Address Found</string>
     <string name="address_found">Address Found</string>
 
+    <!-- profile.xml-->
+    <string name="delete_mood">Delete Mood</string>
+    <string name="edit_mood">Edit Mood</string>
 </resources>
