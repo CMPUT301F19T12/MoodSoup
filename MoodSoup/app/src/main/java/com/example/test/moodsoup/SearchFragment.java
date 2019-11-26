@@ -164,6 +164,7 @@ public class SearchFragment extends Fragment {
                                                                                     } else {
                                                                                         Toast.makeText(getActivity(), "Error: " + task.getException().getMessage(),
                                                                                                 Toast.LENGTH_SHORT).show();
+                                                                                        Navigation.findNavController(root).navigate(R.id.nav_following);
                                                                                     }
                                                                                 }
                                                                             });

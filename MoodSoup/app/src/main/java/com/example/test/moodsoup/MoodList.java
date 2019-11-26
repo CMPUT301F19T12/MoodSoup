@@ -75,29 +75,26 @@ public class MoodList extends ArrayAdapter<Mood>{
         // Create a storage reference from our app
         StorageReference storageRef = firebaseStorage.getReference();
         // Create a reference to "mountains.jpg"
-        StorageReference mountainsRef = storageRef.child(mood.getEmail() + "/" + mood.getDate() + " " + mood.getTime() + ".jpg");
+        StorageReference imageRef = storageRef.child(mood.getEmail() + "/" + mood.getDate() + " " + mood.getTime() + ".jpg");
         // Create a reference to 'images/mountains.jpg'
-        StorageReference mountainImagesRef = storageRef.child("images/" + mood.getEmail() + "/" + mood.getDate() + " " + mood.getTime() + ".jpg");
+        StorageReference imageReference = storageRef.child("images/" + mood.getEmail() + "/" + mood.getDate() + " " + mood.getTime() + ".jpg");
 
         // While the file names are the same, the references point to different files
-        mountainsRef.getName().equals(mountainImagesRef.getName());    // true
-        mountainsRef.getPath().equals(mountainImagesRef.getPath());    // false
+        imageRef.getName().equals(imageReference.getName());    // true
+        imageRef.getPath().equals(imageReference.getPath());    // false
 
-        mountainsRef.getBytes(1024 * 1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        final long ONE_MEGABYTE = 1024 * 1024;
+        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
-                System.out.println("got the image");
                 photo.setVisibility(View.VISIBLE);
-
                 Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-
-                photo.setImageBitmap(Bitmap.createScaledBitmap(bmp, photo.getWidth(),
-                        photo.getHeight(), false));
+                photo.setImageBitmap(Bitmap.createScaledBitmap(bmp, bmp.getWidth(),
+                        bmp.getHeight(), false));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                System.out.println("Did not get the image");
                 photo.setVisibility(View.GONE);
             }
         });
@@ -114,11 +111,7 @@ public class MoodList extends ArrayAdapter<Mood>{
             public void onClick(View view) {
                 Intent change = new Intent(view.getContext(), ProfileOther.class);
                 change.putExtra("usernameOther",name.toString());
-
-                context.startActivity(change);
-
-
-
+                //context.startActivity(change);
             }
         });
 

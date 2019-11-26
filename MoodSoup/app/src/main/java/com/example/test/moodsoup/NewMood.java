@@ -261,21 +261,20 @@ public class NewMood extends AppCompatActivity{
                     // Create a storage reference from our app
                     StorageReference storageRef = firebaseStorage.getReference();
                     // Create a reference to "mountains.jpg"
-                    StorageReference mountainsRef = storageRef.child(email + "/" +currentDate + " " + currentTime + ".jpg");
-                    // Create a reference to 'images/mountains.jpg'
-                    StorageReference mountainImagesRef = storageRef.child("images/" + email + "/" + currentDate + " " + currentTime + ".jpg");
+                    StorageReference imageRef = storageRef.child(email + "/" +currentDate + " " + currentTime + ".jpg");
+
+                    StorageReference imageReference = storageRef.child("images/" + email + "/" +currentDate + " " + currentTime + ".jpg");
 
                     // While the file names are the same, the references point to different files
-                    mountainsRef.getName().equals(mountainImagesRef.getName());    // true
-                    mountainsRef.getPath().equals(mountainImagesRef.getPath());    // false
+                    imageRef.getName().equals(imageReference.getName());    // true
+                    imageRef.getPath().equals(imageReference.getPath());    // false
 
-                    //Uri path = Uri.parse("android.resource://com.example.test.moodsoup/" + R.drawable.)
                     Bitmap bm = ((BitmapDrawable) addPhoto.getDrawable()).getBitmap();
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    bm.compress(Bitmap.CompressFormat.JPEG, 25, baos);
                     byte[] data = baos.toByteArray();
 
-                    UploadTask uploadTask = mountainsRef.putBytes(data);
+                    UploadTask uploadTask = imageRef.putBytes(data);
                     uploadTask.addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
