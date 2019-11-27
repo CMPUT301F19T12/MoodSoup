@@ -1,12 +1,15 @@
 package com.example.test.moodsoup;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +24,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FirebaseFirestore db;
     FloatingActionButton fab;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,13 +59,50 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Floating button in bottom right corner
         // Used to add a new mood
 
-        fab.setOnClickListener(new View.OnClickListener() {
+
+
+        fab.setOnTouchListener(new View.OnTouchListener() {
+
+            float horizontal;
+            float horizontalX;
+            float actualX;
+            int before;
+
             @Override
-            public void onClick(View view) {
-                Intent newMood = new Intent(MainActivity.this, NewMood.class);
-                startActivity(newMood);
+            public boolean onTouch(View view, MotionEvent event) {
+
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN:
+                        horizontal = view.getX() - event.getRawX();
+                        horizontalX = event.getRawX();
+                        before = MotionEvent.ACTION_DOWN;
+                        break;
+
+                    case MotionEvent.ACTION_MOVE:
+                        view.setX(event.getRawX() + horizontal);
+                        view.setY(event.getRawY() + horizontal);
+
+                        before = MotionEvent.ACTION_MOVE;
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        actualX = event.getRawX()-horizontalX;
+                        // If user clicks to add a new mood...
+                        if (Math.abs(actualX)< 8){
+                            Intent newMood = new Intent(MainActivity.this, NewMood.class);
+                            startActivity(newMood);
+                        }
+                        break;
+                    case MotionEvent.ACTION_BUTTON_PRESS:
+
+                    default:
+                        return false;
+                }
+                return true;
             }
         });
+
+
         // Initialize Database information
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
