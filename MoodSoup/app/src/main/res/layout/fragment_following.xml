@@ -8,24 +8,25 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+    <TextView
+        android:id="@+id/addnew_tv"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background=" #f1f1f1 "
+        android:paddingStart="175dp"
+        android:text="@string/following"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        tools:ignore="RtlSymmetry">
+
+    </TextView>
+
     <View
         android:id="@+id/empty_space2"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.8dp"
         android:background="#000000" />
-
-    <TextView
-        android:id="@+id/addnew_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:text="@string/following"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        android:textColor="@color/common_google_signin_btn_text_light_default"
-        android:textSize="14sp"
-        android:layout_gravity="center">
-
-    </TextView>
 
     <Button
         android:id="@+id/Search"
@@ -36,14 +37,10 @@
     <ListView
         android:id="@+id/follower"
         android:layout_width="match_parent"
-        android:layout_height="350dp">
+        android:layout_height="350dp"
+        android:divider="@null">
 
     </ListView>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#000000" />
 
     <TextView
         android:id="@+id/requestText"
@@ -51,12 +48,20 @@
         android:layout_height="wrap_content"
         android:gravity="bottom"
         android:text="@string/requested"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:textSize="16sp"
+        android:layout_marginBottom="10dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background=" #e1e1e1" />
 
     <ListView
         android:id="@+id/pending"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:divider="@null">
 
     </ListView>
 
