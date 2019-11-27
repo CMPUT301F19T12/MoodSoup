@@ -126,7 +126,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
 
         // Set user name on profile layout display view
         final TextView display_name =  profileName;
-        display_name.setText("User Email: "+email);
+        display_name.setText(email);
 
 
         final ListView event = root.findViewById(R.id.event_list_self);

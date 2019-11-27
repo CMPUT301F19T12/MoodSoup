@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_gravity="center"
+        android:textStyle="bold"
         />
 
     <View
