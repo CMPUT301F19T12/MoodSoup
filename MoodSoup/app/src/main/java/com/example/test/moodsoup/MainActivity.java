@@ -2,12 +2,20 @@ package com.example.test.moodsoup;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Outline;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,40 +68,58 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Used to add a new mood
 
 
+        // Get screen Info
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        final float screenHeight = displaymetrics.heightPixels;
+        final float screenWidth = displaymetrics.widthPixels;
 
         fab.setOnTouchListener(new View.OnTouchListener() {
 
             float horizontal;
             float horizontalX;
-            float actualX;
             int before;
+
 
             @Override
             public boolean onTouch(View view, MotionEvent event) {
 
+
+                float newX, newY;
+
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
+
                         horizontal = view.getX() - event.getRawX();
-                        horizontalX = event.getRawX();
+                        horizontalX = view.getY() - event.getRawY();
                         before = MotionEvent.ACTION_DOWN;
                         break;
 
                     case MotionEvent.ACTION_MOVE:
-                        view.setX(event.getRawX() + horizontal);
-                        view.setY(event.getRawY() + horizontal);
+
+                        newX = event.getRawX() + horizontal;
+                        newY = event.getRawY() + horizontalX;
+
+                        // out of screen?
+                        if ((newX <= 0 || newX >= screenWidth-view.getWidth()) || (newY <= 0 || newY >= screenHeight-view.getHeight()))
+                        {
+                            before = MotionEvent.ACTION_MOVE;
+                            break;
+                        }
+
+                        view.setX(newX);
+                        view.setY(newY);
 
                         before = MotionEvent.ACTION_MOVE;
+
                         break;
 
                     case MotionEvent.ACTION_UP:
-                        actualX = event.getRawX()-horizontalX;
-                        // If user clicks to add a new mood...
-                        if (Math.abs(actualX)< 8){
+                        if (before == MotionEvent.ACTION_DOWN) {
                             Intent newMood = new Intent(MainActivity.this, NewMood.class);
                             startActivity(newMood);
                         }
                         break;
-                    case MotionEvent.ACTION_BUTTON_PRESS:
 
                     default:
                         return false;
