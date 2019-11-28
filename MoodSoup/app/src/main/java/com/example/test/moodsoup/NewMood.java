@@ -142,15 +142,18 @@ public class NewMood extends AppCompatActivity{
                 ArrayAdapter emotionAdapter = (ArrayAdapter) emotion.getAdapter();
                 int emotionPosition = emotionAdapter.getPosition(currentEmotion);
                 emotion.setSelection(emotionPosition);
-
-                reason.setText(currentReason);
+                if (!currentReason.equals("")) {
+                    reason.setText(currentReason);
+                }
 
                 ArrayAdapter socialAdapter = (ArrayAdapter) social.getAdapter();
                 int socialPosition = socialAdapter.getPosition(currentSocial);
                 social.setSelection(socialPosition);
 
-                locationTextView.setText(currentLocation);
-
+                if (!currentLocation.equals("")) {
+                    locationTextView.setText(currentLocation);
+                    addressLocation = currentLocation;
+                }
                 FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
                 // Create a storage reference from our app
                 StorageReference storageRef = firebaseStorage.getReference();
@@ -172,6 +175,9 @@ public class NewMood extends AppCompatActivity{
                                 bmp.getHeight(), false));
                     }
                 });
+                if (extras.containsKey("latitude") && extras.containsKey("longitude")) {
+                    geoPoint = new GeoPoint(extras.getDouble("latitude"), extras.getDouble("longitude"));
+                }
             }
         }
         //Create final variables for date/time

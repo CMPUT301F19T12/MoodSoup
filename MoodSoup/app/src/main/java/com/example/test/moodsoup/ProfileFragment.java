@@ -132,7 +132,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
         moodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Navigation.findNavController(root).navigate(ProfileFragmentDirections.actionNavProfileToNavMoodViewFragment(emailFromBundle,event_list.get(i).getDate()+' '+event_list.get(i).getTime()));
+                Navigation.findNavController(root).navigate(ProfileFragmentDirections.actionNavProfileToNavMoodViewFragment(emailFromBundle,event_list.get(i).getDate(),event_list.get(i).getTime()));
             }
         });
 
@@ -231,7 +231,10 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
                 intent.putExtra("reason",editMood.getReason());
                 intent.putExtra("social",editMood.getSocial());
                 intent.putExtra("location",editMood.getLocation());
-                //intent.putExtra("coords",editMood.getCoords().toString());
+                if (event_list.get(info.position).getCoords() != null) {
+                    intent.putExtra("latitude", event_list.get(info.position).getCoords().getLatitude());
+                    intent.putExtra("longitude", event_list.get(info.position).getCoords().getLongitude());
+                }
                 startActivity(intent);
             default:
                 return super.onContextItemSelected(item);
