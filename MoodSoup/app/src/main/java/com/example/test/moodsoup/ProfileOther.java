@@ -47,8 +47,6 @@ public class ProfileOther extends Fragment implements PendingContext.SheetListen
     private String TAG = "ERROR HERE!";
     private ListView moodList;
     private TextView profileName;
-    private ImageButton toFollowing;
-    private ImageButton ProfileImage;
     private static int RESULT_LOAD_IMG = 1;
     private ListView event;
     private ArrayList<Mood> event_list;
@@ -59,41 +57,18 @@ public class ProfileOther extends Fragment implements PendingContext.SheetListen
         final View root = inflater.inflate(R.layout.profile,container,false);
         event = root.findViewById(R.id.event_list_self);
         ///Set profile picture
-        final ImageButton button = (ImageButton)root.findViewById(R.id.ProfileImage);
-
-
-        // Set a user profile image (For self only!) -- > Needs testing
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                button.setSelected(!button.isPressed());
-
-                if (button.isPressed()) {
-
-                    Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                    photoPickerIntent.setType("image/*");
-                    startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
-
-
-                    button.setImageResource(R.drawable.moodsoup_happy);
-                }
-                else {
-                    button.setImageResource(R.drawable.moodsoup_sad);
-                }
-            }
-        });
 
         // View ID
         profileName = root.findViewById(R.id.ProfileName);
         moodList = root.findViewById(R.id.event_list_self);
-        toFollowing = root.findViewById(R.id.imageButton);
 
         // User Instance
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         //User info
+
+        /*
         toFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,6 +76,7 @@ public class ProfileOther extends Fragment implements PendingContext.SheetListen
                 startActivity(FollowingIntent);
             }
         });
+         */
 
         String uid = user.getUid();
         String name = user.getDisplayName();
