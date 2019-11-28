@@ -54,7 +54,6 @@ public class MoodList extends ArrayAdapter<Mood> {
         if (view == null){
             view = LayoutInflater.from(context).inflate(R.layout.context,parent,false);
         }
-
         final Mood mood = moods.get(position);
 
         final TextView name = view.findViewById(R.id.name);

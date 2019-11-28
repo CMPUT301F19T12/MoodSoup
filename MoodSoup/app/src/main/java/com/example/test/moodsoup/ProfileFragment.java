@@ -4,9 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -14,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,6 +33,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -86,6 +94,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
         profileName = root.findViewById(R.id.ProfileName);
         moodList = root.findViewById(R.id.event_list_self);
         toFollowing = root.findViewById(R.id.imageButton);
+        registerForContextMenu(moodList);
 
         // User Instance
 
@@ -148,7 +157,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
 
     @Override
     public void onButtonClicked(String state, int position) {
-        event.setAdapter(event_listAdapter);
+        moodList.setAdapter(event_listAdapter);
         if (state.equals("delete"))
         {
             String uploadTime = event_list.get(position).getDate() +" "+event_list.get(position).getTime();
@@ -156,6 +165,91 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
             event_list.remove(position);
             Toast.makeText(getActivity(),"Mood Deleted",
                     Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * The function will dispaly a context menu if the listView is long-clicked.
+     */
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+    {
+        super.onCreateContextMenu(menu,v,menuInfo);
+        System.out.println("Long clicked");
+        MenuInflater inflater = getActivity().getMenuInflater();
+        if (v.getId() == R.id.event_list_self) {
+            inflater.inflate(R.menu.profile_menu,menu);
+        }
+    }
+
+    /**
+     * The function will handle events when a item in context menu is clicked.
+     * It will handles removing the following from the list and firebase.
+     * */
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()){
+            case R.id.delete:
+                Mood deleteMood = event_list.get(info.position);
+                final String TAG = "Remove Following";
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                final FirebaseUser user = mAuth.getCurrentUser();
+                if (user != null) {
+                    //Delete post from moodHistory
+                    db.collection("Users").document(user.getEmail()).collection("moodHistory").document(deleteMood.getDate() + " " + deleteMood.getTime())
+                            .delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(TAG, "Error deleting document ", e);
+                                }
+                            });
+
+                    //If there is any image, delete the image as well
+                    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+                    // Create a storage reference from our app
+                    StorageReference storageRef = firebaseStorage.getReference();
+                    // Create a reference to "mountains.jpg"
+                    StorageReference imageRef = storageRef.child(deleteMood.getEmail() + "/" + deleteMood.getDate() + ' ' + deleteMood.getTime() + ".jpg");
+                    // Create a reference to 'images/mountains.jpg'
+                    StorageReference imageReference = storageRef.child("images/" + deleteMood.getEmail() + "/" + deleteMood.getDate() + ' ' + deleteMood.getTime() + ".jpg");
+
+                    // While the file names are the same, the references point to different files
+                    imageRef.getName().equals(imageReference.getName());    // true
+                    imageRef.getPath().equals(imageReference.getPath());    // false
+
+                    imageRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                        }
+                    });
+
+                }
+                moodList.setAdapter(event_listAdapter);
+                event_list.remove(info.position);
+                return true;
+            case R.id.edit:
+                Mood editMood = event_list.get(info.position);
+                Intent intent = new Intent(getActivity(), NewMood.class);
+                intent.putExtra("date",editMood.getDate());
+                intent.putExtra("time",editMood.getTime());
+                intent.putExtra("emotion",editMood.getEmotion());
+                intent.putExtra("email",editMood.getEmail());
+                intent.putExtra("reason",editMood.getReason());
+                intent.putExtra("social",editMood.getSocial());
+                intent.putExtra("location",editMood.getLocation());
+                //intent.putExtra("coords",editMood.getCoords().toString());
+                startActivity(intent);
+            default:
+                return super.onContextItemSelected(item);
         }
     }
 }

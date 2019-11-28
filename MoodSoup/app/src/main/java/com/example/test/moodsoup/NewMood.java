@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -94,6 +95,7 @@ public class NewMood extends AppCompatActivity{
         locationTextView = findViewById(R.id.get_location);
         addPhoto = findViewById(R.id.add_photo);
 
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -111,11 +113,61 @@ public class NewMood extends AppCompatActivity{
 
         // Get current date and time
         Calendar calendar = Calendar.getInstance();
-        final String currentDate = getDateString(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+        final String currentDate = getDateString(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         final String currentTime = getTimeString(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
-        final String uploadTime = currentDate+ ' ' + currentTime; // Stored as YYYY-MM-DD HH:MM
-        date.setText(uploadTime);
+        final String uploadTime = currentDate + ' ' + currentTime; // Stored as YYYY-MM-DD HH:MM
 
+        if (savedInstanceState == null)
+        {
+            Bundle extras = getIntent().getExtras();
+            if (extras == null)
+            {
+                date.setText(uploadTime);
+            }
+            else
+            {
+                String pastTime = extras.getString("date") + ' ' + extras.getString("time");
+                String pastEmotion = extras.getString("emotion");
+                String pastReason = extras.getString("reason");
+                String pastSocial = extras.getString("social");
+                String pastLocation = extras.getString("location");
+                date.setText(pastTime);
+
+                ArrayAdapter emotionAdapter = (ArrayAdapter) emotion.getAdapter();
+                int emotionPosition = emotionAdapter.getPosition(pastEmotion);
+                emotion.setSelection(emotionPosition);
+
+                reason.setText(pastReason);
+
+                ArrayAdapter socialAdapter = (ArrayAdapter) social.getAdapter();
+                int socialPosition = socialAdapter.getPosition(pastSocial);
+                social.setSelection(socialPosition);
+
+                locationTextView.setText(pastLocation);
+
+                FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+                // Create a storage reference from our app
+                StorageReference storageRef = firebaseStorage.getReference();
+                // Create a reference to "mountains.jpg"
+                StorageReference imageRef = storageRef.child(extras.getString("email") + "/" + pastTime + ".jpg");
+                // Create a reference to 'images/mountains.jpg'
+                StorageReference imageReference = storageRef.child("images/" + extras.getString("email") + "/" + pastTime + ".jpg");
+
+                // While the file names are the same, the references point to different files
+                imageRef.getName().equals(imageReference.getName());    // true
+                imageRef.getPath().equals(imageReference.getPath());    // false
+
+                final long ONE_MEGABYTE = 1024 * 1024;
+                imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        addPhoto.setImageBitmap(Bitmap.createScaledBitmap(bmp, bmp.getWidth(),
+                                bmp.getHeight(), false));
+                    }
+                });
+            }
+        }
         ImageButton cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
