@@ -6,19 +6,6 @@
     android:layout_height="match_parent">
 
 
-    <ImageButton
-        android:id="@+id/ProfileImage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srcCompat="@mipmap/face_foreground" />
-
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="match_parent"
-        android:layout_height="6dp"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/follow" />
-
     <TextView
         android:id="@+id/ProfileName"
         android:layout_width="wrap_content"

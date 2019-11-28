@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -37,55 +38,26 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 
 public class ProfileFragment extends Fragment implements PendingContext.SheetListener{
-    private ArrayList<String> moods = new ArrayList<String>();
-    private ArrayAdapter<String> adapter;
     private FirebaseAuth mAuth;
-    private AppBarConfiguration mAppBarConfiguration;
     private String TAG = "ERROR HERE!";
     private ListView moodList;
     private TextView profileName;
     private ImageButton toFollowing;
-    private ImageButton ProfileImage;
-    private static int RESULT_LOAD_IMG = 1;
     private ListView event;
     private ArrayList<Mood> event_list;
     private ArrayAdapter<Mood> event_listAdapter;
-    private boolean isFollowing;
-
-    private String test;
+    private String emailFromBundle;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.profile,container,false);
         event = root.findViewById(R.id.event_list_self);
         ///Set profile picture
-        final ImageButton button = (ImageButton)root.findViewById(R.id.ProfileImage);
-        isFollowing = false;
         ProfileFragmentArgs profileFragmentArgs = ProfileFragmentArgs.fromBundle(getArguments());
-        String emailFromBundle = profileFragmentArgs.getEmail();
-        // Set a user profile image (For self only!) -- > Needs testing
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                button.setSelected(!button.isPressed());
-
-                if (button.isPressed()) {
-
-                    Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                    photoPickerIntent.setType("image/*");
-                    startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
-
-
-                    button.setImageResource(R.drawable.moodsoup_happy);
-                }
-                else {
-                    button.setImageResource(R.drawable.moodsoup_sad);
-                }
-            }
-        });
+        emailFromBundle = profileFragmentArgs.getEmail();
 
         // View ID
         profileName = root.findViewById(R.id.ProfileName);
@@ -96,14 +68,8 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+
         //User info
-        toFollowing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent FollowingIntent = new Intent(getActivity(), Followers.class);
-                startActivity(FollowingIntent);
-            }
-        });
 
         if (emailFromBundle.equals("No Email")){
             emailFromBundle = mAuth.getCurrentUser().getEmail();
@@ -138,41 +104,31 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
         // Get the moodHistory for the user in profile --> Not finished yet since we are just pulling the dates, will fix later.
 
         CollectionReference colRef = db.collection("Users").document(email).collection("moodHistory");
-        /*CollectionReference followRef = db.collection("Users").document(mAuth.getCurrentUser().getEmail()).collection("following");
-        followRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        colRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        if (email.equals(document.get("email"))){
-                            isFollowing = true;
-                        }
+                        Mood mood = new Mood(document.get("email").toString(), document.get("username").toString(), document.get("date").toString(), document.get("time").toString(), document.get("emotion").toString(), document.get("reason").toString(), document.get("social").toString(), document.get("location").toString(), (GeoPoint) document.get("coords"));
+                        event_list.add(mood);
                     }
+
+                } else {
+                    Log.d(TAG, "FAIL", task.getException());
                 }
+                Collections.sort(event_list, new StringDateComparator());
+                event_listAdapter = new MoodList(context, event_list);
+                moodList.setAdapter(event_listAdapter);
             }
-        });*/
+        });
 
-        isFollowing = true;
-        if (emailFromBundle.equals(mAuth.getCurrentUser().getEmail()) || isFollowing) {
-            colRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Mood mood = new Mood(document.get("email").toString(), document.get("username").toString(), document.get("date").toString(), document.get("time").toString(), document.get("emotion").toString(), document.get("reason").toString(), document.get("social").toString(), document.get("location").toString(), (GeoPoint) document.get("coords"));
-                            event_list.add(mood);
-                        }
 
-                    } else {
-                        Log.d(TAG, "FAIL", task.getException());
-                    }
-                    Collections.sort(event_list, new StringDateComparator());
-                    event_listAdapter = new MoodList(context, event_list);
-                    moodList.setAdapter(event_listAdapter);
-                }
-            });
-        }
-
+        moodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Navigation.findNavController(root).navigate(ProfileFragmentDirections.actionNavProfileToNavMoodViewFragment(emailFromBundle,event_list.get(i).getDate()+' '+event_list.get(i).getTime()));
+            }
+        });
 
 
         return root;

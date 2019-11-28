@@ -86,6 +86,7 @@
     <string name="invalid_lat_long_used">Invalid Latitude Long Used</string>
     <string name="no_address_found">No Address Found</string>
     <string name="address_found">Address Found</string>
+    <string name="reason_too_long">Reason must be less than twenty characters</string>
 
     <!-- profile.xml-->
     <string name="delete_mood">Delete Mood</string>

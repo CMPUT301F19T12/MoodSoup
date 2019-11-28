@@ -107,7 +107,7 @@ public class HomeFragment extends Fragment {
         moodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Navigation.findNavController(root).navigate(HomeFragmentDirections.actionNavHomeToNavProfile().setEmail(moodArray.get(i).getEmail()));
+                Navigation.findNavController(root).navigate(HomeFragmentDirections.actionNavHomeToNavMoodViewFragment(moodArray.get(i).getEmail(), moodArray.get(i).getDate()+" "+moodArray.get(i).getTime()));
             }
         });
 

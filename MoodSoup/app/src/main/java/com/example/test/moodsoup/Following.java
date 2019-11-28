@@ -124,13 +124,6 @@ public class Following extends Fragment implements PendingContext.SheetListener 
             }
         });
 
-        pending.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Navigation.findNavController(root).navigate(FollowingDirections.actionNavFollowingToNavProfile().setEmail(pendingList.get(i)));
-            }
-        });
-
         return root;
     }
 

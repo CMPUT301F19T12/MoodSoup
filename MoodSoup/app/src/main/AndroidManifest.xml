@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SearchContext"></activity>
+        <activity android:name=".MoodViewFragment"></activity>
+        <activity android:name=".SearchContext" />
         <activity android:name=".MoodLocations" />
 
         <meta-data

@@ -71,6 +71,7 @@ public class NewMood extends AppCompatActivity{
     private String addressLocation;
     private TextView locationTextView;
     private ImageButton addPhoto;
+    private boolean errors = false;
 
     String TAG = "Sample";
     String email;
@@ -191,6 +192,7 @@ public class NewMood extends AppCompatActivity{
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                errors = false;
                 emotionText = emotion.getSelectedItem().toString();
                 reasonText = reason.getText().toString();
                 socialText = social.getSelectedItem().toString();
@@ -205,7 +207,14 @@ public class NewMood extends AppCompatActivity{
                     findViewById(R.id.new_mood_error_emotion).setVisibility(View.VISIBLE);
                     Toast.makeText(NewMood.this, "Please Fill out the Required Fields",
                             Toast.LENGTH_SHORT).show();
-                } else {
+                    errors = true;
+                }
+                findViewById(R.id.new_mood_error_reason).setVisibility(View.INVISIBLE);
+                if (reasonText.length()>20){
+                    findViewById(R.id.new_mood_error_reason).setVisibility(View.VISIBLE);
+                    errors = true;
+                }
+                if (!errors){
                     //IMPLEMENT USER CLASS
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
