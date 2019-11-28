@@ -93,6 +93,7 @@
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginStart="50dp"
+        android:layout_marginBottom="20dp"
         android:text="Location: "
         android:textColor="#52131212"
         app:layout_constraintStart_toStartOf="parent"

@@ -61,6 +61,10 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.activity_mood_locations, container, false);
 
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).hideFloatingActionButton(); // hide the FAB
+        }
+
         // Variable initialization
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();

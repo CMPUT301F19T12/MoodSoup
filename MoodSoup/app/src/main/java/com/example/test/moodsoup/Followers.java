@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.example.test.moodsoup.ui.home.HomeFragmentDirections;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -52,6 +53,10 @@ public class Followers extends Fragment implements RequestContext.RequestSheetLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.fragment_followers, container, false);
+
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).hideFloatingActionButton(); // hide the FAB
+        }
 
         requestList = new ArrayList<>();
         followingList = new ArrayList<>();
@@ -100,12 +105,6 @@ public class Followers extends Fragment implements RequestContext.RequestSheetLi
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
                 }
-            }
-        });
-        following.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Navigation.findNavController(root).navigate(FollowersDirections.actionNavFollowerToNavProfile().setEmail(followingList.get(i)));
             }
         });
 

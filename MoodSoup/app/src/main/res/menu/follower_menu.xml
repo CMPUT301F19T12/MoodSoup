@@ -4,4 +4,8 @@
         android:id="@+id/remove"
         android:title="Stop Following"
         />
+    <item
+        android:id="@+id/move_to_profile"
+        android:title="View Profile"
+        />
 </menu>
