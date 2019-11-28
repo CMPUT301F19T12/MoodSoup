@@ -20,6 +20,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+
+import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
 /**
@@ -39,9 +41,6 @@ public class AndroidTest {
     @Before
     public void SetUp() throws Exception{
         solo = new Solo(InstrumentationRegistry.getInstrumentation(),rule.getActivity());
-        Intent intent = new Intent(rule.getActivity().getApplicationContext(),Login.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        rule.getActivity().startActivity(intent);
     }
 
     /**
@@ -55,44 +54,47 @@ public class AndroidTest {
 
     /**
      * Registers a new user and checks to see if they are logged in
-     * Then logs the user out and attempts to log in
-     * Then checks to see if the profile logged into is the correct one
      */
     @Test
     public void checkRegistration(){
-        solo.assertCurrentActivity("Wrong Activity: Expected Login",Login.class);
-        solo.clickOnView(solo.getView(R.id.register_btn));
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(rule.getActivity().getApplicationContext(),Register.class);
+        rule.getActivity().startActivity(intent);
         solo.assertCurrentActivity("Wrong Activity: Expected Register",Register.class);
-        final String email = "test@gmail.com";
+        final String email = "test2@gmail.com";
         solo.enterText((EditText)solo.getView(R.id.email_new_user_tv),email);
         final String username = "test";
         solo.enterText((EditText)solo.getView(R.id.username_new_user_tv),username);
         final String password = "test123";
         solo.enterText((EditText)solo.getView(R.id.password_new_user_tv),password);
         solo.clickOnButton("Register");
-        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
-        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
-        solo.sleep(2000);
-        assertTrue(solo.waitForText(username,1,2000));
-        solo.clickOnMenuItem("Logout");
-        solo.assertCurrentActivity("Wrong Activity: Expected Login",Login.class);
+        assertEquals(email, FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        FirebaseAuth.getInstance().getCurrentUser().delete();
+        FirebaseFirestore.getInstance().collection("Users").document(email).delete();
+        FirebaseAuth.getInstance().signOut();
+    }
+
+    /**
+     * @author Richard Qin
+     * Checks login with precreated account test@gmail.com
+     * Checks to see if moved to MainActivity on Login Button
+     * Checks to see if current user is same as email
+     */
+    @Test
+    public void checkLoginSuccess(){
+        Intent intent = new Intent(rule.getActivity().getApplicationContext(),Login.class);
+        rule.getActivity().startActivity(intent);
+        final String email = "test@gmail.com";
+        final String password = "test123";
         solo.enterText((EditText)solo.getView(R.id.username),email);
         solo.enterText((EditText)solo.getView(R.id.password),password);
         solo.clickOnView(solo.getView(R.id.login));
         solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
-        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
-        solo.sleep(2000);
-        assertTrue(solo.waitForText(username,1,2000));
+        assertEquals(email, FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        FirebaseAuth.getInstance().signOut();
     }
 
-    /**
-     * This tests the followers and following feature
-     * Makes an account which makes a mood post
-     * Makes another account to request a follow to first account
-     * Logs back into first account to accept request
-     * Logs back into second account to check successfully following
-     */
-    @Test
+    /*@Test
     public void checkFollows(){
         // Create first account
         solo.assertCurrentActivity("Wrong Activity: Expected Login",Login.class);
@@ -173,7 +175,7 @@ public class AndroidTest {
         FirebaseAuth.getInstance().getCurrentUser().delete();
         ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
         solo.clickOnMenuItem("Logout");
-    }
+    }*/
 
 
     /**

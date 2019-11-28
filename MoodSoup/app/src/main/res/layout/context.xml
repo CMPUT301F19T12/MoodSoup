@@ -29,7 +29,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/feeling_label"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginStart="16dp"
@@ -51,33 +51,36 @@
         app:layout_constraintTop_toBottomOf="@+id/userInfo" />
 
     <TextView
-        android:id="@+id/textView11"
+        android:id="@+id/reason_label"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginStart="16dp"
+        android:visibility="gone"
         android:text="Reason: "
         android:textColor="#52131212"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+        app:layout_constraintTop_toBottomOf="@+id/feeling_label" />
 
     <TextView
         android:id="@+id/new_mood_reason"
         android:layout_width="0dp"
         android:layout_height="20dp"
         android:layout_marginStart="200dp"
+        android:visibility="gone"
         android:text="reason"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/feeling" />
 
     <TextView
-        android:id="@+id/textView13"
+        android:id="@+id/social_label"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginStart="16dp"
         android:text="Social Situation: "
+        android:visibility="gone"
         android:textColor="#52131212"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+        app:layout_constraintTop_toBottomOf="@+id/reason_label" />
 
     <TextView
         android:id="@+id/new_mood_social"
@@ -85,19 +88,21 @@
         android:layout_height="20dp"
         android:layout_marginStart="200dp"
         android:text="social"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/new_mood_reason" />
 
     <TextView
-        android:id="@+id/textView15"
+        android:id="@+id/location_label"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="20dp"
         android:text="Location: "
+        android:visibility="gone"
         android:textColor="#52131212"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+        app:layout_constraintTop_toBottomOf="@+id/social_label" />
 
     <TextView
         android:id="@+id/new_mood_location"
@@ -106,6 +111,7 @@
         android:layout_marginStart="200dp"
         android:layout_marginBottom="16dp"
         android:text="City, Province"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/photo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/new_mood_social" />

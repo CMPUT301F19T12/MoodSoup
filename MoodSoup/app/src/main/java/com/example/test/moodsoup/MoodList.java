@@ -50,8 +50,11 @@ public class MoodList extends ArrayAdapter<Mood> {
         final TextView name = view.findViewById(R.id.name);
         final TextView info = view.findViewById(R.id.userInfo);
         TextView emotion = view.findViewById(R.id.feeling);
+        TextView reasonLabel = view.findViewById(R.id.reason_label);
         TextView reason = view.findViewById(R.id.new_mood_reason);
+        TextView socialLabel = view.findViewById(R.id.social_label);
         TextView social = view.findViewById(R.id.new_mood_social);
+        TextView locationLabel = view.findViewById(R.id.location_label);
         TextView location = view.findViewById(R.id.new_mood_location);
         ImageView image = view.findViewById(R.id.image);
         final ImageView photo = view.findViewById(R.id.photo);
@@ -104,9 +107,21 @@ public class MoodList extends ArrayAdapter<Mood> {
             }
         });
 
-        reason.setText(mood.getReason());
-        social.setText(mood.getSocial());
-        location.setText(mood.getLocation());
+        if (!mood.getReason().equals("")) {
+            reasonLabel.setVisibility(View.VISIBLE);
+            reason.setVisibility(View.VISIBLE);
+            reason.setText(mood.getReason());
+        }
+        if(!mood.getSocial().equals("")) {
+            socialLabel.setVisibility(View.VISIBLE);
+            social.setVisibility(View.VISIBLE);
+            social.setText(mood.getSocial());
+        }
+        if(!mood.getLocation().equals("")) {
+            locationLabel.setVisibility(View.VISIBLE);
+            location.setVisibility(View.VISIBLE);
+            location.setText(mood.getLocation());
+        }
         name.setText(mood.getEmail());
 
         return view;
