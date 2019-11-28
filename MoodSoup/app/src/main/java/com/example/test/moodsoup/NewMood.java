@@ -72,6 +72,7 @@ public class NewMood extends AppCompatActivity{
     private String addressLocation;
     private TextView locationTextView;
     private ImageButton addPhoto;
+    private TextView title;
     private boolean errors = false;
 
     String TAG = "Sample";
@@ -89,6 +90,7 @@ public class NewMood extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newmood);
 
+        title = findViewById(R.id.addnew_tv);
         date = findViewById(R.id.new_mood_datetime);
         emotion = findViewById(R.id.new_mood_emotion);
         reason = findViewById(R.id.new_mood_reason);
@@ -127,6 +129,7 @@ public class NewMood extends AppCompatActivity{
             }
             else
             {
+                title.setText(getString(R.string.edit_mood));
                 uploadTime = extras.getString("date") + ' ' + extras.getString("time");
                 currentDate = extras.getString("date");
                 currentTime = extras.getString("time");
