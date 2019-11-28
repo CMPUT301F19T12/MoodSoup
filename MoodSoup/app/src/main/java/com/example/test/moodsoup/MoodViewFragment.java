@@ -1,7 +1,6 @@
 package com.example.test.moodsoup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -15,10 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -61,7 +58,7 @@ public class MoodViewFragment extends Fragment {
         situationTV = root.findViewById(R.id.view_mood_situation);
         locationTV = root.findViewById(R.id.view_mood_location);
         imageView = root.findViewById(R.id.view_mood_image);
-        situationTV2 = root.findViewById(R.id.textView13);
+        situationTV2 = root.findViewById(R.id.social_label);
 
         // Hide the Floating Add Mood Button
         if (getActivity() instanceof MainActivity) {
