@@ -142,7 +142,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:src="@android:drawable/ic_menu_report_image"
         android:visibility="gone"
@@ -170,6 +170,6 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"/>
-        
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
