@@ -114,9 +114,9 @@ public class NewMood extends AppCompatActivity{
 
         // Get current date and time
         Calendar calendar = Calendar.getInstance();
-        final String currentDate = getDateString(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        final String currentTime = getTimeString(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
-        final String uploadTime = currentDate + ' ' + currentTime; // Stored as YYYY-MM-DD HH:MM
+        String currentDate = getDateString(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        String currentTime = getTimeString(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
+        String uploadTime = currentDate + ' ' + currentTime; // Stored as YYYY-MM-DD HH:MM
 
         if (savedInstanceState == null)
         {
@@ -127,32 +127,34 @@ public class NewMood extends AppCompatActivity{
             }
             else
             {
-                String pastTime = extras.getString("date") + ' ' + extras.getString("time");
-                String pastEmotion = extras.getString("emotion");
-                String pastReason = extras.getString("reason");
-                String pastSocial = extras.getString("social");
-                String pastLocation = extras.getString("location");
-                date.setText(pastTime);
+                uploadTime = extras.getString("date") + ' ' + extras.getString("time");
+                currentDate = extras.getString("date");
+                currentTime = extras.getString("time");
+                String currentEmotion = extras.getString("emotion");
+                String currentReason = extras.getString("reason");
+                String currentSocial = extras.getString("social");
+                String currentLocation = extras.getString("location");
+                date.setText(uploadTime);
 
                 ArrayAdapter emotionAdapter = (ArrayAdapter) emotion.getAdapter();
-                int emotionPosition = emotionAdapter.getPosition(pastEmotion);
+                int emotionPosition = emotionAdapter.getPosition(currentEmotion);
                 emotion.setSelection(emotionPosition);
 
-                reason.setText(pastReason);
+                reason.setText(currentReason);
 
                 ArrayAdapter socialAdapter = (ArrayAdapter) social.getAdapter();
-                int socialPosition = socialAdapter.getPosition(pastSocial);
+                int socialPosition = socialAdapter.getPosition(currentSocial);
                 social.setSelection(socialPosition);
 
-                locationTextView.setText(pastLocation);
+                locationTextView.setText(currentLocation);
 
                 FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
                 // Create a storage reference from our app
                 StorageReference storageRef = firebaseStorage.getReference();
                 // Create a reference to "mountains.jpg"
-                StorageReference imageRef = storageRef.child(extras.getString("email") + "/" + pastTime + ".jpg");
+                StorageReference imageRef = storageRef.child(extras.getString("email") + "/" + uploadTime + ".jpg");
                 // Create a reference to 'images/mountains.jpg'
-                StorageReference imageReference = storageRef.child("images/" + extras.getString("email") + "/" + pastTime + ".jpg");
+                StorageReference imageReference = storageRef.child("images/" + extras.getString("email") + "/" + uploadTime + ".jpg");
 
                 // While the file names are the same, the references point to different files
                 imageRef.getName().equals(imageReference.getName());    // true
@@ -169,6 +171,11 @@ public class NewMood extends AppCompatActivity{
                 });
             }
         }
+        //Create final variables for date/time
+        final String finalCurrentDate = currentDate;
+        final String finalCurrentTime = currentTime;
+        final String finalUploadTime = uploadTime;
+
         ImageButton cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,9 +241,6 @@ public class NewMood extends AppCompatActivity{
                     }
                 });
 
-
-
-
             }
         });
 
@@ -288,13 +292,13 @@ public class NewMood extends AppCompatActivity{
                 }
             }
             public void createNewMood(String userName){
-                Mood mood = new Mood(email,userName,currentDate, currentTime,emotionText,reasonText,socialText,addressLocation,geoPoint);
+                Mood mood = new Mood(email,userName, finalCurrentDate, finalCurrentTime,emotionText,reasonText,socialText,addressLocation,geoPoint);
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 CollectionReference collectionReference = db.collection("Users");
                 collectionReference
                             .document(email)
                             .collection("moodHistory")
-                            .document(uploadTime)
+                            .document(finalUploadTime)
                             .set(mood)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -322,9 +326,9 @@ public class NewMood extends AppCompatActivity{
                     // Create a storage reference from our app
                     StorageReference storageRef = firebaseStorage.getReference();
                     // Create a reference to "mountains.jpg"
-                    StorageReference imageRef = storageRef.child(email + "/" +currentDate + " " + currentTime + ".jpg");
+                    StorageReference imageRef = storageRef.child(email + "/" + finalCurrentDate + " " + finalCurrentTime + ".jpg");
 
-                    StorageReference imageReference = storageRef.child("images/" + email + "/" +currentDate + " " + currentTime + ".jpg");
+                    StorageReference imageReference = storageRef.child("images/" + email + "/" + finalCurrentDate + " " + finalCurrentTime + ".jpg");
 
                     // While the file names are the same, the references point to different files
                     imageRef.getName().equals(imageReference.getName());    // true
