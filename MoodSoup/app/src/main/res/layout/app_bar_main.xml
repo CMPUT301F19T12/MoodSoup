@@ -18,21 +18,26 @@
         android:layout_width="match_parent"
         android:layout_height="657dp" />
 
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
+        android:layout_above="@id/toolbar"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:scaleType="fitXY"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="#f1f1f1"
+        android:clickable="true"
+        android:focusable="true"
+        android:scaleType="fitXY"
         app:backgroundTint="#f1f1f1"
-        app:srcCompat="@drawable/moodsoup_floating_button"
 
-        />
-
-
+         />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
