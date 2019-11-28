@@ -108,19 +108,6 @@ public class Followers extends Fragment implements RequestContext.RequestSheetLi
             }
         });
 
-        following.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Navigation.findNavController(root).navigate(FollowersDirections.actionNavFollowerToNavProfile().setEmail(followingList.get(i)));
-            }
-        });
-        request.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Navigation.findNavController(root).navigate(FollowersDirections.actionNavFollowerToNavProfile().setEmail(requestList.get(i)));
-            }
-        });
-
         return root;
     }
 

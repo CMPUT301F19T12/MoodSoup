@@ -67,7 +67,7 @@
     <string name="menu_map">Maps</string>
     <string name="menu_send">Send</string>
 
-    <!-- activity_follower.xml -->
+    <!-- fragment_follower.xml -->
     <string name="requests">Requests</string>
     <string name="followers">Followers</string>
 
@@ -86,8 +86,15 @@
     <string name="invalid_lat_long_used">Invalid Latitude Long Used</string>
     <string name="no_address_found">No Address Found</string>
     <string name="address_found">Address Found</string>
+    <string name="reason_too_long">Reason must be less than twenty characters</string>
 
     <!-- profile.xml-->
     <string name="delete_mood">Delete Mood</string>
     <string name="edit_mood">Edit Mood</string>
+
+    <!-- fragment_home.xml -->
+    <string name="home">Home</string>
+
+    <!-- activity_mood_view_fragment -->
+    <string name="Post">Post</string>
 </resources>

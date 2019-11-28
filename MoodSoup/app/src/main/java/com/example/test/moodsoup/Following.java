@@ -61,14 +61,6 @@ public class Following extends Fragment implements PendingContext.SheetListener 
             ((MainActivity) getActivity()).hideFloatingActionButton(); // hide the FAB
         }
 
-        final Button search = root.findViewById(R.id.Search);
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                findNavController(root).navigate(R.id.nav_search );
-            }
-        });
-
         pendingList = new ArrayList<>();
         followerList = new ArrayList<>();
         pending = root.findViewById(R.id.pending);
@@ -121,13 +113,6 @@ public class Following extends Fragment implements PendingContext.SheetListener 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Navigation.findNavController(root).navigate(FollowingDirections.actionNavFollowingToNavProfile().setEmail(followerList.get(i)));
-            }
-        });
-
-        pending.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Navigation.findNavController(root).navigate(FollowingDirections.actionNavFollowingToNavProfile().setEmail(pendingList.get(i)));
             }
         });
 

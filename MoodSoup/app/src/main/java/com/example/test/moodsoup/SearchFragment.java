@@ -209,12 +209,6 @@ public class SearchFragment extends Fragment {
                 }
             }
         });
-        emailList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Navigation.findNavController(root).navigate(SearchFragmentDirections.actionNavSearchToNavProfile().setEmail(emailArray.get(i)));
-            }
-        });
         return root;
     }
 }
