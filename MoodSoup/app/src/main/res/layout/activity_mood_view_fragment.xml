@@ -44,7 +44,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/empty_space2"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="#000000"/>
 
@@ -54,11 +54,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_mood_username"
-        android:textSize="10sp"
+        android:textSize="14sp"
         android:visibility="gone"/>
 
     <TextView
@@ -66,10 +65,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="6dp"
         android:layout_marginEnd="16dp"
         android:textSize="14sp"
-        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_mood_location"
@@ -81,7 +78,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_mood_emotion"
@@ -98,13 +94,13 @@
 
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_mood_situation"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:visibility="gone"
-        android:textColor="#000000"/>
+        android:textColor="#000000"
+        android:textStyle="italic"/>
 
 
     <ImageView
@@ -113,7 +109,6 @@
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
         app:layout_constraintHeight_percent="0.5"
-
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:src="@android:drawable/ic_menu_report_image"
@@ -129,10 +124,9 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_mood_image"
-        android:textSize="14sp" />
+        android:textSize="16sp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

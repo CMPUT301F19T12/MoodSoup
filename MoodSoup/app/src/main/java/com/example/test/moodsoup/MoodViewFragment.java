@@ -80,7 +80,7 @@ public class MoodViewFragment extends Fragment {
                         emotionTV.setText(emotion);
                         reason = documentSnapshot.get("reason").toString();
                         if (!reason.equals("")){
-                            reason = "Reason: " + reason;
+                            reason = "\"\"" + reason + "\"\"";
                             reasonTV.setVisibility(View.VISIBLE);
                             reasonTV.setText(reason);
                         }
