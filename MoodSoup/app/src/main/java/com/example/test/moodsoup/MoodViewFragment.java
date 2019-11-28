@@ -92,7 +92,6 @@ public class MoodViewFragment extends Fragment {
                         }
                         location = documentSnapshot.get("location").toString();
                         if (!location.equals("")){
-                            location = "Location: " + location;
                             locationTV.setVisibility(View.VISIBLE);
                             locationTV.setText(location);
                         }

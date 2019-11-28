@@ -70,7 +70,6 @@ public class Profile extends AppCompatActivity  implements PendingContext.SheetL
     private String TAG = "ERROR HERE!";
     private ListView moodList;
     private TextView profileName;
-    private ImageButton toFollowing;
     private ImageButton imageButton2;
     private static final String KEY_DATE = "Date";
     private static final String KEY_EMOTION = "Emotion";
@@ -117,7 +116,6 @@ public class Profile extends AppCompatActivity  implements PendingContext.SheetL
         // View ID
         profileName = findViewById(R.id.ProfileName);
         moodList = findViewById(R.id.event_list_self);
-        toFollowing = findViewById(R.id.imageButton);
 
         // User Instance
 

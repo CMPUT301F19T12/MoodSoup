@@ -53,7 +53,6 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
     private String TAG = "ERROR HERE!";
     private ListView moodList;
     private TextView profileName;
-    private ImageButton toFollowing;
     private ListView event;
     private ArrayList<Mood> event_list;
     private ArrayAdapter<Mood> event_listAdapter;
@@ -69,9 +68,8 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
         // View ID
         profileName = root.findViewById(R.id.ProfileName);
         moodList = root.findViewById(R.id.event_list_self);
-        toFollowing = root.findViewById(R.id.imageButton);
         registerForContextMenu(moodList);
-
+      
         // User Instance
 
         mAuth = FirebaseAuth.getInstance();

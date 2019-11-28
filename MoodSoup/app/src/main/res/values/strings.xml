@@ -91,4 +91,10 @@
     <!-- profile.xml-->
     <string name="delete_mood">Delete Mood</string>
     <string name="edit_mood">Edit Mood</string>
+
+    <!-- fragment_home.xml -->
+    <string name="home">Home</string>
+
+    <!-- activity_mood_view_fragment -->
+    <string name="Post">Post</string>
 </resources>
