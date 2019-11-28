@@ -45,6 +45,7 @@ public class MoodViewFragment extends Fragment {
     private TextView situationTV;
     private TextView locationTV;
     private ImageView imageView;
+    private TextView situationTV2;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Initialize Variables
@@ -60,6 +61,7 @@ public class MoodViewFragment extends Fragment {
         situationTV = root.findViewById(R.id.view_mood_situation);
         locationTV = root.findViewById(R.id.view_mood_location);
         imageView = root.findViewById(R.id.view_mood_image);
+        situationTV2 = root.findViewById(R.id.textView13);
 
         // Hide the Floating Add Mood Button
         if (getActivity() instanceof MainActivity) {
@@ -87,6 +89,7 @@ public class MoodViewFragment extends Fragment {
                         situation = documentSnapshot.get("social").toString();
                         if (!situation.equals("")){
                             situationTV.setVisibility(View.VISIBLE);
+                            situationTV2.setVisibility(View.VISIBLE);
                             situationTV.setText(situation);
                         }
                         location = documentSnapshot.get("location").toString();
