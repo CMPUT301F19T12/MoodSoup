@@ -76,7 +76,7 @@ public class MoodViewFragment extends Fragment {
                     if (documentSnapshot.exists()){
                         emailTV.setText(email);
                         dateTV.setText(uploadTime);
-                        emotion = "Emotion: " + documentSnapshot.get("emotion").toString();
+                        emotion = documentSnapshot.get("emotion").toString();
                         emotionTV.setText(emotion);
                         reason = documentSnapshot.get("reason").toString();
                         if (!reason.equals("")){
@@ -86,7 +86,6 @@ public class MoodViewFragment extends Fragment {
                         }
                         situation = documentSnapshot.get("social").toString();
                         if (!situation.equals("")){
-                            situation = "Social Situation: " + situation;
                             situationTV.setVisibility(View.VISIBLE);
                             situationTV.setText(situation);
                         }
@@ -95,6 +94,7 @@ public class MoodViewFragment extends Fragment {
                             locationTV.setVisibility(View.VISIBLE);
                             locationTV.setText(location);
                         }
+
 
                         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
                         // Create a storage reference from our app
