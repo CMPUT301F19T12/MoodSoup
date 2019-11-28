@@ -21,7 +21,7 @@
         android:id="@+id/nav_follower"
         android:name="com.example.test.moodsoup.Followers"
         android:label="@string/menu_following"
-        tools:layout="@layout/following" />
+        tools:layout="@layout/fragment_following" />
     <activity
         android:id="@+id/nav_logout"
         android:name="com.example.test.moodsoup.Login"

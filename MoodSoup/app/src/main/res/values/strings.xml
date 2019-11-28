@@ -71,7 +71,7 @@
     <string name="requests">Requests</string>
     <string name="followers">Followers</string>
 
-    <!-- following.xml -->
+    <!-- fragment_following.xml -->
     <string name="following">Following</string>
 
     <string name="requested">Requested</string>

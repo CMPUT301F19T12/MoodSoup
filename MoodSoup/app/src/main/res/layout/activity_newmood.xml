@@ -28,7 +28,8 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Display2"
         android:textColor="@color/common_google_signin_btn_text_dark_focused"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textStyle="bold"/>
 
     <View
         android:id="@+id/empty_space2"
@@ -184,8 +185,8 @@
 
         <ImageButton
             android:id="@+id/add_photo"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_width="59dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:background="@android:color/transparent"
