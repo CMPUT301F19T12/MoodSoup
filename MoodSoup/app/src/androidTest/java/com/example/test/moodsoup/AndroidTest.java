@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -19,10 +20,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.annotation.NonNull;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+
+import java.util.HashMap;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -170,7 +174,7 @@ public class AndroidTest {
 
     /**
      * @author Sanae Mayer
-     * Attempts to search for user(test3) that does not exist using email
+     * Attempts to search for user(test3@gmail.com) that does not exist using email
      */
     @Test
     public void checkEmailSearchFail() {
@@ -199,7 +203,7 @@ public class AndroidTest {
 
     /**
      * @author Sanae Mayer
-     * Attempts to search for user(test3) that does not exist using email
+     * Attempts to search for user(test3) that does not exist using username
      */
     @Test
     public void checkUsernameSearchFail() {
@@ -224,6 +228,330 @@ public class AndroidTest {
 
         ListView search = (ListView) solo.getView(R.id.search_result);
         assertEquals(search.getAdapter().getCount(),0);
+    }
+
+    /**
+     * @author Sanae Mayer
+     * Attempts to Accept a follow request that is manually added
+     */
+    @Test
+    public void checkAcceptFollowRequest() {
+        final String email = "test@gmail.com";
+        final String requestEmail = "test2@gmail.com";
+        final String password = "test123";
+
+        HashMap<String,String> request = new HashMap<>();
+        request.put("request",requestEmail);
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(email).collection("request").document(requestEmail).set(request)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("FAKE", "Request Addition Successful");
+                    }
+                });
+
+        HashMap<String,String> pending = new HashMap<>();
+        pending.put("pending",email);
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(requestEmail).collection("pending").document(email).set(pending)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("FAKE", "Pending Addition Successful");
+                    }
+                });
+
+        solo.enterText((EditText) solo.getView(R.id.username), email);
+        solo.enterText((EditText) solo.getView(R.id.password), password);
+        solo.clickOnView(solo.getView(R.id.login));
+
+        solo.sleep(3000);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Follower");
+        solo.sleep(5000);
+
+        solo.clickOnImageButton(0);
+        solo.sleep(3000);
+
+
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(email).collection("follower").document(requestEmail)
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                String follower = documentSnapshot.getData().get("follower").toString();
+                assertEquals(follower, requestEmail);
+                FirebaseFirestore.getInstance().collection("Users").document(email).collection("follower").document(requestEmail).delete();
+            }
+        });
+
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(requestEmail).collection("following").document(email)
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                String following = documentSnapshot.getData().get("following").toString();
+                assertEquals(following, email);
+                FirebaseFirestore.getInstance().collection("Users").document(requestEmail).collection("following").document(email).delete();
+            }
+        });
+    }
+
+    /**
+     * @author Sanae Mayer
+     * Attempts to declines a follow request that is manually added
+     */
+    @Test
+    public void checkDeclineFollowRequest() {
+        final String email = "test@gmail.com";
+        final String requestEmail = "test2@gmail.com";
+        final String password = "test123";
+
+        HashMap<String,String> request = new HashMap<>();
+        request.put("request",requestEmail);
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(email).collection("request").document(requestEmail).set(request)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("FAKE", "Request Addition Successful");
+                    }
+                });
+
+        HashMap<String,String> pending = new HashMap<>();
+        pending.put("pending",email);
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(requestEmail).collection("pending").document(email).set(pending)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("FAKE", "Pending Addition Successful");
+                    }
+                });
+
+        solo.enterText((EditText) solo.getView(R.id.username), email);
+        solo.enterText((EditText) solo.getView(R.id.password), password);
+        solo.clickOnView(solo.getView(R.id.login));
+
+        solo.sleep(3000);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Follower");
+        solo.sleep(5000);
+
+        solo.clickOnImageButton(1);
+        solo.sleep(3000);
+
+        ListView requestView = (ListView) solo.getView(R.id.requests);
+        assertEquals(requestView.getAdapter().getCount(),0);
+
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(email).collection("request").document(requestEmail)
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                assertTrue(!documentSnapshot.exists());
+            }
+        });
+
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(requestEmail).collection("pending").document(email)
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                assertTrue(!documentSnapshot.exists());
+            }
+        });
+    }
+
+    /**
+     * @author Sanae Mayer
+     * Attempts to remove a follower that is manually added
+     */
+    @Test
+    public void checkRemoveFollower() {
+        final String email = "test@gmail.com";
+        final String requestEmail = "test2@gmail.com";
+        final String password = "test123";
+
+        HashMap<String,String> follower = new HashMap<>();
+        follower.put("follower",requestEmail);
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(email).collection("follower").document(requestEmail).set(follower)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("FAKE", "follower Addition Successful");
+                    }
+                });
+
+        HashMap<String,String> following = new HashMap<>();
+        following.put("following",email);
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(requestEmail).collection("following").document(email).set(following)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("FAKE", "following Addition Successful");
+                    }
+                });
+
+        solo.enterText((EditText) solo.getView(R.id.username), email);
+        solo.enterText((EditText) solo.getView(R.id.password), password);
+        solo.clickOnView(solo.getView(R.id.login));
+
+        solo.sleep(3000);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Follower");
+        solo.sleep(5000);
+
+        solo.clickLongInList(0);
+
+        solo.clickOnText("Remove Follower");
+
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(email).collection("follower").document(requestEmail)
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                assertTrue(!documentSnapshot.exists());
+            }
+        });
+
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(requestEmail).collection("following").document(email)
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                assertTrue(!documentSnapshot.exists());
+            }
+        });
+    }
+
+    /**
+     * @author Sanae Mayer
+     * Attempts to remove a following that is manually added
+     */
+    @Test
+    public void checkRemoveFollowing() {
+        final String email = "test@gmail.com";
+        final String requestEmail = "test2@gmail.com";
+        final String password = "test123";
+
+        HashMap<String,String> following = new HashMap<>();
+        following.put("following",requestEmail);
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(email).collection("following").document(requestEmail).set(following)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("FAKE", "following Addition Successful");
+                    }
+                });
+
+        HashMap<String,String> follower = new HashMap<>();
+        follower.put("follower",email);
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(requestEmail).collection("follower").document(email).set(follower)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("FAKE", "follower Addition Successful");
+                    }
+                });
+
+        solo.enterText((EditText) solo.getView(R.id.username), email);
+        solo.enterText((EditText) solo.getView(R.id.password), password);
+        solo.clickOnView(solo.getView(R.id.login));
+
+        solo.sleep(3000);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Following");
+        solo.sleep(5000);
+
+        solo.clickLongInList(0);
+
+        solo.clickOnText("Stop Following");
+
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(email).collection("following").document(requestEmail)
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                assertTrue(!documentSnapshot.exists());
+            }
+        });
+
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(requestEmail).collection("follower").document(email)
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                assertTrue(!documentSnapshot.exists());
+            }
+        });
+    }
+
+    /**
+     * @author Sanae Mayer
+     * Attempts to remove a following that is manually added
+     */
+    @Test
+    public void checkCancelFollowRequest() {
+        final String email = "test@gmail.com";
+        final String requestEmail = "test2@gmail.com";
+        final String password = "test123";
+
+        HashMap<String,String> pending = new HashMap<>();
+        pending.put("pending",requestEmail);
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(email).collection("pending").document(requestEmail).set(pending)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("FAKE", "pending Addition Successful");
+                    }
+                });
+
+        HashMap<String,String> request = new HashMap<>();
+        request.put("request",email);
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(requestEmail).collection("request").document(email).set(request)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("FAKE", "request Addition Successful");
+                    }
+                });
+
+        solo.enterText((EditText) solo.getView(R.id.username), email);
+        solo.enterText((EditText) solo.getView(R.id.password), password);
+        solo.clickOnView(solo.getView(R.id.login));
+
+        solo.sleep(3000);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Following");
+        solo.sleep(5000);
+
+        solo.clickOnImageButton(0);
+
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(email).collection("pending").document(requestEmail)
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                assertTrue(!documentSnapshot.exists());
+            }
+        });
+
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(requestEmail).collection("request").document(email)
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                assertTrue(!documentSnapshot.exists());
+            }
+        });
     }
 
     /**

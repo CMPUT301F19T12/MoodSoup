@@ -29,7 +29,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
+/**
+ * SearchFragmant
+ * V1.1
+ * 2019-11-07
+ * <p>
+ * This is meant to notify the user about the other users that they have searched.
+ * You can either send or cancel follow request, or view if you are already following.
+ *
+ * @author pspiers
+ * @author smayer
+ */
 public class SearchContext extends ArrayAdapter<String> {
     private Context context;
     private ArrayList<String> emails;
@@ -64,6 +74,7 @@ public class SearchContext extends ArrayAdapter<String> {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
+            //If you search for yourself
             if (email.equals(user.getEmail())) {
                 addUser.setText("Yourself");
                 addUser.setEnabled(false);
@@ -74,7 +85,7 @@ public class SearchContext extends ArrayAdapter<String> {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> pendingTask) {
                     if (pendingTask.isSuccessful()) {
-                        //Already sent a request
+                        //Already sent a request therefore you should be able to cancel it
                         DocumentSnapshot pendingDoc = pendingTask.getResult();
                         if (pendingDoc.exists()) {
                             addUser.setText("Cancel Request");
@@ -89,6 +100,7 @@ public class SearchContext extends ArrayAdapter<String> {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> followingTask) {
                     if (followingTask.isSuccessful()) {
+                        //If you are already following a user, button should not be clickable and notify the user that user is already following
                         DocumentSnapshot followingDoc = followingTask.getResult();
                         if (followingDoc.exists()) {
                             addUser.setText("Following");
@@ -102,7 +114,9 @@ public class SearchContext extends ArrayAdapter<String> {
             addUser.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //When cancel request is pressed
                     if (addUser.getText() == "Cancel Request") {
+                        //Change the text to "send request"
                         addUser.setText("Send Request");
                         addUser.setEnabled(true);
                         if (user != null) {
@@ -110,12 +124,15 @@ public class SearchContext extends ArrayAdapter<String> {
                             db.collection("Users")
                                     .document(user.getEmail()).collection("pending").document(email)
                                     .delete();
-
+                            //Remove me from user's request
                             db.collection("Users")
                                     .document(email).collection("request").document(user.getEmail())
                                     .delete();
                         }
-                    } else {
+                    }
+                    //When follow is requested
+                    else {
+                        //Change the text to "cancel request"
                         addUser.setText("Cancel Request");
                         addUser.setEnabled(true);
                         final String TAG = "Search";
