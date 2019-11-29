@@ -325,7 +325,13 @@ public class NewMood extends AppCompatActivity{
              * Create mood object with userName
              */
             private void createNewMood(String userName) {
-                Mood mood = new Mood(email, userName, finalCurrentDate, finalCurrentTime, emotionText, reasonText, socialText, addressLocation, geoPoint);
+                Boolean imageIncluded;
+                if (reqCode == -1)
+                    imageIncluded = false;
+                else
+                    imageIncluded = true;
+
+                Mood mood = new Mood(email, userName, finalCurrentDate, finalCurrentTime, emotionText, reasonText, socialText, addressLocation, geoPoint,imageIncluded);
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 CollectionReference collectionReference = db.collection("Users");
                 collectionReference
