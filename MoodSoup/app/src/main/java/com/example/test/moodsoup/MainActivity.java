@@ -43,6 +43,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * @author Richard Qin
  * @author Darian Chen
  * @author Sanae Mayer
+ * @author Atilla Akbay - Add moveable Floating action button
  * Handles navigating to the different fragments and activities
  * Hosts the user's information and passes it to the different fragments and activities
  */
@@ -59,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+
 
         fab = findViewById(R.id.fab);
 
