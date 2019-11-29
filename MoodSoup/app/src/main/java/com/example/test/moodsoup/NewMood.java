@@ -1,6 +1,7 @@
 package com.example.test.moodsoup;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,9 +14,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -25,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -58,42 +58,47 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import javax.annotation.Nonnull;
+
 /**
+ * NewMood
+ * V1.2
+ *
  * Handles creating a new mood
- * @author Sanae Mayer
- * @author Richard Qin
+ *
+ * @author smayer
+ * @author rqin1
  */
 
 public class NewMood extends AppCompatActivity{
-    private TextView date;
-    private Spinner emotion;
+    // Variable Declaration
+    private TextView dateTV,locationTV,title;
+    private Spinner emotion, social;
     private EditText reason;
-    private Spinner social;
-    private String addressLocation;
-    private TextView locationTextView;
     private ImageButton addPhoto;
     private boolean errors = false;
-
-    String TAG = "Sample";
-    String email;
-    String emotionText,reasonText,socialText,locationText;
-    int reqCode = -1;
+    private String email,emotionText,reasonText,socialText, addressLocation;
     private GeoPoint geoPoint;
-
     private FusedLocationProviderClient mFusedLocationClient;
-    private static final int REQUEST_CHECK_SETTINGS = 9004;
+    private boolean imageIncluded = false;
 
+    // Constants
+    int reqCode = -1;
+    private static final int REQUEST_CHECK_SETTINGS = 9004;
+    String TAG = "Sample";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newmood);
 
-        date = findViewById(R.id.new_mood_datetime);
+        // Variable Initialization
+        title = findViewById(R.id.addnew_tv);
+        dateTV = findViewById(R.id.new_mood_datetime);
         emotion = findViewById(R.id.new_mood_emotion);
         reason = findViewById(R.id.new_mood_reason);
         social = findViewById(R.id.new_mood_social);
-        locationTextView = findViewById(R.id.get_location);
+        locationTV = findViewById(R.id.get_location);
         addPhoto = findViewById(R.id.add_photo);
 
 
@@ -118,15 +123,21 @@ public class NewMood extends AppCompatActivity{
         String currentTime = getTimeString(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
         String uploadTime = currentDate + ' ' + currentTime; // Stored as YYYY-MM-DD HH:MM
 
+        // Can be passed information in order to edit a mood
         if (savedInstanceState == null)
         {
             Bundle extras = getIntent().getExtras();
+            // Not editing a mood
             if (extras == null)
             {
-                date.setText(uploadTime);
+                dateTV.setText(uploadTime);
             }
+            // Information given to edit a mood
             else
             {
+                // Change title of Activity
+                title.setText(getString(R.string.edit_mood));
+                // Pre-fill fields with given information
                 uploadTime = extras.getString("date") + ' ' + extras.getString("time");
                 currentDate = extras.getString("date");
                 currentTime = extras.getString("time");
@@ -134,20 +145,23 @@ public class NewMood extends AppCompatActivity{
                 String currentReason = extras.getString("reason");
                 String currentSocial = extras.getString("social");
                 String currentLocation = extras.getString("location");
-                date.setText(uploadTime);
+                dateTV.setText(uploadTime);
 
                 ArrayAdapter emotionAdapter = (ArrayAdapter) emotion.getAdapter();
                 int emotionPosition = emotionAdapter.getPosition(currentEmotion);
                 emotion.setSelection(emotionPosition);
-
-                reason.setText(currentReason);
+                if (!currentReason.equals("")) {
+                    reason.setText(currentReason);
+                }
 
                 ArrayAdapter socialAdapter = (ArrayAdapter) social.getAdapter();
                 int socialPosition = socialAdapter.getPosition(currentSocial);
                 social.setSelection(socialPosition);
 
-                locationTextView.setText(currentLocation);
-
+                if (!currentLocation.equals("")) {
+                    locationTV.setText(currentLocation);
+                    addressLocation = currentLocation;
+                }
                 FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
                 // Create a storage reference from our app
                 StorageReference storageRef = firebaseStorage.getReference();
@@ -169,13 +183,18 @@ public class NewMood extends AppCompatActivity{
                                 bmp.getHeight(), false));
                     }
                 });
+                if (extras.containsKey("latitude") && extras.containsKey("longitude")) {
+                    geoPoint = new GeoPoint(extras.getDouble("latitude"), extras.getDouble("longitude"));
+                }
             }
         }
-        //Create final variables for date/time
+
+        // Create final variables for date/time
         final String finalCurrentDate = currentDate;
         final String finalCurrentTime = currentTime;
         final String finalUploadTime = uploadTime;
 
+        // Cancel button
         ImageButton cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,66 +203,66 @@ public class NewMood extends AppCompatActivity{
             }
         });
 
-        locationTextView.setOnClickListener(new View.OnClickListener() {
+        // Clicking the add location text view automatically gets your location
+        locationTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createLocationRequest();
-                mFusedLocationClient.getLastLocation().addOnSuccessListener(NewMood.this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (location != null){
-                            geoPoint = new GeoPoint(location.getLatitude(),location.getLongitude());
-                            Geocoder geoCoder = new Geocoder(NewMood.this, Locale.getDefault()); //it is Geocoder
-                            String errorMessage = "";
-                            List<Address> addresses = null;
+                // Gets permission to access location if not granted
+                if (ContextCompat.checkSelfPermission(NewMood.this , Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
+                    ActivityCompat.requestPermissions(NewMood.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+                } else {
+                    createLocationRequest();
+                    // Gets GPS Coordinates
+                    mFusedLocationClient.getLastLocation().addOnSuccessListener(NewMood.this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+                                Geocoder geoCoder = new Geocoder(NewMood.this, Locale.getDefault()); //it is Geocoder
+                                String errorMessage = "";
+                                List<Address> addresses = null;
 
-                            try {
-                                addresses = geoCoder.getFromLocation(
-                                        location.getLatitude(),
-                                        location.getLongitude(),
-                                        // In this sample, get just a single address.
-                                        1);
-                            } catch (IOException ioException) {
-                                // Catch network or other I/O problems.
-                                errorMessage = getString(R.string.service_not_available);
-                                Log.e(TAG, errorMessage, ioException);
-                            } catch (IllegalArgumentException illegalArgumentException) {
-                                // Catch invalid latitude or longitude values.
-                                errorMessage = getString(R.string.invalid_lat_long_used);
-                                Log.e(TAG, errorMessage + ". " +
-                                        "Latitude = " + location.getLatitude() +
-                                        ", Longitude = " +
-                                        location.getLongitude(), illegalArgumentException);
-                            }
-
-                            // Handle case where no address was found.
-                            if (addresses == null || addresses.size()  == 0) {
-                                if (errorMessage.isEmpty()) {
-                                    errorMessage = getString(R.string.no_address_found);
-                                    Log.e(TAG, errorMessage);
+                                try {
+                                    addresses = geoCoder.getFromLocation(
+                                            location.getLatitude(),
+                                            location.getLongitude(),
+                                            // In this sample, get just a single address.
+                                            1);
+                                } catch (IOException ioException) {
+                                    // Catch network or other I/O problems.
+                                    errorMessage = getString(R.string.service_not_available);
+                                    Log.e(TAG, errorMessage, ioException);
+                                } catch (IllegalArgumentException illegalArgumentException) {
+                                    // Catch invalid latitude or longitude values.
+                                    errorMessage = getString(R.string.invalid_lat_long_used);
+                                    Log.e(TAG, errorMessage + ". " +
+                                            "Latitude = " + location.getLatitude() +
+                                            ", Longitude = " +
+                                            location.getLongitude(), illegalArgumentException);
                                 }
-                            } else {
-                                Address address = addresses.get(0);
-                                ArrayList<String> addressFragments = new ArrayList<String>();
 
-                                // Fetch the address lines using getAddressLine,
-                                // join them, and send them to the thread.
-                                for(int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-                                    addressFragments.add(address.getAddressLine(i));
+                                // Handle case where no address was found.
+                                if (addresses == null || addresses.size() == 0) {
+                                    if (errorMessage.isEmpty()) {
+                                        errorMessage = getString(R.string.no_address_found);
+                                        Log.e(TAG, errorMessage);
+                                    }
+                                } else {
+                                    Log.i(TAG, getString(R.string.address_found));
+                                    addressLocation = addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea();//+", "+addresses.get(0).getCountryName();
+                                    //addressLocation = TextUtils.join(System.getProperty("line.separator"),addressFragments);
+                                    locationTV.setText(addressLocation);
                                 }
-                                Log.i(TAG, getString(R.string.address_found));
-                                addressLocation = addresses.get(0).getLocality()+", "+addresses.get(0).getAdminArea();//+", "+addresses.get(0).getCountryName();
-                                //addressLocation = TextUtils.join(System.getProperty("line.separator"),addressFragments);
-                                locationTextView.setText(addressLocation);
+
                             }
 
                         }
-                    }
-                });
-
+                    });
+                }
             }
         });
 
+        // Post button
         ImageButton post = findViewById(R.id.post);
         post.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -252,30 +271,38 @@ public class NewMood extends AppCompatActivity{
                 emotionText = emotion.getSelectedItem().toString();
                 reasonText = reason.getText().toString();
                 socialText = social.getSelectedItem().toString();
+                // If no location given
                 if (addressLocation==null){
                     addressLocation = "";
                 }
+                // If no social situation given
                 findViewById(R.id.new_mood_error_emotion).setVisibility(View.INVISIBLE);
                 if (socialText.equals("Choose a social situation:")) {
                     socialText = "";
                 }
+                // Error Handling
+                // Emotional state is required, create error message and set errors to true
                 if (emotionText.equals("Choose an emotion:")) {
                     findViewById(R.id.new_mood_error_emotion).setVisibility(View.VISIBLE);
                     Toast.makeText(NewMood.this, "Please Fill out the Required Fields",
                             Toast.LENGTH_SHORT).show();
                     errors = true;
                 }
+                // Reason must be less than twenty characters, if greater than: create error message and set errors to true
                 findViewById(R.id.new_mood_error_reason).setVisibility(View.INVISIBLE);
-                if (reasonText.length()>20){
+                if (reasonText.length() > 20) {
                     findViewById(R.id.new_mood_error_reason).setVisibility(View.VISIBLE);
                     errors = true;
                 }
+
+                // If no errors
                 if (!errors){
                     //IMPLEMENT USER CLASS
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
                     email = mAuth.getCurrentUser().getEmail();
 
+                    // Add mood to history
                     DocumentReference usernameRef = db.collection("Users").document(email);
                     usernameRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -291,10 +318,6 @@ public class NewMood extends AppCompatActivity{
                     });
                 }
             }
-<<<<<<< Updated upstream
-            public void createNewMood(String userName){
-                Mood mood = new Mood(email,userName, finalCurrentDate, finalCurrentTime,emotionText,reasonText,socialText,addressLocation,geoPoint);
-=======
 
             /**
              * Uploads mood to user's moodHistory
@@ -302,33 +325,41 @@ public class NewMood extends AppCompatActivity{
              * Create mood object with userName
              */
             private void createNewMood(String userName) {
-                Mood mood = new Mood(email, userName, finalCurrentDate, finalCurrentTime, emotionText, reasonText, socialText, addressLocation, geoPoint, imageIncluded);
->>>>>>> Stashed changes
+                Boolean imageIncluded;
+                if (reqCode == -1)
+                    imageIncluded = false;
+                else
+                    imageIncluded = true;
+
+                Mood mood = new Mood(email, userName, finalCurrentDate, finalCurrentTime, emotionText, reasonText, socialText, addressLocation, geoPoint,imageIncluded);
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 CollectionReference collectionReference = db.collection("Users");
                 collectionReference
-                            .document(email)
-                            .collection("moodHistory")
-                            .document(finalUploadTime)
-                            .set(mood)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d(TAG,"Data Addition Successful");
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d(TAG,"Data Addition Failed" + e.toString());
-                                }
-                            });
-                    Intent intent = new Intent(NewMood.this,MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                }
+                        .document(email)
+                        .collection("moodHistory")
+                        .document(finalUploadTime)
+                        .set(mood)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "Data Addition Successful");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "Data Addition Failed" + e.toString());
+                            }
+                        });
+                Intent intent = new Intent(NewMood.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
 
-            public void createNewImage(){
+            /**
+             * Uploads images to storage
+             */
+            private void createNewImage(){
                 if (reqCode != -1) {
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
                     email = mAuth.getCurrentUser().getEmail();
@@ -371,29 +402,63 @@ public class NewMood extends AppCompatActivity{
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
-
-                if (ContextCompat.checkSelfPermission(NewMood.this , Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-                    ActivityCompat.requestPermissions(NewMood.this, new String[]{Manifest.permission.CAMERA}, 100);
+                Context context = NewMood.this;
+                Activity activity = NewMood.this;
+                int ExtstorePermission = ContextCompat.checkSelfPermission(context,
+                        Manifest.permission.READ_EXTERNAL_STORAGE);
+                int cameraPermission = ContextCompat.checkSelfPermission(context,
+                        Manifest.permission.CAMERA);
+                List<String> listPermissionsNeeded = new ArrayList<>();
+                if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded.add(Manifest.permission.CAMERA);
                 }
-
-                if (ContextCompat.checkSelfPermission(NewMood.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
-                {
-                    ActivityCompat.requestPermissions(NewMood.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
+                if (ExtstorePermission != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded
+                            .add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 }
-
-                if (ContextCompat.checkSelfPermission(NewMood.this , Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED)
-                {}
-                else if (ContextCompat.checkSelfPermission(NewMood.this , Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED)
-                {}
-                else
-                {
+                if (!listPermissionsNeeded.isEmpty()) {
+                    ActivityCompat.requestPermissions(activity, listPermissionsNeeded
+                                    .toArray(new String[listPermissionsNeeded.size()]),
+                            1);
+                }
+                else{
                     selectImage(NewMood.this);
                 }
             }
         });
     }
 
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @Nonnull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        int ExtstorePermission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+        int cameraPermission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA);
+        List<String> listPermissionsNeeded = new ArrayList<>();
+
+        switch (requestCode){
+            case 1:
+                if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded.add(Manifest.permission.CAMERA);
+                }
+                if (ExtstorePermission != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded
+                            .add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                }
+                if (listPermissionsNeeded.isEmpty()) {
+                    selectImage(NewMood.this);
+                }
+                return;
+        }
+    }
+
+    /**
+     * Creates a pop up menu
+     * @param context
+     * context is the menu that is being created
+     */
     private void selectImage(Context context) {
         final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
 
@@ -425,6 +490,15 @@ public class NewMood extends AppCompatActivity{
         builder.show();
     }
 
+    /**
+     * displays preview image
+     * @param requestCode
+     * Check which request to respond to
+     * @param resultCode
+     * Check if request was successful
+     * @param data
+     * Determine which contact was selected
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
@@ -515,7 +589,9 @@ public class NewMood extends AppCompatActivity{
         finish();
     }
 
-    // GOOGLE MAPS STUFF
+    /**
+     * Checks if location services are active
+     */
     protected void createLocationRequest() {
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setInterval(10000);
