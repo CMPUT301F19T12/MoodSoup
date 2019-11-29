@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +23,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -32,33 +40,27 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
 
-/**
- * ProfileFragment
- * V1.2
- *
- * This page displays moods of the user
- *
- * @author jinzhou
- * @author atilla
- */
 public class ProfileFragment extends Fragment implements PendingContext.SheetListener{
     private FirebaseAuth mAuth;
     private String TAG = "ERROR HERE!";
     private ListView moodList;
     private TextView profileName;
+    private ListView event;
     private ArrayList<Mood> event_list;
     private ArrayAdapter<Mood> event_listAdapter;
     private String emailFromBundle;
-    private String email;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.profile,container,false);
+        event = root.findViewById(R.id.event_list_self);
         ///Set profile picture
         ProfileFragmentArgs profileFragmentArgs = ProfileFragmentArgs.fromBundle(getArguments());
         emailFromBundle = profileFragmentArgs.getEmail();
@@ -91,7 +93,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
 
         String uid = user.getUid();
         String name = user.getDisplayName();
-        email = emailFromBundle;
+        final String email = emailFromBundle;
 
 
         // Set user name on profile layout display view
@@ -113,7 +115,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Mood mood = new Mood(document.get("email").toString(), document.get("username").toString(), document.get("date").toString(), document.get("time").toString(), document.get("emotion").toString(), document.get("reason").toString(), document.get("social").toString(), document.get("location").toString(), (GeoPoint) document.get("coords"));
+                        Mood mood = new Mood(document.get("email").toString(), document.get("username").toString(), document.get("date").toString(), document.get("time").toString(), document.get("emotion").toString(), document.get("reason").toString(), document.get("social").toString(), document.get("location").toString(), (GeoPoint) document.get("coords"), (boolean)document.get("imgIncluded"));
                         event_list.add(mood);
                     }
 
@@ -121,7 +123,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
                     Log.d(TAG, "FAIL", task.getException());
                 }
                 Collections.sort(event_list, new StringDateComparator());
-                event_listAdapter = new MoodList(getActivity(), event_list);
+                event_listAdapter = new MoodList(context, event_list);
                 moodList.setAdapter(event_listAdapter);
             }
         });
@@ -130,7 +132,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
         moodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Navigation.findNavController(root).navigate(ProfileFragmentDirections.actionNavProfileToNavMoodViewFragment(emailFromBundle,event_list.get(i).getDate(),event_list.get(i).getTime()));
+                Navigation.findNavController(root).navigate(ProfileFragmentDirections.actionNavProfileToNavMoodViewFragment(emailFromBundle,event_list.get(i).getDate()+' '+event_list.get(i).getTime()));
             }
         });
 
@@ -152,17 +154,16 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
     }
 
     /**
-     * The function will display a context menu if the listView is long-clicked.
+     * The function will dispaly a context menu if the listView is long-clicked.
      */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
     {
-        if (email.equals(mAuth.getCurrentUser().getEmail())) {
-            super.onCreateContextMenu(menu, v, menuInfo);
-            MenuInflater inflater = getActivity().getMenuInflater();
-            if (v.getId() == R.id.event_list_self) {
-                inflater.inflate(R.menu.profile_menu, menu);
-            }
+        super.onCreateContextMenu(menu,v,menuInfo);
+        System.out.println("Long clicked");
+        MenuInflater inflater = getActivity().getMenuInflater();
+        if (v.getId() == R.id.event_list_self) {
+            inflater.inflate(R.menu.profile_menu,menu);
         }
     }
 
@@ -230,10 +231,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
                 intent.putExtra("reason",editMood.getReason());
                 intent.putExtra("social",editMood.getSocial());
                 intent.putExtra("location",editMood.getLocation());
-                if (event_list.get(info.position).getCoords() != null) {
-                    intent.putExtra("latitude", event_list.get(info.position).getCoords().getLatitude());
-                    intent.putExtra("longitude", event_list.get(info.position).getCoords().getLongitude());
-                }
+                //intent.putExtra("coords",editMood.getCoords().toString());
                 startActivity(intent);
             default:
                 return super.onContextItemSelected(item);
