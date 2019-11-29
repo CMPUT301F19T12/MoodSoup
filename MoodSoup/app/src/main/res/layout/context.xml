@@ -144,10 +144,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/new_mood_location"
         app:srcCompat="@android:drawable/ic_menu_camera" />
-
-
-    <!--
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    -->
+    
 </androidx.constraintlayout.widget.ConstraintLayout>
