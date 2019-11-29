@@ -4,6 +4,10 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+/**
+ * @author Darian Chen
+ */
+
 public class NewMoodTest {
     NewMood cNewMood = new NewMood();
 
