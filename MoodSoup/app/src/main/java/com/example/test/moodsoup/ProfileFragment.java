@@ -121,7 +121,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
                     Log.d(TAG, "FAIL", task.getException());
                 }
                 Collections.sort(event_list, new StringDateComparator());
-                event_listAdapter = new MoodList(context, event_list);
+                event_listAdapter = new MoodList(getActivity(), event_list);
                 moodList.setAdapter(event_listAdapter);
             }
         });

@@ -94,6 +94,7 @@ public class MoodList extends ArrayAdapter<Mood> {
         imageRef.getName().equals(imageReference.getName());    // true
         imageRef.getPath().equals(imageReference.getPath());    // false
 
+        photo.setVisibility(View.GONE);
         final long ONE_MEGABYTE = 1024 * 1024;
         imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
@@ -109,16 +110,25 @@ public class MoodList extends ArrayAdapter<Mood> {
             reasonLabel.setVisibility(View.VISIBLE);
             reason.setVisibility(View.VISIBLE);
             reason.setText(mood.getReason());
+        } else{
+            reasonLabel.setVisibility(View.GONE);
+            reason.setVisibility(View.GONE);
         }
         if(!mood.getSocial().equals("")) {
             socialLabel.setVisibility(View.VISIBLE);
             social.setVisibility(View.VISIBLE);
             social.setText(mood.getSocial());
+        }else{
+            socialLabel.setVisibility(View.GONE);
+            social.setVisibility(View.GONE);
         }
         if(!mood.getLocation().equals("")) {
             locationLabel.setVisibility(View.VISIBLE);
             location.setVisibility(View.VISIBLE);
             location.setText(mood.getLocation());
+        }else{
+            locationLabel.setVisibility(View.GONE);
+            location.setVisibility(View.GONE);
         }
         name.setText(mood.getEmail());
 
