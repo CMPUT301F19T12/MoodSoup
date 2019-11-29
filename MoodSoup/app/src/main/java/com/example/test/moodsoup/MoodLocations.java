@@ -2,17 +2,13 @@ package com.example.test.moodsoup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +41,8 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 
 /**
  * @author Richard Qin
- * Handles putting markers on a Google Maps View
+ * Handles loading up the Google MapView
+ * Handles placing markers on the MapView
  */
 public class MoodLocations extends Fragment implements OnMapReadyCallback {
 
@@ -61,6 +58,7 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.activity_mood_locations, container, false);
 
+        // Hide the floating add button on this fragment
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).hideFloatingActionButton(); // hide the FAB
         }
@@ -79,12 +77,7 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
                     public void onSuccess(Location location) {
                         if (location != null) {
                             LatLng curPos = new LatLng(location.getLatitude(),location.getLongitude());
-                            CameraPosition cameraPosition = new CameraPosition.Builder()
-                                    .target(curPos)
-                                    .zoom(17)
-                                    .bearing(0)
-                                    .tilt(0)
-                                    .build();
+                            CameraPosition cameraPosition = new CameraPosition.Builder().target(curPos).zoom(17).bearing(0).tilt(0).build();
                             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                         }
                     }
@@ -97,6 +90,7 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
         mapOptions.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         options.setAdapter(mapOptions);
 
+        //
         options.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

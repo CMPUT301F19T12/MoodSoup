@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -16,9 +17,11 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -29,11 +32,14 @@ import com.google.firebase.storage.StorageReference;
 public class MoodViewFragment extends Fragment {
     // Declare Variables
     private String email;
+    private String date;
+    private String time;
     private String uploadTime;
     private String emotion;
     private String reason;
     private String situation;
     private String location;
+    private GeoPoint coords;
     private FirebaseFirestore db;
     private TextView emailTV;
     private TextView dateTV;
@@ -49,7 +55,9 @@ public class MoodViewFragment extends Fragment {
         final View root = inflater.inflate(R.layout.activity_mood_view_fragment, container, false);
         db = FirebaseFirestore.getInstance();
         email = MoodViewFragmentArgs.fromBundle(getArguments()).getEmail();
-        uploadTime = MoodViewFragmentArgs.fromBundle(getArguments()).getUploadTime();
+        date = MoodViewFragmentArgs.fromBundle(getArguments()).getDate();
+        time = MoodViewFragmentArgs.fromBundle(getArguments()).getTime();
+        uploadTime = date+" "+time;
 
         emailTV = root.findViewById(R.id.view_mood_username);
         dateTV = root.findViewById(R.id.view_mood_upload_time);
@@ -63,6 +71,10 @@ public class MoodViewFragment extends Fragment {
         // Hide the Floating Add Mood Button
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).hideFloatingActionButton(); // hide the FAB
+        }
+
+        if (!email.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())){
+            root.findViewById(R.id.view_mood_edit_btn).setVisibility(View.GONE);
         }
 
         // Get details of the mood and set TextViews to display details
@@ -79,9 +91,9 @@ public class MoodViewFragment extends Fragment {
                         emotionTV.setText(emotion);
                         reason = documentSnapshot.get("reason").toString();
                         if (!reason.equals("")){
-                            reason = "\"\"" + reason + "\"\"";
+                            String reasonText = "\"" + reason + "\"";
                             reasonTV.setVisibility(View.VISIBLE);
-                            reasonTV.setText(reason);
+                            reasonTV.setText(reasonText);
                         }
                         situation = documentSnapshot.get("social").toString();
                         if (!situation.equals("")){
@@ -94,6 +106,7 @@ public class MoodViewFragment extends Fragment {
                             locationTV.setVisibility(View.VISIBLE);
                             locationTV.setText(location);
                         }
+                        coords = (GeoPoint) documentSnapshot.get("coords");
 
 
                         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
@@ -128,6 +141,25 @@ public class MoodViewFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Navigation.findNavController(root).navigate(MoodViewFragmentDirections.actionNavMoodViewFragmentToNavProfile().setEmail(email));
+            }
+        });
+
+        root.findViewById(R.id.view_mood_edit_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), NewMood.class);
+                intent.putExtra("date",date);
+                intent.putExtra("time",time);
+                intent.putExtra("emotion",emotion);
+                intent.putExtra("email",email);
+                intent.putExtra("reason",reason);
+                intent.putExtra("social",situation);
+                intent.putExtra("location",location);
+                if (coords != null) {
+                    intent.putExtra("latitude", coords.getLatitude());
+                    intent.putExtra("longitude", coords.getLongitude());
+                }
+                startActivity(intent);
             }
         });
 

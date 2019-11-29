@@ -100,11 +100,6 @@ public class MoodList extends ArrayAdapter<Mood> {
                 photo.setImageBitmap(Bitmap.createScaledBitmap(bmp, bmp.getWidth(),
                         bmp.getHeight(), false));
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                photo.setVisibility(View.GONE);
-            }
         });
 
         if (!mood.getReason().equals("")) {

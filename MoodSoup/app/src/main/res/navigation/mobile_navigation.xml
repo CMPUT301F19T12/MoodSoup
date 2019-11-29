@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.test.moodsoup.ui.home.HomeFragment"
+        android:name="com.example.test.moodsoup.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -68,11 +68,14 @@
             android:name="email"
             app:argType="string" />
         <argument
-            android:name="uploadTime"
+            android:name="date"
             app:argType="string" />
         <action
             android:id="@+id/action_nav_moodViewFragment_to_nav_profile"
             app:destination="@id/nav_profile" />
+        <argument
+            android:name="time"
+            app:argType="string" />
     </fragment>
 
 </navigation>
