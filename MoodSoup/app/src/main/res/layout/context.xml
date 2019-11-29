@@ -41,7 +41,7 @@
 
     <TextView
         android:id="@+id/feeling"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginStart="200dp"
         android:layout_marginTop="20dp"
@@ -63,7 +63,7 @@
 
     <TextView
         android:id="@+id/new_mood_reason"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginStart="200dp"
         android:visibility="gone"
@@ -84,7 +84,7 @@
 
     <TextView
         android:id="@+id/new_mood_social"
-        android:layout_width="59dp"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginStart="200dp"
         android:text="social"
@@ -144,4 +144,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_camera" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
