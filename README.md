@@ -1,9 +1,10 @@
 # MoodSoup
 # V2.0
-# 
-# atilla
-# dchen
-# jinzhou
-# pspiers
-# rqin1
-# smayer
+# 20191129
+
+atilla
+dchen
+jinzhou
+pspiers
+rqin1
+smayer
