@@ -22,6 +22,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertTrue;
 
 /**
@@ -53,10 +54,12 @@ public class AndroidTest {
     }
 
     /**
-     * Registers a new user and checks to see if they are logged in
+     * @author Richard Qin
+     * Attempts to register a new user
+     * Checks to see if they are logged in with newly created account
      */
     @Test
-    public void checkRegistration(){
+    public void checkRegistrationSuccess(){
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(rule.getActivity().getApplicationContext(),Register.class);
         rule.getActivity().startActivity(intent);
@@ -71,6 +74,32 @@ public class AndroidTest {
         assertEquals(email, FirebaseAuth.getInstance().getCurrentUser().getEmail());
         FirebaseAuth.getInstance().getCurrentUser().delete();
         FirebaseFirestore.getInstance().collection("Users").document(email).delete();
+        FirebaseAuth.getInstance().signOut();
+    }
+
+    /**
+     * @author Richard Qin
+     * Attempts to create account with precreated existing email: test@gmail.com
+     * Checks to see that error text appears
+     * Checks to see that activity is still Register Activity
+     * Checks to see that no user is logged in
+     */
+    @Test
+    public void checkRegistrationFail(){
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(rule.getActivity().getApplicationContext(),Register.class);
+        rule.getActivity().startActivity(intent);
+        solo.assertCurrentActivity("Wrong Activity: Expected Register",Register.class);
+        final String email = "test@gmail.com";
+        solo.enterText((EditText)solo.getView(R.id.email_new_user_tv),email);
+        final String username = "test";
+        solo.enterText((EditText)solo.getView(R.id.username_new_user_tv),username);
+        final String password = "test1234";
+        solo.enterText((EditText)solo.getView(R.id.password_new_user_tv),password);
+        solo.clickOnButton("Register");
+        solo.waitForText(rule.getActivity().getString(R.string.invalid_email));
+        solo.assertCurrentActivity("Wrong Activity: Expected Register",Register.class);
+        assertNull(FirebaseAuth.getInstance().getCurrentUser());
         FirebaseAuth.getInstance().signOut();
     }
 
@@ -94,7 +123,30 @@ public class AndroidTest {
         FirebaseAuth.getInstance().signOut();
     }
 
-    /*@Test
+    /**
+     * @author Richard Qin
+     * Attempts to login to precreated account test@gmail.com with wrong password
+     * Checks to see if still on Login Activity
+     * Checks to see if a user is logged in
+     */
+    @Test
+    public void checkLoginFail(){
+        Intent intent = new Intent(rule.getActivity().getApplicationContext(),Login.class);
+        rule.getActivity().startActivity(intent);
+        final String email = "test@gmail.com";
+        final String password = "test1234567890";
+        solo.enterText((EditText)solo.getView(R.id.username),email);
+        solo.enterText((EditText)solo.getView(R.id.password),password);
+        solo.clickOnView(solo.getView(R.id.login));
+        solo.assertCurrentActivity("Wrong Activity: Expected LoginActivity", Login.class);
+        assertNull(FirebaseAuth.getInstance().getCurrentUser());
+        FirebaseAuth.getInstance().signOut();
+    }
+
+    /*
+    WILL KEEP THIS HERE FOR REFERENCE
+    BUT PROBABLY GONNA DELETE THIS AROUND MIDNIGHT THURSDAY
+    @Test
     public void checkFollows(){
         // Create first account
         solo.assertCurrentActivity("Wrong Activity: Expected Login",Login.class);

@@ -1,4 +1,4 @@
-package com.example.test.moodsoup.ui.home;
+package com.example.test.moodsoup;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -13,13 +13,6 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-
-import com.example.test.moodsoup.FollowingDirections;
-import com.example.test.moodsoup.MainActivity;
-import com.example.test.moodsoup.Mood;
-import com.example.test.moodsoup.MoodList;
-import com.example.test.moodsoup.R;
-import com.example.test.moodsoup.StringDateComparator;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +28,6 @@ import java.util.Collections;
 
 public class HomeFragment extends Fragment {
 
-    //private HomeViewModel homeViewModel;
     private FirebaseFirestore db;
     private ListView moodList;
     private ArrayList<String> followerArray;
@@ -43,10 +35,7 @@ public class HomeFragment extends Fragment {
     private ArrayList<Mood> filteredMood;
     private ArrayAdapter<Mood> moodAdapter;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        //homeViewModel =
-        //ViewModelProviders.of(this).get(HomeViewModel.class);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.fragment_home, container, false);
 
         //Set adapter for moodList
@@ -76,10 +65,10 @@ public class HomeFragment extends Fragment {
             });
         }
 
-        /*
-        Whenever filter is selected
-        - position 0 means no filter
-        - Rest will have its emotion attached to it
+        /**
+         * Whenever filter is selected
+         * - position 0 means no filter
+         * - Rest will have its emotion attached to it
         */
         Spinner filter = root.findViewById(R.id.filter);
         filter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -107,14 +96,14 @@ public class HomeFragment extends Fragment {
         moodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Navigation.findNavController(root).navigate(HomeFragmentDirections.actionNavHomeToNavMoodViewFragment(moodArray.get(i).getEmail(), moodArray.get(i).getDate()+" "+moodArray.get(i).getTime()));
+                Navigation.findNavController(root).navigate(HomeFragmentDirections.actionNavHomeToNavMoodViewFragment(moodArray.get(i).getEmail(), moodArray.get(i).getDate(),moodArray.get(i).getTime()));
             }
         });
 
         return root;
     }
 
-    /*
+    /**
      * This Function will set a filter by setting a new array "filteredMood"
      * which will be used to display in screen
      * - Much faster method because we do not have to access firebase.
@@ -131,10 +120,10 @@ public class HomeFragment extends Fragment {
 
     }
 
-    /*
-    when view is initialized, a "followerArray" will be created to track all the users I'm following.
-    After, with the follower's now we will add the moods created by followers into "moodArray"
-    which will be shown in listView
+    /**
+    * when view is initialized, a "followerArray" will be created to track all the users I'm following.
+    * After, with the follower's now we will add the moods created by followers into "moodArray"
+    * which will be shown in listView
     */
     public void getFollowerMood() {
         for (int i = 0; i < followerArray.size(); ++i) {
