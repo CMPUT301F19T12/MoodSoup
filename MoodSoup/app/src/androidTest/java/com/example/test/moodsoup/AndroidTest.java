@@ -2,6 +2,7 @@ package com.example.test.moodsoup;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -59,7 +60,7 @@ public class AndroidTest {
     }
 
     /**
-     * @author Sanae Mayer
+     * @author smayer
      * Attempts to follow test2 with test account using email
      */
     @Test
@@ -114,7 +115,7 @@ public class AndroidTest {
     }
 
     /**
-     * @author Sanae Mayer
+     * @author smayer
      * Attempts to follow test2 with test account using username
      */
     @Test
@@ -169,7 +170,7 @@ public class AndroidTest {
     }
 
     /**
-     * @author Sanae Mayer
+     * @author smayer
      * Attempts to search for user(test3@gmail.com) that does not exist using email
      */
     @Test
@@ -198,7 +199,7 @@ public class AndroidTest {
     }
 
     /**
-     * @author Sanae Mayer
+     * @author smayer
      * Attempts to search for user(test3) that does not exist using username
      */
     @Test
@@ -227,7 +228,7 @@ public class AndroidTest {
     }
 
     /**
-     * @author Sanae Mayer
+     * @author smayer
      * Attempts to Accept a follow request that is manually added
      */
     @Test
@@ -295,7 +296,7 @@ public class AndroidTest {
     }
 
     /**
-     * @author Sanae Mayer
+     * @author smayer
      * Attempts to declines a follow request that is manually added
      */
     @Test
@@ -361,7 +362,7 @@ public class AndroidTest {
     }
 
     /**
-     * @author Sanae Mayer
+     * @author smayer
      * Attempts to remove a follower that is manually added
      */
     @Test
@@ -425,7 +426,7 @@ public class AndroidTest {
     }
 
     /**
-     * @author Sanae Mayer
+     * @author smayer
      * Attempts to remove a following that is manually added
      */
     @Test
@@ -489,7 +490,7 @@ public class AndroidTest {
     }
 
     /**
-     * @author Sanae Mayer
+     * @author smayer
      * Attempts to remove a following that is manually added
      */
     @Test
@@ -551,7 +552,7 @@ public class AndroidTest {
     }
 
     /**
-     * @author Richard Qin
+     * @author rqin1
      * Attempts to register a new user
      * Checks to see if they are logged in with newly created account
      */
@@ -576,7 +577,7 @@ public class AndroidTest {
     }
 
     /**
-     * @author Richard Qin
+     * @author rqin1
      * Attempts to create account with precreated existing email: test@gmail.com
      * Checks to see that error text appears
      * Checks to see that activity is still Register Activity
@@ -602,7 +603,7 @@ public class AndroidTest {
     }
 
     /**
-     * @author Richard Qin
+     * @author rqin1
      * Checks login with precreated account test@gmail.com
      * Checks to see if moved to MainActivity on Login Button
      * Checks to see if current user is same as email
@@ -622,7 +623,7 @@ public class AndroidTest {
         FirebaseAuth.getInstance().signOut();
     }
     /**
-     * @author Richard Qin
+     * @author rqin1
      * Attempts to login to precreated account test@gmail.com with wrong password
      * Checks to see if still on Login Activity
      * Checks to see if a user is logged in
@@ -729,7 +730,7 @@ public class AndroidTest {
     }*/
 
     /**
-     * @author Belton He <jinzhou@ulaberta.ca>
+     * @author jinzhou
      * checks if Profile Navigation works
      * checks if it's user's profile
      */

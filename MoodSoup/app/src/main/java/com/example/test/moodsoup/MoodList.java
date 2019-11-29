@@ -21,9 +21,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
- * @author Sanae Mayer <smayer@ualberta.ca>
- * @author Peter Spiers <pspiers@ualberta.ca>
- * @author Darian Chen <dchen@ualberta.ca>
+ * @author smayer
+ * @author pspiers
+ * @author dchen
  * This class will handle the arrayAdapter of the mainpage/profile
  * where it sets how listview is displayed
  */

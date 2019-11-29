@@ -40,7 +40,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 /**
- * @author Richard Qin
+ * @author rqin1
  * Handles loading up the Google MapView
  * Handles placing markers on the MapView
  */

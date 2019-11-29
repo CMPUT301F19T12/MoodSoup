@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * @author Darian Chen
+ * @author dchen
  */
 
 public class NewMoodTest {

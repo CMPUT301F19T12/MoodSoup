@@ -62,8 +62,8 @@ import javax.annotation.Nonnull;
 
 /**
  * Handles creating a new mood
- * @author Sanae Mayer
- * @author Richard Qin
+ * @author smayer
+ * @author rqin1
  */
 
 public class NewMood extends AppCompatActivity{

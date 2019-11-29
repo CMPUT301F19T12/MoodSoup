@@ -24,8 +24,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import java.util.ArrayList;
 
 /**
- * * @author Sanae Mayer <smayer@ualberta.ca>
- * @author Peter Spiers <pspiers@ualberta.ca>
+ * * @author smayer
+ * @author pspiers
  * This class handles the arrayAdapyer of the pending Listview
  */
 public class PendingContext extends ArrayAdapter<String> {

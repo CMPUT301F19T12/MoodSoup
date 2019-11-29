@@ -35,8 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * @author Richard Qin
- * @author Darian Chen
+ * @author rqin1
+ * @author dchen
  * This activity deals with creating a new account
  * Creates new account using Firebase Authentication
  */

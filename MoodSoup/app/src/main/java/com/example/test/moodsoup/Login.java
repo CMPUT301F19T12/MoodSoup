@@ -20,9 +20,9 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Objects;
 
 /**
- * @author Atilla Ackbay
- * @author Richard Qin
- * @author Darian Chen
+ * @author atilla
+ * @author rqin1
+ * @author dchen
  * This activity handles logging in the user using an existing account
  * Logs user in using Firebase Authentication
  */

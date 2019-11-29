@@ -39,8 +39,8 @@ import static androidx.navigation.Navigation.findNavController;
  * This page contains a list of all the people who are following you and a list of all the requests
  * that you have active. You may delete a following and you may accept or reject a request.
  *
- *@author smayer <smayer@ualberta.ca>
- * @author Peter Spiers <pspiers@ualberta.ca>
+ *@author smayer
+ * @author pspiers
  */
 
 public class Following extends Fragment implements PendingContext.SheetListener {

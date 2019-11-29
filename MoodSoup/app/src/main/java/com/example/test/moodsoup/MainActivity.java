@@ -31,10 +31,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
- * @author Richard Qin
- * @author Darian Chen
- * @author Sanae Mayer
- * @author Atilla Akbay - Add moveable Floating action button
+ * @author rqin1
+ * @author dchen
+ * @author smayer
+ * @author atilla - Add moveable Floating action button
  * Handles navigating to the different fragments and activities
  * Hosts the user's information and passes it to the different fragments and activities
  */

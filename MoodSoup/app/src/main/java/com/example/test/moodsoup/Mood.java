@@ -3,7 +3,7 @@ package com.example.test.moodsoup;
 import com.google.firebase.firestore.GeoPoint;
 
 /**
- * @author Richard Qin
+ * @author rqin1
  * Holds details of a Mood Object
  */
 public class Mood{

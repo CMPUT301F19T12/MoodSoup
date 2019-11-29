@@ -29,7 +29,7 @@ import java.util.Collections;
 /**
  * Handles displaying the most recent Moods of users being followed
  * Also Home Screen when logged in
- * @author Sanae Mayers
+ * @author smayer
  */
 public class HomeFragment extends Fragment {
 

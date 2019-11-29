@@ -35,8 +35,8 @@ import java.util.ArrayList;
  * This page contains a list of all pending follow requests, a list of all users the current user
  * is follower and a button which leads to follow_search to find users to add.
  *
- * @author Sanae Mayer <smayer@ualberta.ca>
- * @author Peter Spiers <pspiers@ualberta.ca>
+ * @author smayer
+ * @author pspiers
  */
 public class Followers extends Fragment implements RequestContext.RequestSheetListener {
     private ArrayList<String> requestList;

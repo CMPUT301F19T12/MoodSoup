@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Comparator;
 
 /**
- @author Sanae Mayer
+ @author smayer
  The function is used to compare moods and sort it by date and time
  */
 public class StringDateComparator implements Comparator<Mood> {

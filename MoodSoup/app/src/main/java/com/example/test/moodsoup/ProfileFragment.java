@@ -49,8 +49,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 
 /**
- * @author Belton He <jinzhou@ualberta.ca>
- * @author Atilla Ackbay <atilla@ualberta.ca>
+ * @author jinzhou
+ * @author atilla
  * This page displays moods of the user
  */
 public class ProfileFragment extends Fragment implements PendingContext.SheetListener{
