@@ -1,0 +1,37 @@
+
+
+Competitive Products:
+
+FaceBook like the feature that allows user to express their emotion on a post, but main purpose for expressing emotions.
+
+    Mood is like a tweet or post on Facebook, which tracks your social media presence, mood is shown as an emoticon which the user can add details attached alongside.
+    Also very similar to Instagram with the ability to follow your friends
+    Geolocation and maps is a function that can be visibly seen on Snapchat and Instagram showing where the user sent their latest moods
+
+Glossary:
+
+    Emoticon: different types of emotions available that express user's current mood.
+
+    Follow: To have been granted permission by a user (after requesting), to access their Mood History.
+
+    Follow Request: To request to follow another user.
+
+    Follower: A user who is following another user. The follower-user has been granted permission to view the other users Mood History.
+
+    Following Request: To be requested by a user to be followed by said user.
+
+    Geolocation: Being able to see the location of where the mood event happened.
+
+    Mood (Synonym => emotion): One of the 8 emotions that can be selected. Happy, sad, excited, angry, bored, tired, scared, surprised.
+
+    Mood Event: A post or event that displays the user's emotions, using emoticons with the current date and time, a required emotional state, optional reason, and optional social situation.
+
+    Mood History: A list of the all Mood Events posted by a user.
+
+    Participants: Students or staff that attend the university.
+
+Resource: \
+
+    Map/location feature help: https://developers.google.com/maps/documentation/android-sdk/start
+    Following/Follower function: Very similar to the following and follower function on instagram
+
