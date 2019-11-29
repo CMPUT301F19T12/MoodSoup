@@ -31,24 +31,11 @@ import com.google.firebase.storage.StorageReference;
  */
 public class MoodViewFragment extends Fragment {
     // Declare Variables
-    private String email;
-    private String date;
-    private String time;
-    private String uploadTime;
-    private String emotion;
-    private String reason;
-    private String situation;
-    private String location;
+    private String email, date, time, uploadTime, emotion, reason, situation, location;
     private GeoPoint coords;
     private FirebaseFirestore db;
-    private TextView emailTV;
-    private TextView dateTV;
-    private TextView emotionTV;
-    private TextView reasonTV;
-    private TextView situationTV;
-    private TextView locationTV;
+    private TextView emailTV, dateTV, emotionTV, reasonTV, situationTV, locationTV, situationTV2;
     private ImageView imageView;
-    private TextView situationTV2;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Initialize Variables

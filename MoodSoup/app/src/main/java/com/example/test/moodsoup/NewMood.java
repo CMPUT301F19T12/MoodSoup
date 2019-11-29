@@ -320,7 +320,7 @@ public class NewMood extends AppCompatActivity{
              * @param userName
              * Create mood object with userName
              */
-            public void createNewMood(String userName) {
+            private void createNewMood(String userName) {
                 Mood mood = new Mood(email, userName, finalCurrentDate, finalCurrentTime, emotionText, reasonText, socialText, addressLocation, geoPoint);
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 CollectionReference collectionReference = db.collection("Users");
@@ -349,7 +349,7 @@ public class NewMood extends AppCompatActivity{
             /**
              * Uploads images to storage
              */
-            public void createNewImage(){
+            private void createNewImage(){
                 if (reqCode != -1) {
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
                     email = mAuth.getCurrentUser().getEmail();
