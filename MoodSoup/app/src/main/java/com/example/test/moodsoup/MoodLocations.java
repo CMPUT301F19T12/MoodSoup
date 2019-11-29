@@ -145,6 +145,7 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
                                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                 if (task.isSuccessful()) {
                                                     for (QueryDocumentSnapshot document : task.getResult()) {
+                                                        // Create Mood Object
                                                         Mood mood = new Mood(document.get("email").toString(),
                                                                 document.get("username").toString(), document.get("date").toString(),
                                                                 document.get("time").toString(), document.get("emotion").toString(),
@@ -178,7 +179,10 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
         return root;
     }
 
-    // Various Google Map View related functions
+    /**
+     * Initializes MapView
+     * @param savedInstanceState
+     */
     private void initGoogleMap(Bundle savedInstanceState){
         // *** IMPORTANT ***
         // MapView requires that the Bundle you pass contain _ONLY_ MapView SDK
@@ -192,6 +196,7 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
 
         mMapView.getMapAsync(this);
     }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -223,6 +228,11 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
         mMapView.onStop();
     }
 
+    /**
+     * Checks permissions and finds User Location
+     * @param map
+     * map is Google Map Object
+     */
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;

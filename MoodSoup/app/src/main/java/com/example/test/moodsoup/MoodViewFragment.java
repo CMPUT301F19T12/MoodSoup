@@ -124,6 +124,7 @@ public class MoodViewFragment extends Fragment {
             }
         });
 
+        // Navigate to poster's profile when clicking their email
         emailTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -131,6 +132,7 @@ public class MoodViewFragment extends Fragment {
             }
         });
 
+        // Edit Mood Button
         root.findViewById(R.id.view_mood_edit_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

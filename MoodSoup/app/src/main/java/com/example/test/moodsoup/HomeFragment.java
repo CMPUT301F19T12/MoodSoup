@@ -26,6 +26,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Handles displaying the most recent Moods of users being followed
+ * Also Home Screen when logged in
+ * @author Sanae Mayers
+ */
 public class HomeFragment extends Fragment {
 
     private FirebaseFirestore db;
@@ -65,7 +70,7 @@ public class HomeFragment extends Fragment {
             });
         }
 
-        /**
+        /*
          * Whenever filter is selected
          * - position 0 means no filter
          * - Rest will have its emotion attached to it
@@ -107,6 +112,9 @@ public class HomeFragment extends Fragment {
      * This Function will set a filter by setting a new array "filteredMood"
      * which will be used to display in screen
      * - Much faster method because we do not have to access firebase.
+     * @param position
+     * position indicates the position of the Mood in the filter Spinner
+     *
      */
     private void setFilter(final int position) {
         final String[] emotion = getResources().getStringArray(R.array.emotionFilter);
