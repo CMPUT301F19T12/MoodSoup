@@ -62,7 +62,7 @@ public class AndroidTest {
         Intent intent = new Intent(rule.getActivity().getApplicationContext(),Register.class);
         rule.getActivity().startActivity(intent);
         solo.assertCurrentActivity("Wrong Activity: Expected Register",Register.class);
-        final String email = "test2@gmail.com";
+        final String email = "test5@gmail.com";
         solo.enterText((EditText)solo.getView(R.id.email_new_user_tv),email);
         final String username = "test";
         solo.enterText((EditText)solo.getView(R.id.username_new_user_tv),username);
@@ -137,7 +137,7 @@ public class AndroidTest {
         solo.enterText((EditText)solo.getView(R.id.username),email);
         solo.enterText((EditText)solo.getView(R.id.password),password);
         solo.clickOnView(solo.getView(R.id.login));
-        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        solo.assertCurrentActivity("Wrong Activity: Expected Login", Login.class);
         assertNull(FirebaseAuth.getInstance().getCurrentUser());
         FirebaseAuth.getInstance().signOut();
     }
