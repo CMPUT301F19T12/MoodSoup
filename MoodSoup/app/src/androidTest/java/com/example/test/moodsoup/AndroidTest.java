@@ -6,7 +6,9 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.EditText;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.robotium.solo.Solo;
 
@@ -20,6 +22,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+
+import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
 /**
@@ -51,6 +55,62 @@ public class AndroidTest {
     @Test
     public void start() throws Exception{
         Activity activity = rule.getActivity();
+    }
+
+    /**
+     * @author Sanae Mayer
+     * Attempts to follow test2 with test account
+     */
+    @Test
+    public void checkSearchRequestSuccess() {
+        final String email = "test@gmail.com";
+        final String password = "test123";
+
+        solo.enterText((EditText) solo.getView(R.id.username), email);
+        solo.enterText((EditText) solo.getView(R.id.password), password);
+        solo.clickOnView(solo.getView(R.id.login));
+
+        solo.sleep(3000);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.sleep(3000);
+        solo.clickOnMenuItem("Search");
+        solo.sleep(5000);
+
+
+        solo.enterText((EditText) solo.getView(R.id.Search_User), "test2@gmail.com");
+        solo.clickOnCheckBox(1);
+        solo.clickOnButton(2);
+
+        solo.sleep(3000);
+
+        solo.clickOnButton("Send Request");
+        solo.sleep(3000);
+
+        final String myEmail = "test@gmail.com";
+        final String requestEmail = "test2@gmail.com";
+
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(myEmail).collection("pending").document(requestEmail)
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                String myPending = documentSnapshot.getData().get("pending").toString();
+                assertEquals(myPending, requestEmail);
+                FirebaseFirestore.getInstance().collection("Users").document(myEmail).collection("pending").document(requestEmail).delete();
+            }
+        });
+
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(requestEmail).collection("request").document(myEmail)
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                String myRequest = documentSnapshot.getData().get("request").toString();
+                assertEquals(myRequest, myEmail);
+                FirebaseFirestore.getInstance().collection("Users").document(requestEmail).collection("request").document(myEmail).delete();
+
+            }
+        });
     }
 
     /**
@@ -184,10 +244,5 @@ public class AndroidTest {
     @After
     public void tearDown() throws Exception {
         solo.finishOpenedActivities();
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getEmail()).delete();
-            FirebaseAuth.getInstance().getCurrentUser().delete();
-            FirebaseAuth.getInstance().signOut();
-        }
     }
 }

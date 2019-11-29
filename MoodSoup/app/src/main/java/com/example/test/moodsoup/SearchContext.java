@@ -152,7 +152,7 @@ public class SearchContext extends ArrayAdapter<String> {
                                                             });
                                                     //Add me to searched user's request
                                                     HashMap<String, String> requestData = new HashMap<>();
-                                                    requestData.put("request", email);
+                                                    requestData.put("request", user.getEmail());
                                                     db.collection("Users")
                                                             .document(email)
                                                             .collection("request")

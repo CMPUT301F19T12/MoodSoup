@@ -77,6 +77,10 @@ public class SearchFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked)
                     email.setChecked(false);
+                else {
+                    if (!email.isChecked())
+                        username.setChecked(true);
+                }
             }
         });
 
@@ -85,8 +89,13 @@ public class SearchFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked)
                     username.setChecked(false);
+                else {
+                    if (!username.isChecked())
+                        email.setChecked(true);
+                }
             }
         });
+
 
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).hideFloatingActionButton(); // hide the FAB
