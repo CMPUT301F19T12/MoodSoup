@@ -98,10 +98,9 @@
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="20dp"
         android:text="Location: "
-        android:visibility="gone"
         android:textColor="#52131212"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/social_label" />
 
@@ -110,12 +109,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="200dp"
-        android:layout_marginBottom="16dp"
         android:text="City, Province"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/photo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/new_mood_social" />
+    <TextView
+        android:id="@+id/image_included"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginStart="16dp"
+        android:text="This Mood has an image"
+        android:textColor="#52131212"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/location_label" />
 
     <ImageView
         android:id="@+id/image"
@@ -126,25 +133,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/moodsoup_happy" />
-
-    <ImageView
-        android:visibility="gone"
-        android:id="@+id/photo"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="10dp"
-        android:padding="5dp"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        android:background="@android:color/transparent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/new_mood_location"
-        app:srcCompat="@android:drawable/ic_menu_camera"
-        android:maxWidth="300dp"
-        android:maxHeight="300dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

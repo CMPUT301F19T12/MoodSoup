@@ -60,7 +60,6 @@ public class MoodList extends ArrayAdapter<Mood> {
         TextView locationLabel = view.findViewById(R.id.location_label);
         TextView location = view.findViewById(R.id.new_mood_location);
         ImageView image = view.findViewById(R.id.image);
-        final ImageView photo = view.findViewById(R.id.photo);
 
         info.setText(String.format("@%s - %s - %s", mood.getUsername(), mood.getDate(), mood.getTime()));
         emotion.setText(mood.getEmotion());
@@ -94,20 +93,10 @@ public class MoodList extends ArrayAdapter<Mood> {
         imageRef.getName().equals(imageReference.getName());    // true
         imageRef.getPath().equals(imageReference.getPath());    // false
 
-
         if (mood.isImgIncluded()) {
-            final long ONE_MEGABYTE = 1024 * 1024;
-            imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    photo.setVisibility(View.VISIBLE);
-                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    photo.setImageBitmap(Bitmap.createScaledBitmap(bmp, bmp.getWidth(),
-                            bmp.getHeight(), false));
-                }
-            });
+            view.findViewById(R.id.image_included).setVisibility(View.VISIBLE);
         } else{
-            photo.setVisibility(View.GONE);
+            view.findViewById(R.id.image_included).setVisibility(View.GONE);
         }
 
         if (!mood.getReason().equals("")) {
