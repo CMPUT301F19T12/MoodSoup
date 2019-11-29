@@ -143,7 +143,7 @@ public class AndroidTest {
         solo.enterText((EditText)solo.getView(R.id.username),email);
         solo.enterText((EditText)solo.getView(R.id.password),password);
         solo.clickOnView(solo.getView(R.id.login));
-        solo.assertCurrentActivity("Wrong Activity: Expected LoginActivity", Login.class);
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
         assertNull(FirebaseAuth.getInstance().getCurrentUser());
         FirebaseAuth.getInstance().signOut();
     }
@@ -240,24 +240,22 @@ public class AndroidTest {
      * checks if Profile Navigation works
      * checks if it's user's profile
      */
-    /*
     @Test
     public void checkProfiles(){
         Intent intent = new Intent(rule.getActivity().getApplicationContext(),Login.class);
         rule.getActivity().startActivity(intent);
-        final String email = "jinzhou@ualberta.ca";
+        final String email = "test@gmail.com";
         solo.enterText((EditText)solo.getView(R.id.username),email);
-        final String password = "beltonhe";
+        final String password = "test123";
         solo.enterText((EditText)solo.getView(R.id.password),password);
         solo.clickOnView(solo.getView(R.id.login));
-        solo.assertCurrentActivity("Wrong Activity: Expected LoginFragment", Login.class);
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
         ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
         solo.clickOnMenuItem("Profile");
-        solo.assertCurrentActivity("Wrong Activity: Expected ProfileFragment", ProfileFragment.class);
         assertEquals(email,FirebaseAuth.getInstance().getCurrentUser().getEmail());
         FirebaseAuth.getInstance().signOut();
     }
-    */
+
     /**
      * Close activity after each test
      * Deletes the accounts created after each test
