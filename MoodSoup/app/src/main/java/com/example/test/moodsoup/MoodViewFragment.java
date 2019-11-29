@@ -26,7 +26,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 /**
+ * MoodViewFragment
+ * V1.0
+ *
  * Creates a larger view for the moods
+ *
  * @author rqin1
  */
 public class MoodViewFragment extends Fragment {

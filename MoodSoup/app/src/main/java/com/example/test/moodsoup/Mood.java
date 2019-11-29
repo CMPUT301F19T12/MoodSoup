@@ -3,8 +3,12 @@ package com.example.test.moodsoup;
 import com.google.firebase.firestore.GeoPoint;
 
 /**
- * @author rqin1
+ * Mood
+ * V1.2
+ *
  * Holds details of a Mood Object
+ *
+ * @author rqin1
  */
 public class Mood{
     private String email;

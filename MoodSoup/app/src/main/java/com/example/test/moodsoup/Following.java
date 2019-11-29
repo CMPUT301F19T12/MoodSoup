@@ -30,7 +30,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import static androidx.navigation.Navigation.findNavController;
 /**
  * Following
  * V1.1

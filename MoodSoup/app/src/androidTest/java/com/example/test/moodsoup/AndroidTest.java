@@ -29,6 +29,7 @@ import androidx.test.rule.ActivityTestRule;
 import java.util.HashMap;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertTrue;
 
 /**

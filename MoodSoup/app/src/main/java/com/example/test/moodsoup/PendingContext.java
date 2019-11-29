@@ -9,24 +9,25 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
- * * @author smayer
- * @author pspiers
+ * PendingContext
+ * V1.1
+ *
  * This class handles the arrayAdapyer of the pending Listview
+ *
+ * @author smayer
+ * @author pspiers
  */
 public class PendingContext extends ArrayAdapter<String> {
     private ArrayList<String> emails;

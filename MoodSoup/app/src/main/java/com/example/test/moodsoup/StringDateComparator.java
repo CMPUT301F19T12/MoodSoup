@@ -1,15 +1,18 @@
 package com.example.test.moodsoup;
 
 import android.annotation.SuppressLint;
-import android.icu.text.RelativeDateTimeFormatter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 
 /**
- @author smayer
- The function is used to compare moods and sort it by date and time
+ * StringDateComparator
+ * V1.0
+ *
+ * The function is used to compare moods and sort it by date and time
+ *
+ * @author smayer
  */
 public class StringDateComparator implements Comparator<Mood> {
     @SuppressLint("SimpleDateFormat")

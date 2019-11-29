@@ -27,8 +27,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
+ * HomeFragment
+ * V1.0
+ *
  * Handles displaying the most recent Moods of users being followed
  * Also Home Screen when logged in
+ *
  * @author smayer
  */
 public class HomeFragment extends Fragment {

@@ -31,12 +31,16 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
+ * MainActivity
+ * V2.0
+ *
+ * Handles navigating to the different fragments and activities
+ * Hosts the user's information and passes it to the different fragments and activities
+ *
  * @author rqin1
  * @author dchen
  * @author smayer
  * @author atilla - Add moveable Floating action button
- * Handles navigating to the different fragments and activities
- * Hosts the user's information and passes it to the different fragments and activities
  */
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private FirebaseAuth mAuth;

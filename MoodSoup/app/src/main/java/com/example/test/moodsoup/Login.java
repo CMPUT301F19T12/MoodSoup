@@ -17,14 +17,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.Objects;
-
 /**
+ * Login
+ * V1.2
+ *
+ * This activity handles logging in the user using an existing account
+ * Logs user in using Firebase Authentication
+ *
  * @author atilla
  * @author rqin1
  * @author dchen
- * This activity handles logging in the user using an existing account
- * Logs user in using Firebase Authentication
  */
 public class Login extends AppCompatActivity {
 

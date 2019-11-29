@@ -40,9 +40,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 /**
- * @author rqin1
+ * MoodLocations
+ * V1.2
+ *
  * Handles loading up the Google MapView
  * Handles placing markers on the MapView
+ *
+ * @author rqin1
  */
 public class MoodLocations extends Fragment implements OnMapReadyCallback {
 

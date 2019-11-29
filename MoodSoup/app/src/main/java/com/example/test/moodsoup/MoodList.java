@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -21,11 +20,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
+ * MoodList
+ * V1.2
+ *
+ * This class will handle the arrayAdapter of the mainpage/profile
+ * where it sets how listview is displayed
+ *
  * @author smayer
  * @author pspiers
  * @author dchen
- * This class will handle the arrayAdapter of the mainpage/profile
- * where it sets how listview is displayed
  */
 public class MoodList extends ArrayAdapter<Mood> {
     private ArrayList<Mood> moods;

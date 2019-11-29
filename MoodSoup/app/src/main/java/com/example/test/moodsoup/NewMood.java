@@ -61,7 +61,11 @@ import java.util.Locale;
 import javax.annotation.Nonnull;
 
 /**
+ * NewMood
+ * V1.2
+ *
  * Handles creating a new mood
+ *
  * @author smayer
  * @author rqin1
  */
