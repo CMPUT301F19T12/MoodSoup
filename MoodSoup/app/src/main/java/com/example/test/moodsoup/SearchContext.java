@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,7 +50,7 @@ public class SearchContext extends ArrayAdapter<String> {
 
         final String email = emails.get(position);
         final TextView emailText = view.findViewById(R.id.email);
-        final ImageButton addUser = view.findViewById(R.id.addUser);
+        final Button addUser = view.findViewById(R.id.addUser);
 
         emailText.setText(email);
 

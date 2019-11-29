@@ -48,6 +48,11 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 
+/**
+ * @author Belton He <jinzhou@ualberta.ca>
+ * @author Atilla Ackbay
+ * This page displays moods of the user
+ */
 public class ProfileFragment extends Fragment implements PendingContext.SheetListener{
     private FirebaseAuth mAuth;
     private String TAG = "ERROR HERE!";
@@ -57,6 +62,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
     private ArrayList<Mood> event_list;
     private ArrayAdapter<Mood> event_listAdapter;
     private String emailFromBundle;
+    private String email;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.profile,container,false);
@@ -93,7 +99,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
 
         String uid = user.getUid();
         String name = user.getDisplayName();
-        final String email = emailFromBundle;
+        email = emailFromBundle;
 
 
         // Set user name on profile layout display view
@@ -159,11 +165,12 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
     {
-        super.onCreateContextMenu(menu,v,menuInfo);
-        System.out.println("Long clicked");
-        MenuInflater inflater = getActivity().getMenuInflater();
-        if (v.getId() == R.id.event_list_self) {
-            inflater.inflate(R.menu.profile_menu,menu);
+        if (email.equals(mAuth.getCurrentUser().getEmail())) {
+            super.onCreateContextMenu(menu, v, menuInfo);
+            MenuInflater inflater = getActivity().getMenuInflater();
+            if (v.getId() == R.id.event_list_self) {
+                inflater.inflate(R.menu.profile_menu, menu);
+            }
         }
     }
 

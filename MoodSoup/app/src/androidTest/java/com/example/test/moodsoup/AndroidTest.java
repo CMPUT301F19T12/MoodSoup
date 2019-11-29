@@ -2,9 +2,11 @@ package com.example.test.moodsoup;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,6 +22,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+
+import java.util.ArrayList;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNull;
@@ -109,6 +113,7 @@ public class AndroidTest {
      * Checks to see if moved to MainActivity on Login Button
      * Checks to see if current user is same as email
      */
+
     @Test
     public void checkLoginSuccess(){
         Intent intent = new Intent(rule.getActivity().getApplicationContext(),Login.class);
@@ -122,7 +127,7 @@ public class AndroidTest {
         assertEquals(email, FirebaseAuth.getInstance().getCurrentUser().getEmail());
         FirebaseAuth.getInstance().signOut();
     }
-
+    /*@Test
     /**
      * @author Richard Qin
      * Attempts to login to precreated account test@gmail.com with wrong password
@@ -229,7 +234,29 @@ public class AndroidTest {
         solo.clickOnMenuItem("Logout");
     }*/
 
-
+    /**
+     * @author Belton He <jinzhou@ulaberta.ca>
+     * checks if Profile Navigation works
+     * checks if it's user's profile
+     */
+    /*
+    @Test
+    public void checkProfiles(){
+        Intent intent = new Intent(rule.getActivity().getApplicationContext(),Login.class);
+        rule.getActivity().startActivity(intent);
+        final String email = "jinzhou@ualberta.ca";
+        solo.enterText((EditText)solo.getView(R.id.username),email);
+        final String password = "beltonhe";
+        solo.enterText((EditText)solo.getView(R.id.password),password);
+        solo.clickOnView(solo.getView(R.id.login));
+        solo.assertCurrentActivity("Wrong Activity: Expected LoginFragment", Login.class);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Profile");
+        solo.assertCurrentActivity("Wrong Activity: Expected ProfileFragment", ProfileFragment.class);
+        assertEquals(email,FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        FirebaseAuth.getInstance().signOut();
+    }
+    */
     /**
      * Close activity after each test
      * Deletes the accounts created after each test
