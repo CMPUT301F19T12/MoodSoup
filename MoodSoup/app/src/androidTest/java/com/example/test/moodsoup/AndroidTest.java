@@ -754,7 +754,7 @@ public class AndroidTest {
 
     /**
      * @author jinzhou
-     * checks whether edit mood button takes you to the activity_mood_view_fragment
+     * checks whether it system allows to expand a post
      */
     @Test
     public void AccessEditMood() {
@@ -770,8 +770,6 @@ public class AndroidTest {
         solo.clickOnMenuItem("Profile");
         solo.clickInList(1);
         solo.assertCurrentActivity("Wrong Activity: Expected MoodViewFragment", MoodViewFragment.class);
-        ImageButton imageButton = (ImageButton)solo.getView("view_mood_edit_btn");
-        solo.clickOnView(imageButton);
         FirebaseAuth.getInstance().signOut();
     }
 
