@@ -389,11 +389,22 @@ public class NewMood extends AppCompatActivity{
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @Nonnull int[] grantResults)
     {
         super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        int ExtstorePermission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+        int cameraPermission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA);
+        List<String> listPermissionsNeeded = new ArrayList<>();
+
         switch (requestCode){
             case 1:
-                if (ContextCompat.checkSelfPermission(NewMood.this , Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
-                        ContextCompat.checkSelfPermission(NewMood.this , Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
-                {
+                if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded.add(Manifest.permission.CAMERA);
+                }
+                if (ExtstorePermission != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded
+                            .add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                }
+                if (listPermissionsNeeded.isEmpty()) {
                     selectImage(NewMood.this);
                 }
                 return;
