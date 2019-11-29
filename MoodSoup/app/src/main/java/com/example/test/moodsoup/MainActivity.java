@@ -80,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             float downRawX;
             float downRawY;
 
+
+            //switch mode
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 float newX, newY;
@@ -99,14 +101,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         // out of screen?
                         if ((newX <= 0 || newX >= screenWidth-view.getWidth()) || (newY <= 0 || newY >= screenHeight-view.getHeight()))
                         {
-                            //before = MotionEvent.ACTION_MOVE;
+
                             break;
                         }
 
                         view.setX(newX);
                         view.setY(newY);
 
-                        //before = MotionEvent.ACTION_MOVE;
+
 
                         break;
 

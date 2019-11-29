@@ -152,7 +152,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
     }
 
     /**
-     * The function will dispaly a context menu if the listView is long-clicked.
+     * The function will display a context menu if the listView is long-clicked.
      */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
