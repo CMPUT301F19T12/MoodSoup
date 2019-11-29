@@ -1,6 +1,6 @@
 # MoodSoup
-V2.0\
-20191129
+<b>V2.0</b>\
+<b>2019-11-29</b>
 
 atilla\ 
 dchen\
