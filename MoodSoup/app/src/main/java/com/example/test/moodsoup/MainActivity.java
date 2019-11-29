@@ -75,49 +75,53 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final float screenWidth = displaymetrics.widthPixels;
 
         fab.setOnTouchListener(new View.OnTouchListener() {
-
             float horizontal;
             float horizontalX;
             int before;
-
+            float downRawX;
+            float downRawY;
 
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-
-
                 float newX, newY;
-
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
-
+                        downRawX = event.getRawX();
+                        downRawY = event.getRawY();
                         horizontal = view.getX() - event.getRawX();
                         horizontalX = view.getY() - event.getRawY();
                         before = MotionEvent.ACTION_DOWN;
                         break;
 
                     case MotionEvent.ACTION_MOVE:
-
                         newX = event.getRawX() + horizontal;
                         newY = event.getRawY() + horizontalX;
 
                         // out of screen?
                         if ((newX <= 0 || newX >= screenWidth-view.getWidth()) || (newY <= 0 || newY >= screenHeight-view.getHeight()))
                         {
-                            before = MotionEvent.ACTION_MOVE;
+                            //before = MotionEvent.ACTION_MOVE;
                             break;
                         }
 
                         view.setX(newX);
                         view.setY(newY);
 
-                        before = MotionEvent.ACTION_MOVE;
+                        //before = MotionEvent.ACTION_MOVE;
 
                         break;
 
                     case MotionEvent.ACTION_UP:
+                        float upRawX = event.getRawX();
+                        float upRawY = event.getRawY();
+
+                        float upDX = upRawX - downRawX;
+                        float upDY = upRawY - downRawY;
                         if (before == MotionEvent.ACTION_DOWN) {
-                            Intent newMood = new Intent(MainActivity.this, NewMood.class);
-                            startActivity(newMood);
+                            if(Math.abs(upDX) < 10 && Math.abs(upDY) < 10) {
+                                Intent newMood = new Intent(MainActivity.this, NewMood.class);
+                                startActivity(newMood);
+                            }
                         }
                         break;
 
