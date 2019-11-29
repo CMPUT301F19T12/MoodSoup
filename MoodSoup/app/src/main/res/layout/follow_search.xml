@@ -1,12 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0C000000"
+    android:background="#ffffff"
     android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/addnew_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background=" #f1f1f1 "
+        android:gravity="center_horizontal"
+        android:text="@string/Search"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/empty_space2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingBottom="5dp" />
+
+    <View
+        android:id="@+id/empty_space2"
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="#000000"
+        app:layout_constraintBottom_toTopOf="@id/Search_User"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addnew_tv" />
+
+    <Button
+        android:id="@+id/search_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:buttonTint="#23a4ef"
+        android:onClick="Search_button"
+        android:text="Search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/emailCheck" />
+
+    <CheckBox
+        android:id="@+id/emailCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:buttonTint="#23a4ef"
+        android:text="Search By Email"
+        android:textColorHighlight="#23a4ef"
+        android:textColorLink="#23a4ef"
+        app:layout_constraintStart_toEndOf="@id/usernameCheck"
+        app:layout_constraintTop_toBottomOf="@id/Search_User" />
+
+    <CheckBox
+        android:id="@+id/usernameCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:buttonTint="#23a4ef"
+        android:text="Search By Username"
+        android:textColorHighlight="#23a4ef"
+        android:textColorLink="#23a4ef"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/Search_User" />
 
     <EditText
         android:id="@+id/Search_User"
@@ -22,53 +86,16 @@
         android:paddingStart="10dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:textCursorDrawable="@null"
-        />
-
-    <CheckBox
-        android:id="@+id/usernameCheck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="Search By Username"
-        android:textColorHighlight="#23a4ef"
-        android:textColorLink="#23a4ef"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/Search_User"
-        android:buttonTint="#23a4ef"/>
-
-    <CheckBox
-        android:id="@+id/emailCheck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="Search By Email"
-        android:textColorHighlight="#23a4ef"
-        android:textColorLink="#23a4ef"
-        app:layout_constraintStart_toEndOf="@id/usernameCheck"
-        app:layout_constraintTop_toBottomOf="@id/Search_User"
-        android:buttonTint="#23a4ef"/>
-
-    <Button
-        android:id="@+id/search_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:onClick="Search_button"
-        android:text="Search"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailCheck"
-        android:buttonTint="#23a4ef"/>
+        app:layout_constraintTop_toBottomOf="@id/empty_space2" />
 
     <ListView
         android:id="@+id/search_result"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="#ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

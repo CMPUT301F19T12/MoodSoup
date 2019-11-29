@@ -26,7 +26,7 @@
 
     <View
         android:id="@+id/empty_space2"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0.8dp"
         android:background="#000000"
         app:layout_constraintBottom_toTopOf="@id/view_mood_username"
@@ -44,7 +44,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/empty_space2"
-        android:textSize="16sp"
+        android:textSize="18dp"
         android:textStyle="bold"
         android:textColor="#000000"/>
 
@@ -59,17 +59,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_mood_username"
-        android:textSize="12sp"
+        android:textSize="14sp"
         android:visibility="gone"/>
 
     <View
         android:id="@+id/empty_space"
-        android:layout_width="300dp"
+        android:layout_width="0dp"
         android:layout_height="0.8dp"
-        android:background="#e1e1e1"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:background="#e1e1e1"
         app:layout_constraintBottom_toTopOf="@id/feeling_label"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_mood_username" />
 
@@ -81,6 +83,7 @@
         android:layout_marginTop="16dp"
         android:text="Feeling: "
         android:textColor="#52131212"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/empty_space" />
 
@@ -90,7 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:textColor="#000000"
-        android:textSize="14sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@id/feeling_label"
         app:layout_constraintTop_toBottomOf="@id/empty_space" />
 
@@ -101,6 +104,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="6dp"
         android:text="Social Situation: "
+        android:textSize="16sp"
         android:textColor="#52131212"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_mood_emotion"
@@ -114,7 +118,7 @@
         android:layout_marginTop="6dp"
         android:text="social_situation_placeholder"
         android:textColor="#000000"
-        android:textSize="14sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@id/social_label"
         app:layout_constraintTop_toBottomOf="@id/view_mood_emotion"
         android:visibility="gone" />
@@ -163,12 +167,18 @@
         app:layout_constraintTop_toBottomOf="@id/view_mood_image"
         android:textSize="14sp" />
 
-    <Button
+    <ImageButton
         android:id="@+id/view_mood_edit_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@android:drawable/ic_menu_edit"
+        android:text="Edit"
+        app:layout_constraintBottom_toTopOf="@+id/empty_space"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/empty_space2" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

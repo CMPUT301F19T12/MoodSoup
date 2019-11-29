@@ -6,36 +6,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- THIS ISN'T WORKING IDK WHY -->
-
     <TextView
         android:id="@+id/Profiles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="20sp"
+        android:background="#f1f1f1"
+        android:gravity="center_horizontal"
         android:text="Profile"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@id/ProfileName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:paddingBottom="30dp"/>
+
+    <TextView
+        android:id="@+id/currentlyViewing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f1f1f1"
         android:gravity="center_horizontal"
-        android:background="#f1f1f1"/>
+        android:text="Currently Viewing:"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/ProfileName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Profiles" />
 
     <TextView
         android:id="@+id/ProfileName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/empty_space2"
-        app:layout_constraintTop_toBottomOf="@id/Profiles"
+        app:layout_constraintTop_toBottomOf="@id/currentlyViewing"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         android:paddingBottom="4dp"
         android:gravity="center_horizontal"
-        android:background="#f1f1f1"/>
+        android:background="#f1f1f1"
+        android:textColor="#000000" />
 
     <View
         android:id="@+id/empty_space2"
