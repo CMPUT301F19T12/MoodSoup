@@ -33,18 +33,18 @@ import java.util.ArrayList;
  * 2019-11-07
  *
  * This page contains a list of all pending follow requests, a list of all users the current user
- * is following and a button which leads to follow_search to find users to add.
+ * is follower and a button which leads to follow_search to find users to add.
  *
  * @author Sanae Mayer <smayer@ualberta.ca>
  * @author Peter Spiers <pspiers@ualberta.ca>
  */
 public class Followers extends Fragment implements RequestContext.RequestSheetListener {
     private ArrayList<String> requestList;
-    private ArrayList<String> followingList;
+    private ArrayList<String> followerList;
     private ListView request;
-    private ListView following;
+    private ListView follower;
     private ArrayAdapter<String> listAdapter;
-    private ArrayAdapter followingAdapter;
+    private ArrayAdapter followerAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,9 +56,9 @@ public class Followers extends Fragment implements RequestContext.RequestSheetLi
         }
 
         requestList = new ArrayList<>();
-        followingList = new ArrayList<>();
+        followerList = new ArrayList<>();
         request = root.findViewById(R.id.requests);
-        following = root.findViewById(R.id.following);
+        follower = root.findViewById(R.id.followers);
 
         final FirebaseFirestore db;
         final String TAG = "Sample";
@@ -94,11 +94,11 @@ public class Followers extends Fragment implements RequestContext.RequestSheetLi
 
                     for (QueryDocumentSnapshot document : task.getResult())
                     {
-                        followingList.add(document.getId());
+                        followerList.add(document.getId());
                     }
-                    followingAdapter = new FollowerContext(context , followingList);
-                    following.setAdapter(followingAdapter);
-                    registerForContextMenu(following);
+                    followerAdapter = new FollowerContext(context , followerList);
+                    follower.setAdapter(followerAdapter);
+                    registerForContextMenu(follower);
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
                 }
@@ -115,27 +115,27 @@ public class Followers extends Fragment implements RequestContext.RequestSheetLi
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
     {
         MenuInflater inflater = getActivity().getMenuInflater();
-        if (v.getId() == R.id.following) {
-            inflater.inflate(R.menu.following_menu,menu);
+        if (v.getId() == R.id.followers) {
+            inflater.inflate(R.menu.follower_menu,menu);
         }
     }
 
     /**
      * The function will handle events when a item in context menu is clicked.
-     * It will handles removing the following from the list and firebase.
+     * It will handles removing the follower from the list and firebase.
      * */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.remove:
                 AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-                String email = followingList.get(info.position);
+                String email = followerList.get(info.position);
                 final String TAG = "Remove Following";
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 final FirebaseUser user = mAuth.getCurrentUser();
                 if (user != null) {
-                    //Remove user from my following
+                    //Remove user from my follower
                     db.collection("Users").document(user.getEmail()).collection("follower").document(email)
                             .delete()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -152,7 +152,7 @@ public class Followers extends Fragment implements RequestContext.RequestSheetLi
                             });
 
                     //Remove me from user's follower list
-                    db.collection("Users").document(email).collection("following").document(user.getEmail())
+                    db.collection("Users").document(email).collection("follower").document(user.getEmail())
                             .delete()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -167,8 +167,8 @@ public class Followers extends Fragment implements RequestContext.RequestSheetLi
                                 }
                             });
                 }
-                following.setAdapter(followingAdapter);
-                followingList.remove(info.position);
+                follower.setAdapter(followerAdapter);
+                followerList.remove(info.position);
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -183,14 +183,14 @@ public class Followers extends Fragment implements RequestContext.RequestSheetLi
     @Override
     public void onButtonClicked(String state, int position) {
         request.setAdapter(listAdapter);
-        following.setAdapter(followingAdapter);
+        follower.setAdapter(followerAdapter);
         if (state.equals("delete"))
         {
             requestList.remove(position);
         }
         else
         {
-            followingList.add(state);
+            followerList.add(state);
         }
     }
 }

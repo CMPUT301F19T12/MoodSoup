@@ -2,8 +2,6 @@ package com.example.test.moodsoup;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Outline;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -11,13 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,7 +24,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -43,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * @author Richard Qin
  * @author Darian Chen
  * @author Sanae Mayer
+ * @author Atilla Akbay - Add moveable Floating action button
  * Handles navigating to the different fragments and activities
  * Hosts the user's information and passes it to the different fragments and activities
  */
@@ -59,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+
 
         fab = findViewById(R.id.fab);
 

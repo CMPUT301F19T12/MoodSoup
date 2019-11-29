@@ -13,7 +13,7 @@ import java.util.Comparator;
  */
 public class StringDateComparator implements Comparator<Mood> {
     @SuppressLint("SimpleDateFormat")
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     @Override
     public int compare(Mood o1, Mood o2) {

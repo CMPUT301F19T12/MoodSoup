@@ -31,13 +31,13 @@
         android:layout_width="match_parent"
         android:layout_height="0.8dp"
         android:background="#000000"
-        app:layout_constraintBottom_toTopOf="@id/follower"
+        app:layout_constraintBottom_toTopOf="@id/following"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/addnew_tv" />
 
     <ListView
-        android:id="@+id/follower"
+        android:id="@+id/following"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:divider="@null"
@@ -56,7 +56,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/follower"
+        app:layout_constraintTop_toBottomOf="@id/following"
         app:layout_constraintBottom_toTopOf="@id/view"
         android:gravity="center"
         android:textStyle="bold"/>

@@ -68,7 +68,7 @@ import javax.annotation.Nonnull;
 
 public class NewMood extends AppCompatActivity{
     // Variable Declaration
-    private TextView date,locationTextView,title;
+    private TextView dateTV,locationTV,title;
     private Spinner emotion, social;
     private EditText reason;
     private ImageButton addPhoto;
@@ -89,11 +89,11 @@ public class NewMood extends AppCompatActivity{
 
         // Variable Initialization
         title = findViewById(R.id.addnew_tv);
-        date = findViewById(R.id.new_mood_datetime);
+        dateTV = findViewById(R.id.new_mood_datetime);
         emotion = findViewById(R.id.new_mood_emotion);
         reason = findViewById(R.id.new_mood_reason);
         social = findViewById(R.id.new_mood_social);
-        locationTextView = findViewById(R.id.get_location);
+        locationTV = findViewById(R.id.get_location);
         addPhoto = findViewById(R.id.add_photo);
 
 
@@ -125,7 +125,7 @@ public class NewMood extends AppCompatActivity{
             // Not editing a mood
             if (extras == null)
             {
-                date.setText(uploadTime);
+                dateTV.setText(uploadTime);
             }
             // Information given to edit a mood
             else
@@ -140,7 +140,7 @@ public class NewMood extends AppCompatActivity{
                 String currentReason = extras.getString("reason");
                 String currentSocial = extras.getString("social");
                 String currentLocation = extras.getString("location");
-                date.setText(uploadTime);
+                dateTV.setText(uploadTime);
 
                 ArrayAdapter emotionAdapter = (ArrayAdapter) emotion.getAdapter();
                 int emotionPosition = emotionAdapter.getPosition(currentEmotion);
@@ -154,7 +154,7 @@ public class NewMood extends AppCompatActivity{
                 social.setSelection(socialPosition);
 
                 if (!currentLocation.equals("")) {
-                    locationTextView.setText(currentLocation);
+                    locationTV.setText(currentLocation);
                     addressLocation = currentLocation;
                 }
                 FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
@@ -199,7 +199,7 @@ public class NewMood extends AppCompatActivity{
         });
 
         // Clicking the add location text view automatically gets your location
-        locationTextView.setOnClickListener(new View.OnClickListener() {
+        locationTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Gets permission to access location if not granted
@@ -246,7 +246,7 @@ public class NewMood extends AppCompatActivity{
                                     Log.i(TAG, getString(R.string.address_found));
                                     addressLocation = addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea();//+", "+addresses.get(0).getCountryName();
                                     //addressLocation = TextUtils.join(System.getProperty("line.separator"),addressFragments);
-                                    locationTextView.setText(addressLocation);
+                                    locationTV.setText(addressLocation);
                                 }
 
                             }

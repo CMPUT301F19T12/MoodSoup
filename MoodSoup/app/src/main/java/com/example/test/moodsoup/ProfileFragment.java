@@ -50,7 +50,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 
 /**
  * @author Belton He <jinzhou@ualberta.ca>
- * @author Atilla Ackbay
+ * @author Atilla Ackbay <atilla@ualberta.ca>
  * This page displays moods of the user
  */
 public class ProfileFragment extends Fragment implements PendingContext.SheetListener{
@@ -58,7 +58,6 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
     private String TAG = "ERROR HERE!";
     private ListView moodList;
     private TextView profileName;
-    private ListView event;
     private ArrayList<Mood> event_list;
     private ArrayAdapter<Mood> event_listAdapter;
     private String emailFromBundle;
@@ -66,7 +65,6 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.profile,container,false);
-        event = root.findViewById(R.id.event_list_self);
         ///Set profile picture
         ProfileFragmentArgs profileFragmentArgs = ProfileFragmentArgs.fromBundle(getArguments());
         emailFromBundle = profileFragmentArgs.getEmail();
