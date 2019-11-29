@@ -1,77 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0C000000"
+    android:background="#ffffff"
     android:orientation="vertical">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/addnew_tv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:orientation="vertical">
-
-        <EditText
-            android:id="@+id/Search_User"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/edittextborder"
-            android:ems="10"
-            android:hint="Enter Name"
-            android:inputType="textShortMessage"
-            android:paddingStart="10dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <CheckBox
-                android:id="@+id/usernameCheck"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Search By Username" />
-
-            <View
-                android:id="@+id/divider3"
-                android:layout_width="10dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@android:color/transparent" />
-
-            <CheckBox
-                android:id="@+id/emailCheck"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Search By Email" />
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/search_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="Search_button"
-            android:text="Search" />
-
-        <ListView
-            android:id="@+id/search_result"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:background=" #f1f1f1 "
+        android:gravity="center_horizontal"
+        android:text="@string/Search"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/empty_space2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingBottom="5dp" />
 
     <View
-        android:id="@+id/divider_reg"
+        android:id="@+id/empty_space2"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="5dp"
-        android:background="#696969" />
+        android:layout_height="0.8dp"
+        android:background="#000000"
+        app:layout_constraintBottom_toTopOf="@id/Search_User"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addnew_tv" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/search_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:buttonTint="#23a4ef"
+        android:onClick="Search_button"
+        android:text="Search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/emailCheck" />
+
+    <CheckBox
+        android:id="@+id/emailCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:buttonTint="#23a4ef"
+        android:text="Search By Email"
+        android:textColorHighlight="#23a4ef"
+        android:textColorLink="#23a4ef"
+        app:layout_constraintStart_toEndOf="@id/usernameCheck"
+        app:layout_constraintTop_toBottomOf="@id/Search_User" />
+
+    <CheckBox
+        android:id="@+id/usernameCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:buttonTint="#23a4ef"
+        android:text="Search By Username"
+        android:textColorHighlight="#23a4ef"
+        android:textColorLink="#23a4ef"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/Search_User" />
+
+    <EditText
+        android:id="@+id/Search_User"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/edittextborder"
+        android:ems="10"
+        android:hint="Enter Name"
+        android:inputType="textShortMessage"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:textCursorDrawable="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/empty_space2" />
+
+    <ListView
+        android:id="@+id/search_result"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#ffffff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_button" />
+
+    <!--
+
+<View
+android:id="@+id/divider3"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:background="@android:color/transparent" />
+
+
+<View
+android:id="@+id/divider_reg"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:background="#696969" />
+
+-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

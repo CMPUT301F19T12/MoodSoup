@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.test.moodsoup.ui.home.HomeFragment"
+        android:name="com.example.test.moodsoup.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -21,7 +21,7 @@
         android:id="@+id/nav_follower"
         android:name="com.example.test.moodsoup.Followers"
         android:label="@string/menu_following"
-        tools:layout="@layout/following" />
+        tools:layout="@layout/fragment_following" />
     <activity
         android:id="@+id/nav_logout"
         android:name="com.example.test.moodsoup.Login"
@@ -40,11 +40,6 @@
             android:id="@+id/action_nav_profile_to_nav_moodViewFragment"
             app:destination="@id/nav_moodViewFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/nav_profileOthers"
-        android:name="com.example.test.moodsoup.ProfileOther"
-        android:label="ProfileOthers"
-        tools:layout="@layout/profile_other" />
     <fragment
         android:id="@+id/nav_search"
         android:name="com.example.test.moodsoup.SearchFragment"
@@ -73,11 +68,14 @@
             android:name="email"
             app:argType="string" />
         <argument
-            android:name="uploadTime"
+            android:name="date"
             app:argType="string" />
         <action
             android:id="@+id/action_nav_moodViewFragment_to_nav_profile"
             app:destination="@id/nav_profile" />
+        <argument
+            android:name="time"
+            app:argType="string" />
     </fragment>
 
 </navigation>

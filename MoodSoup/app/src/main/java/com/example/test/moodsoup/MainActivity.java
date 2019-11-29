@@ -3,13 +3,13 @@ package com.example.test.moodsoup;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +24,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -35,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * @author Richard Qin
  * @author Darian Chen
  * @author Sanae Mayer
+ * @author Atilla Akbay - Add moveable Floating action button
  * Handles navigating to the different fragments and activities
  * Hosts the user's information and passes it to the different fragments and activities
  */
@@ -52,6 +52,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+
+
         fab = findViewById(R.id.fab);
 
         showFloatingActionButton(); // Show the FAB
@@ -60,40 +63,62 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Used to add a new mood
 
 
+        // Get screen Info
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        final float screenHeight = displaymetrics.heightPixels;
+        final float screenWidth = displaymetrics.widthPixels;
 
         fab.setOnTouchListener(new View.OnTouchListener() {
-
             float horizontal;
             float horizontalX;
-            float actualX;
             int before;
+            float downRawX;
+            float downRawY;
 
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-
+                float newX, newY;
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
+                        downRawX = event.getRawX();
+                        downRawY = event.getRawY();
                         horizontal = view.getX() - event.getRawX();
-                        horizontalX = event.getRawX();
+                        horizontalX = view.getY() - event.getRawY();
                         before = MotionEvent.ACTION_DOWN;
                         break;
 
                     case MotionEvent.ACTION_MOVE:
-                        view.setX(event.getRawX() + horizontal);
-                        view.setY(event.getRawY() + horizontal);
+                        newX = event.getRawX() + horizontal;
+                        newY = event.getRawY() + horizontalX;
 
-                        before = MotionEvent.ACTION_MOVE;
+                        // out of screen?
+                        if ((newX <= 0 || newX >= screenWidth-view.getWidth()) || (newY <= 0 || newY >= screenHeight-view.getHeight()))
+                        {
+                            //before = MotionEvent.ACTION_MOVE;
+                            break;
+                        }
+
+                        view.setX(newX);
+                        view.setY(newY);
+
+                        //before = MotionEvent.ACTION_MOVE;
+
                         break;
 
                     case MotionEvent.ACTION_UP:
-                        actualX = event.getRawX()-horizontalX;
-                        // If user clicks to add a new mood...
-                        if (Math.abs(actualX)< 8){
-                            Intent newMood = new Intent(MainActivity.this, NewMood.class);
-                            startActivity(newMood);
+                        float upRawX = event.getRawX();
+                        float upRawY = event.getRawY();
+
+                        float upDX = upRawX - downRawX;
+                        float upDY = upRawY - downRawY;
+                        if (before == MotionEvent.ACTION_DOWN) {
+                            if(Math.abs(upDX) < 10 && Math.abs(upDY) < 10) {
+                                Intent newMood = new Intent(MainActivity.this, NewMood.class);
+                                startActivity(newMood);
+                            }
                         }
                         break;
-                    case MotionEvent.ACTION_BUTTON_PRESS:
 
                     default:
                         return false;

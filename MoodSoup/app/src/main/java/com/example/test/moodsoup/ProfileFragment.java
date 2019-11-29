@@ -48,20 +48,23 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 
+/**
+ * @author Belton He <jinzhou@ualberta.ca>
+ * @author Atilla Ackbay <atilla@ualberta.ca>
+ * This page displays moods of the user
+ */
 public class ProfileFragment extends Fragment implements PendingContext.SheetListener{
     private FirebaseAuth mAuth;
     private String TAG = "ERROR HERE!";
     private ListView moodList;
     private TextView profileName;
-    private ImageButton toFollowing;
-    private ListView event;
     private ArrayList<Mood> event_list;
     private ArrayAdapter<Mood> event_listAdapter;
     private String emailFromBundle;
+    private String email;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.profile,container,false);
-        event = root.findViewById(R.id.event_list_self);
         ///Set profile picture
         ProfileFragmentArgs profileFragmentArgs = ProfileFragmentArgs.fromBundle(getArguments());
         emailFromBundle = profileFragmentArgs.getEmail();
@@ -69,9 +72,8 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
         // View ID
         profileName = root.findViewById(R.id.ProfileName);
         moodList = root.findViewById(R.id.event_list_self);
-        toFollowing = root.findViewById(R.id.imageButton);
         registerForContextMenu(moodList);
-
+      
         // User Instance
 
         mAuth = FirebaseAuth.getInstance();
@@ -95,7 +97,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
 
         String uid = user.getUid();
         String name = user.getDisplayName();
-        final String email = emailFromBundle;
+        email = emailFromBundle;
 
 
         // Set user name on profile layout display view
@@ -134,7 +136,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
         moodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Navigation.findNavController(root).navigate(ProfileFragmentDirections.actionNavProfileToNavMoodViewFragment(emailFromBundle,event_list.get(i).getDate()+' '+event_list.get(i).getTime()));
+                Navigation.findNavController(root).navigate(ProfileFragmentDirections.actionNavProfileToNavMoodViewFragment(emailFromBundle,event_list.get(i).getDate(),event_list.get(i).getTime()));
             }
         });
 
@@ -161,11 +163,12 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
     {
-        super.onCreateContextMenu(menu,v,menuInfo);
-        System.out.println("Long clicked");
-        MenuInflater inflater = getActivity().getMenuInflater();
-        if (v.getId() == R.id.event_list_self) {
-            inflater.inflate(R.menu.profile_menu,menu);
+        if (email.equals(mAuth.getCurrentUser().getEmail())) {
+            super.onCreateContextMenu(menu, v, menuInfo);
+            MenuInflater inflater = getActivity().getMenuInflater();
+            if (v.getId() == R.id.event_list_self) {
+                inflater.inflate(R.menu.profile_menu, menu);
+            }
         }
     }
 
@@ -233,7 +236,10 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
                 intent.putExtra("reason",editMood.getReason());
                 intent.putExtra("social",editMood.getSocial());
                 intent.putExtra("location",editMood.getLocation());
-                //intent.putExtra("coords",editMood.getCoords().toString());
+                if (event_list.get(info.position).getCoords() != null) {
+                    intent.putExtra("latitude", event_list.get(info.position).getCoords().getLatitude());
+                    intent.putExtra("longitude", event_list.get(info.position).getCoords().getLongitude());
+                }
                 startActivity(intent);
             default:
                 return super.onContextItemSelected(item);
