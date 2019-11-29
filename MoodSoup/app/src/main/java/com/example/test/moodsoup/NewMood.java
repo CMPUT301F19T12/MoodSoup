@@ -1,6 +1,7 @@
 package com.example.test.moodsoup;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -55,6 +57,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+
+import javax.annotation.Nonnull;
 
 /**
  * Handles creating a new mood
@@ -114,7 +118,6 @@ public class NewMood extends AppCompatActivity{
         String currentDate = getDateString(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         String currentTime = getTimeString(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
         String uploadTime = currentDate + ' ' + currentTime; // Stored as YYYY-MM-DD HH:MM
-
 
         // Can be passed information in order to edit a mood
         if (savedInstanceState == null)
@@ -181,6 +184,7 @@ public class NewMood extends AppCompatActivity{
                 }
             }
         }
+
         // Create final variables for date/time
         final String finalCurrentDate = currentDate;
         final String finalCurrentTime = currentTime;
@@ -245,6 +249,7 @@ public class NewMood extends AppCompatActivity{
                                     //addressLocation = TextUtils.join(System.getProperty("line.separator"),addressFragments);
                                     locationTextView.setText(addressLocation);
                                 }
+
                             }
 
                         }
@@ -281,10 +286,11 @@ public class NewMood extends AppCompatActivity{
                 }
                 // Reason must be less than twenty characters, if greater than: create error message and set errors to true
                 findViewById(R.id.new_mood_error_reason).setVisibility(View.INVISIBLE);
-                if (reasonText.length()>20){
+                if (reasonText.length() > 20) {
                     findViewById(R.id.new_mood_error_reason).setVisibility(View.VISIBLE);
                     errors = true;
                 }
+
                 // If no errors
                 if (!errors){
                     //IMPLEMENT USER CLASS
@@ -314,31 +320,31 @@ public class NewMood extends AppCompatActivity{
              * @param userName
              * Create mood object with userName
              */
-            public void createNewMood(String userName){
-                Mood mood = new Mood(email,userName, finalCurrentDate, finalCurrentTime,emotionText,reasonText,socialText,addressLocation,geoPoint);
+            public void createNewMood(String userName) {
+                Mood mood = new Mood(email, userName, finalCurrentDate, finalCurrentTime, emotionText, reasonText, socialText, addressLocation, geoPoint);
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 CollectionReference collectionReference = db.collection("Users");
                 collectionReference
-                            .document(email)
-                            .collection("moodHistory")
-                            .document(finalUploadTime)
-                            .set(mood)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d(TAG,"Data Addition Successful");
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d(TAG,"Data Addition Failed" + e.toString());
-                                }
-                            });
-                    Intent intent = new Intent(NewMood.this,MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                }
+                        .document(email)
+                        .collection("moodHistory")
+                        .document(finalUploadTime)
+                        .set(mood)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "Data Addition Successful");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "Data Addition Failed" + e.toString());
+                            }
+                        });
+                Intent intent = new Intent(NewMood.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
 
             /**
              * Uploads images to storage
@@ -386,27 +392,56 @@ public class NewMood extends AppCompatActivity{
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
-
-                if (ContextCompat.checkSelfPermission(NewMood.this , Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-                    ActivityCompat.requestPermissions(NewMood.this, new String[]{Manifest.permission.CAMERA}, 100);
+                Context context = NewMood.this;
+                Activity activity = NewMood.this;
+                int ExtstorePermission = ContextCompat.checkSelfPermission(context,
+                        Manifest.permission.READ_EXTERNAL_STORAGE);
+                int cameraPermission = ContextCompat.checkSelfPermission(context,
+                        Manifest.permission.CAMERA);
+                List<String> listPermissionsNeeded = new ArrayList<>();
+                if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded.add(Manifest.permission.CAMERA);
                 }
-
-                if (ContextCompat.checkSelfPermission(NewMood.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
-                {
-                    ActivityCompat.requestPermissions(NewMood.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
+                if (ExtstorePermission != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded
+                            .add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 }
-
-                if (ContextCompat.checkSelfPermission(NewMood.this , Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED)
-                {}
-                else if (ContextCompat.checkSelfPermission(NewMood.this , Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED)
-                {}
-                else
-                {
+                if (!listPermissionsNeeded.isEmpty()) {
+                    ActivityCompat.requestPermissions(activity, listPermissionsNeeded
+                                    .toArray(new String[listPermissionsNeeded.size()]),
+                            1);
+                }
+                else{
                     selectImage(NewMood.this);
                 }
             }
         });
+    }
+
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @Nonnull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        int ExtstorePermission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+        int cameraPermission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA);
+        List<String> listPermissionsNeeded = new ArrayList<>();
+
+        switch (requestCode){
+            case 1:
+                if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded.add(Manifest.permission.CAMERA);
+                }
+                if (ExtstorePermission != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded
+                            .add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                }
+                if (listPermissionsNeeded.isEmpty()) {
+                    selectImage(NewMood.this);
+                }
+                return;
+        }
     }
 
     /**
