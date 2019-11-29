@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -750,6 +751,30 @@ public class AndroidTest {
         assertEquals(email,FirebaseAuth.getInstance().getCurrentUser().getEmail());
         FirebaseAuth.getInstance().signOut();
     }
+
+    /**
+     * @author jinzhou
+     * checks whether edit mood button takes you to the activity_mood_view_fragment
+     */
+    @Test
+    public void AccessEditMood() {
+        Intent intent = new Intent(rule.getActivity().getApplicationContext(), Login.class);
+        rule.getActivity().startActivity(intent);
+        final String email = "test@gmail.com";
+        solo.enterText((EditText) solo.getView(R.id.username), email);
+        final String password = "test123";
+        solo.enterText((EditText) solo.getView(R.id.password), password);
+        solo.clickOnView(solo.getView(R.id.login));
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Profile");
+        solo.clickInList(1);
+        solo.assertCurrentActivity("Wrong Activity: Expected MoodViewFragment", MoodViewFragment.class);
+        ImageButton imageButton = (ImageButton)solo.getView("view_mood_edit_btn");
+        solo.clickOnView(imageButton);
+        FirebaseAuth.getInstance().signOut();
+    }
+
     /**
      * @author pspiers
      * checks if Maps Navigation works
