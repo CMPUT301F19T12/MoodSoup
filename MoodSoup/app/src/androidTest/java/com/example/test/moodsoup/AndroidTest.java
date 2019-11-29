@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -59,10 +60,10 @@ public class AndroidTest {
 
     /**
      * @author Sanae Mayer
-     * Attempts to follow test2 with test account
+     * Attempts to follow test2 with test account using email
      */
     @Test
-    public void checkSearchRequestSuccess() {
+    public void checkEmailSearchSuccess() {
         final String email = "test@gmail.com";
         final String password = "test123";
 
@@ -72,7 +73,6 @@ public class AndroidTest {
 
         solo.sleep(3000);
         ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
-        solo.sleep(3000);
         solo.clickOnMenuItem("Search");
         solo.sleep(5000);
 
@@ -111,6 +111,119 @@ public class AndroidTest {
 
             }
         });
+    }
+
+    /**
+     * @author Sanae Mayer
+     * Attempts to follow test2 with test account using username
+     */
+    @Test
+    public void checkUsernameSearchSuccess() {
+        final String email = "test@gmail.com";
+        final String password = "test123";
+
+        solo.enterText((EditText) solo.getView(R.id.username), email);
+        solo.enterText((EditText) solo.getView(R.id.password), password);
+        solo.clickOnView(solo.getView(R.id.login));
+
+        solo.sleep(3000);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Search");
+        solo.sleep(5000);
+
+
+        solo.enterText((EditText) solo.getView(R.id.Search_User), "test2");
+        solo.clickOnCheckBox(0);
+        solo.clickOnButton(2);
+
+        solo.sleep(3000);
+
+        solo.clickOnButton("Send Request");
+        solo.sleep(3000);
+
+        final String myEmail = "test@gmail.com";
+        final String requestEmail = "test2@gmail.com";
+
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(myEmail).collection("pending").document(requestEmail)
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                String myPending = documentSnapshot.getData().get("pending").toString();
+                assertEquals(myPending, requestEmail);
+                FirebaseFirestore.getInstance().collection("Users").document(myEmail).collection("pending").document(requestEmail).delete();
+            }
+        });
+
+        FirebaseFirestore.getInstance().collection("Users")
+                .document(requestEmail).collection("request").document(myEmail)
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                String myRequest = documentSnapshot.getData().get("request").toString();
+                assertEquals(myRequest, myEmail);
+                FirebaseFirestore.getInstance().collection("Users").document(requestEmail).collection("request").document(myEmail).delete();
+
+            }
+        });
+    }
+
+    /**
+     * @author Sanae Mayer
+     * Attempts to search for user(test3) that does not exist using email
+     */
+    @Test
+    public void checkEmailSearchFail() {
+        final String email = "test@gmail.com";
+        final String password = "test123";
+
+        solo.enterText((EditText) solo.getView(R.id.username), email);
+        solo.enterText((EditText) solo.getView(R.id.password), password);
+        solo.clickOnView(solo.getView(R.id.login));
+
+        solo.sleep(3000);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Search");
+        solo.sleep(3000);
+
+
+        solo.enterText((EditText) solo.getView(R.id.Search_User), "test3@gmail.com");
+        solo.clickOnCheckBox(1);
+        solo.clickOnButton(2);
+
+        solo.sleep(3000);
+
+        ListView search = (ListView) solo.getView(R.id.search_result);
+        assertEquals(search.getAdapter().getCount(),0);
+    }
+
+    /**
+     * @author Sanae Mayer
+     * Attempts to search for user(test3) that does not exist using email
+     */
+    @Test
+    public void checkUsernameSearchFail() {
+        final String email = "test@gmail.com";
+        final String password = "test123";
+
+        solo.enterText((EditText) solo.getView(R.id.username), email);
+        solo.enterText((EditText) solo.getView(R.id.password), password);
+        solo.clickOnView(solo.getView(R.id.login));
+
+        solo.sleep(3000);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Search");
+        solo.sleep(5000);
+
+
+        solo.enterText((EditText) solo.getView(R.id.Search_User), "test3");
+        solo.clickOnCheckBox(0);
+        solo.clickOnButton(2);
+
+        solo.sleep(3000);
+
+        ListView search = (ListView) solo.getView(R.id.search_result);
+        assertEquals(search.getAdapter().getCount(),0);
     }
 
     /**

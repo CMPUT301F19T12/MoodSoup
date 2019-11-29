@@ -143,9 +143,11 @@ public class SearchFragment extends Fragment {
                                                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                                     if (task.isSuccessful()) {
                                                                         for (QueryDocumentSnapshot document : task.getResult()) {
-                                                                            Log.d(TAG, document.getId() + " => " + document.getData());
-                                                                            emailArray.add(document.getId());
-                                                                            usernameArray.add(document.getData().get("username").toString());
+                                                                            if (document.exists()) {
+                                                                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                                                                emailArray.add(document.getId());
+                                                                                usernameArray.add(document.getData().get("username").toString());
+                                                                            }
                                                                         }
                                                                         ArrayAdapter<String> emailAdapter = new SearchContext(getContext(), emailArray, usernameArray);
                                                                         emailList.setAdapter(emailAdapter);
@@ -169,8 +171,10 @@ public class SearchFragment extends Fragment {
                                                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                                     if (task.isSuccessful()) {
                                                                         DocumentSnapshot document = task.getResult();
-                                                                        emailArray.add(document.getId());
-                                                                        usernameArray.add(document.get("username").toString());
+                                                                        if (document.exists()) {
+                                                                            emailArray.add(document.getId());
+                                                                            usernameArray.add(document.get("username").toString());
+                                                                        }
                                                                         ArrayAdapter<String> emailAdapter = new SearchContext(getContext(), emailArray, usernameArray);
                                                                         emailList.setAdapter(emailAdapter);
                                                                     } else {
