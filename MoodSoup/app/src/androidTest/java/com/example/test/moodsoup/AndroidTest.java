@@ -866,6 +866,57 @@ public class AndroidTest {
     }
 
     /**
+     * @author atilla
+     * checks if we can navigate to home, and other places when at profile screen
+     */
+    public void checkProfile(){
+        final String email = "atilla1@gmail.com";
+        final String password = "atilla1";
+        Intent intent = new Intent(rule.getActivity().getApplicationContext(),Login.class);
+        rule.getActivity().startActivity(intent);
+        solo.enterText((EditText)solo.getView(R.id.username),email);
+        solo.enterText((EditText)solo.getView(R.id.password),password);
+        solo.clickOnView(solo.getView(R.id.login));
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Profile");
+        solo.assertCurrentActivity("Wrong Activity: Expected Profile", ProfileFragment.class);
+        solo.clickOnMenuItem("Home");
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Profile");
+        solo.assertCurrentActivity("Wrong Activity: Expected Profile", ProfileFragment.class);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Search");
+        solo.assertCurrentActivity("Wrong Activity: Expected MoodViewFragment", MoodViewFragment.class);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Profile");
+        solo.assertCurrentActivity("Wrong Activity: Expected Profile", ProfileFragment.class);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        FirebaseAuth.getInstance().signOut();
+
+    }
+    /**
+     * @author atilla
+     * check and see if no mood event is added after pressing add mood FAB and pressing cancel
+     */
+
+    public void checkAdd(){
+        final String email = "atilla1@gmail.com";
+        final String password = "atilla1";
+        Intent intent = new Intent(rule.getActivity().getApplicationContext(),Login.class);
+        rule.getActivity().startActivity(intent);
+        solo.enterText((EditText)solo.getView(R.id.username),email);
+        solo.enterText((EditText)solo.getView(R.id.password),password);
+        solo.clickOnView(solo.getView(R.id.login));
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        solo.clickOnView(solo.getView(R.id.fab));
+        solo.clickOnView(solo.getView(R.id.cancel));
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        FirebaseAuth.getInstance().signOut();
+    }
+
+    /**
      * Close activity after each test
      * Deletes the accounts created after each test
      * @throws Exception
@@ -874,4 +925,6 @@ public class AndroidTest {
     public void tearDown() throws Exception {
         solo.finishOpenedActivities();
     }
+
+
 }
