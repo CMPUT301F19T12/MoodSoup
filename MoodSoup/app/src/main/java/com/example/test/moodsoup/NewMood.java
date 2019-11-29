@@ -1,6 +1,7 @@
 package com.example.test.moodsoup;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,9 +14,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -25,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -57,6 +57,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+
+import javax.annotation.Nonnull;
 
 /**
  * Handles creating a new mood
@@ -118,15 +120,11 @@ public class NewMood extends AppCompatActivity{
         String currentTime = getTimeString(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
         String uploadTime = currentDate + ' ' + currentTime; // Stored as YYYY-MM-DD HH:MM
 
-        if (savedInstanceState == null)
-        {
+        if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
-            if (extras == null)
-            {
+            if (extras == null) {
                 date.setText(uploadTime);
-            }
-            else
-            {
+            } else {
                 uploadTime = extras.getString("date") + ' ' + extras.getString("time");
                 currentDate = extras.getString("date");
                 currentTime = extras.getString("time");
@@ -171,6 +169,7 @@ public class NewMood extends AppCompatActivity{
                 });
             }
         }
+
         //Create final variables for date/time
         final String finalCurrentDate = currentDate;
         final String finalCurrentTime = currentTime;
@@ -191,8 +190,8 @@ public class NewMood extends AppCompatActivity{
                 mFusedLocationClient.getLastLocation().addOnSuccessListener(NewMood.this, new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
-                        if (location != null){
-                            geoPoint = new GeoPoint(location.getLatitude(),location.getLongitude());
+                        if (location != null) {
+                            geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
                             Geocoder geoCoder = new Geocoder(NewMood.this, Locale.getDefault()); //it is Geocoder
                             String errorMessage = "";
                             List<Address> addresses = null;
@@ -217,7 +216,7 @@ public class NewMood extends AppCompatActivity{
                             }
 
                             // Handle case where no address was found.
-                            if (addresses == null || addresses.size()  == 0) {
+                            if (addresses == null || addresses.size() == 0) {
                                 if (errorMessage.isEmpty()) {
                                     errorMessage = getString(R.string.no_address_found);
                                     Log.e(TAG, errorMessage);
@@ -228,11 +227,11 @@ public class NewMood extends AppCompatActivity{
 
                                 // Fetch the address lines using getAddressLine,
                                 // join them, and send them to the thread.
-                                for(int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+                                for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
                                     addressFragments.add(address.getAddressLine(i));
                                 }
                                 Log.i(TAG, getString(R.string.address_found));
-                                addressLocation = addresses.get(0).getLocality()+", "+addresses.get(0).getAdminArea();//+", "+addresses.get(0).getCountryName();
+                                addressLocation = addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea();//+", "+addresses.get(0).getCountryName();
                                 //addressLocation = TextUtils.join(System.getProperty("line.separator"),addressFragments);
                                 locationTextView.setText(addressLocation);
                             }
@@ -252,7 +251,7 @@ public class NewMood extends AppCompatActivity{
                 emotionText = emotion.getSelectedItem().toString();
                 reasonText = reason.getText().toString();
                 socialText = social.getSelectedItem().toString();
-                if (addressLocation==null){
+                if (addressLocation == null) {
                     addressLocation = "";
                 }
                 findViewById(R.id.new_mood_error_emotion).setVisibility(View.INVISIBLE);
@@ -266,11 +265,11 @@ public class NewMood extends AppCompatActivity{
                     errors = true;
                 }
                 findViewById(R.id.new_mood_error_reason).setVisibility(View.INVISIBLE);
-                if (reasonText.length()>20){
+                if (reasonText.length() > 20) {
                     findViewById(R.id.new_mood_error_reason).setVisibility(View.VISIBLE);
                     errors = true;
                 }
-                if (!errors){
+                if (!errors) {
                     //IMPLEMENT USER CLASS
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -291,33 +290,34 @@ public class NewMood extends AppCompatActivity{
                     });
                 }
             }
-            public void createNewMood(String userName){
-                Mood mood = new Mood(email,userName, finalCurrentDate, finalCurrentTime,emotionText,reasonText,socialText,addressLocation,geoPoint);
+
+            public void createNewMood(String userName) {
+                Mood mood = new Mood(email, userName, finalCurrentDate, finalCurrentTime, emotionText, reasonText, socialText, addressLocation, geoPoint);
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 CollectionReference collectionReference = db.collection("Users");
                 collectionReference
-                            .document(email)
-                            .collection("moodHistory")
-                            .document(finalUploadTime)
-                            .set(mood)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d(TAG,"Data Addition Successful");
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d(TAG,"Data Addition Failed" + e.toString());
-                                }
-                            });
-                    Intent intent = new Intent(NewMood.this,MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                }
+                        .document(email)
+                        .collection("moodHistory")
+                        .document(finalUploadTime)
+                        .set(mood)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "Data Addition Successful");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "Data Addition Failed" + e.toString());
+                            }
+                        });
+                Intent intent = new Intent(NewMood.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
 
-            public void createNewImage(){
+            public void createNewImage() {
                 if (reqCode != -1) {
                     FirebaseAuth mAuth = FirebaseAuth.getInstance();
                     email = mAuth.getCurrentUser().getEmail();
@@ -360,27 +360,44 @@ public class NewMood extends AppCompatActivity{
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
-
-                if (ContextCompat.checkSelfPermission(NewMood.this , Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-                    ActivityCompat.requestPermissions(NewMood.this, new String[]{Manifest.permission.CAMERA}, 100);
+                Context context = NewMood.this;
+                Activity activity = NewMood.this;
+                int ExtstorePermission = ContextCompat.checkSelfPermission(context,
+                        Manifest.permission.READ_EXTERNAL_STORAGE);
+                int cameraPermission = ContextCompat.checkSelfPermission(context,
+                        Manifest.permission.CAMERA);
+                List<String> listPermissionsNeeded = new ArrayList<>();
+                if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded.add(Manifest.permission.CAMERA);
                 }
-
-                if (ContextCompat.checkSelfPermission(NewMood.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
-                {
-                    ActivityCompat.requestPermissions(NewMood.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
+                if (ExtstorePermission != PackageManager.PERMISSION_GRANTED) {
+                    listPermissionsNeeded
+                            .add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 }
-
-                if (ContextCompat.checkSelfPermission(NewMood.this , Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED)
-                {}
-                else if (ContextCompat.checkSelfPermission(NewMood.this , Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED)
-                {}
-                else
-                {
+                if (!listPermissionsNeeded.isEmpty()) {
+                    ActivityCompat.requestPermissions(activity, listPermissionsNeeded
+                                    .toArray(new String[listPermissionsNeeded.size()]),
+                            1);
+                }
+                else{
                     selectImage(NewMood.this);
                 }
             }
         });
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @Nonnull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        switch (requestCode){
+            case 1:
+                if (ContextCompat.checkSelfPermission(NewMood.this , Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(NewMood.this , Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
+                {
+                    selectImage(NewMood.this);
+                }
+                return;
+        }
     }
 
     private void selectImage(Context context) {
