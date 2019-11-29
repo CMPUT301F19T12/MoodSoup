@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="16dip">
 
     <TextView
         android:id="@+id/name"
@@ -41,7 +42,7 @@
 
     <TextView
         android:id="@+id/feeling"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginStart="200dp"
         android:layout_marginTop="20dp"
@@ -63,7 +64,7 @@
 
     <TextView
         android:id="@+id/new_mood_reason"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginStart="200dp"
         android:visibility="gone"
@@ -84,7 +85,7 @@
 
     <TextView
         android:id="@+id/new_mood_social"
-        android:layout_width="59dp"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginStart="200dp"
         android:text="social"
@@ -132,16 +133,21 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="10dp"
         android:padding="5dp"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
         android:background="@android:color/transparent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/new_mood_location"
         app:srcCompat="@android:drawable/ic_menu_camera" />
+
+
+    <!--
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    -->
 </androidx.constraintlayout.widget.ConstraintLayout>
