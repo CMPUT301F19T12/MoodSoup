@@ -97,4 +97,7 @@
 
     <!-- activity_mood_view_fragment -->
     <string name="Post">Post</string>
+
+    <!-- follow_search.xml -->
+    <string name="Search">Search</string>
 </resources>

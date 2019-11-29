@@ -82,7 +82,6 @@ public class NewMood extends AppCompatActivity{
     private static final int REQUEST_CHECK_SETTINGS = 9004;
     String TAG = "Sample";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
