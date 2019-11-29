@@ -24,7 +24,9 @@
         android:paddingBottom="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:textCursorDrawable="@null"
+        />
 
     <CheckBox
         android:id="@+id/usernameCheck"
@@ -35,7 +37,8 @@
         android:textColorHighlight="#23a4ef"
         android:textColorLink="#23a4ef"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/Search_User" />
+        app:layout_constraintTop_toBottomOf="@id/Search_User"
+        android:buttonTint="#23a4ef"/>
 
     <CheckBox
         android:id="@+id/emailCheck"
@@ -46,7 +49,8 @@
         android:textColorHighlight="#23a4ef"
         android:textColorLink="#23a4ef"
         app:layout_constraintStart_toEndOf="@id/usernameCheck"
-        app:layout_constraintTop_toBottomOf="@id/Search_User" />
+        app:layout_constraintTop_toBottomOf="@id/Search_User"
+        android:buttonTint="#23a4ef"/>
 
     <Button
         android:id="@+id/search_button"
@@ -58,7 +62,8 @@
         android:text="Search"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailCheck" />
+        app:layout_constraintTop_toBottomOf="@id/emailCheck"
+        android:buttonTint="#23a4ef"/>
 
     <ListView
         android:id="@+id/search_result"
