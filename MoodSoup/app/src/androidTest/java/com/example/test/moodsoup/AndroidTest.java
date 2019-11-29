@@ -30,6 +30,7 @@ import java.util.HashMap;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertNull;
 
 /**
  * Test start on the Login Page and deletes the user that is last logged in
@@ -747,6 +748,96 @@ public class AndroidTest {
         ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
         solo.clickOnMenuItem("Profile");
         assertEquals(email,FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        FirebaseAuth.getInstance().signOut();
+    }
+    /**
+     * @author pspiers
+     * checks if Maps Navigation works
+     */
+    @Test
+    public void checkMapExists(){
+        Intent intent = new Intent(rule.getActivity().getApplicationContext(),Login.class);
+        rule.getActivity().startActivity(intent);
+        final String email = "test@gmail.com";
+        solo.enterText((EditText)solo.getView(R.id.username),email);
+        final String password = "test123";
+        solo.enterText((EditText)solo.getView(R.id.password),password);
+        solo.clickOnView(solo.getView(R.id.login));
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Maps");
+        solo.assertCurrentActivity("Wrong Activity: Expected Maps", MoodLocations.class);
+        FirebaseAuth.getInstance().signOut();
+    }
+    /**
+     * @author pspiers
+     * checks if we go to home when home is pressed form menu
+     */
+    @Test
+    public void checkHome(){
+        Intent intent = new Intent(rule.getActivity().getApplicationContext(),Login.class);
+        rule.getActivity().startActivity(intent);
+        final String email = "test@gmail.com";
+        solo.enterText((EditText)solo.getView(R.id.username),email);
+        final String password = "test123";
+        solo.enterText((EditText)solo.getView(R.id.password),password);
+        solo.clickOnView(solo.getView(R.id.login));
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Search");
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Home");
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        FirebaseAuth.getInstance().signOut();
+    }
+    /**
+     * @author pspiers
+     * checks if we go to home when home is pressed form menu
+     */
+    @Test
+    public void checkGetsToProfile(){
+        Intent intent = new Intent(rule.getActivity().getApplicationContext(),Login.class);
+        rule.getActivity().startActivity(intent);
+        final String email = "test@gmail.com";
+        solo.enterText((EditText)solo.getView(R.id.username),email);
+        final String password = "test123";
+        solo.enterText((EditText)solo.getView(R.id.password),password);
+        solo.clickOnView(solo.getView(R.id.login));
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Profile");
+        solo.assertCurrentActivity("Wrong Activity: Expected Profile", ProfileFragment.class);
+        FirebaseAuth.getInstance().signOut();
+    }
+    /**
+     * @author pspiers
+     * checks if the sidebar can be opened/closed multiple times
+     */
+    @Test
+    public void checkSidebar(){
+        Intent intent = new Intent(rule.getActivity().getApplicationContext(),Login.class);
+        rule.getActivity().startActivity(intent);
+        final String email = "test@gmail.com";
+        solo.enterText((EditText)solo.getView(R.id.username),email);
+        final String password = "test123";
+        solo.enterText((EditText)solo.getView(R.id.password),password);
+        solo.clickOnView(solo.getView(R.id.login));
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Search");
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Home");
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Search");
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Home");
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Search");
+        ((DrawerLayout) solo.getView(R.id.drawer_layout)).openDrawer(Gravity.LEFT);
+        solo.clickOnMenuItem("Home");
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
         FirebaseAuth.getInstance().signOut();
     }
 
