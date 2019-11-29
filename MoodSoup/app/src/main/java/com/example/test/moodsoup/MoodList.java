@@ -94,17 +94,21 @@ public class MoodList extends ArrayAdapter<Mood> {
         imageRef.getName().equals(imageReference.getName());    // true
         imageRef.getPath().equals(imageReference.getPath());    // false
 
-        photo.setVisibility(View.GONE);
-        final long ONE_MEGABYTE = 1024 * 1024;
-        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                photo.setVisibility(View.VISIBLE);
-                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                photo.setImageBitmap(Bitmap.createScaledBitmap(bmp, bmp.getWidth(),
-                        bmp.getHeight(), false));
-            }
-        });
+
+        if (mood.isImgIncluded()) {
+            final long ONE_MEGABYTE = 1024 * 1024;
+            imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    photo.setVisibility(View.VISIBLE);
+                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    photo.setImageBitmap(Bitmap.createScaledBitmap(bmp, bmp.getWidth(),
+                            bmp.getHeight(), false));
+                }
+            });
+        } else{
+            photo.setVisibility(View.GONE);
+        }
 
         if (!mood.getReason().equals("")) {
             reasonLabel.setVisibility(View.VISIBLE);

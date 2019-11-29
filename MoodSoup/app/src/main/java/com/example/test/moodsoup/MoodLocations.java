@@ -114,7 +114,7 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
                                                 document.get("username").toString(),document.get("date").toString(),
                                                 document.get("time").toString(),document.get("emotion").toString(),
                                                 document.get("reason").toString(),document.get("social").toString(),
-                                                document.get("location").toString(),(GeoPoint)document.get("coords"));
+                                                document.get("location").toString(),(GeoPoint)document.get("coords"), (boolean) document.get("imgIncluded"));
                                         // Creates a marker for moods with a gps coordinate
                                         if (mood.getCoords() != null) {
                                             LatLng coordinates = new LatLng(mood.getCoords().getLatitude(), mood.getCoords().getLongitude());
@@ -154,7 +154,7 @@ public class MoodLocations extends Fragment implements OnMapReadyCallback {
                                                                 document.get("username").toString(), document.get("date").toString(),
                                                                 document.get("time").toString(), document.get("emotion").toString(),
                                                                 document.get("reason").toString(), document.get("social").toString(),
-                                                                document.get("location").toString(), (GeoPoint)document.get("coords"));
+                                                                document.get("location").toString(), (GeoPoint)document.get("coords"), (boolean) document.get("imgIncluded"));
                                                         // Creates a marker for moods with a gps coordinate
                                                         if (mood.getCoords() != null) {
                                                             LatLng coordinates = new LatLng(mood.getCoords().getLatitude(), mood.getCoords().getLongitude());

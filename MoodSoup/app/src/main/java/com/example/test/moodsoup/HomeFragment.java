@@ -150,7 +150,7 @@ public class HomeFragment extends Fragment {
                                     document.get("username").toString(), document.get("date").toString(),
                                     document.get("time").toString(), document.get("emotion").toString(),
                                     document.get("reason").toString(), document.get("social").toString(),
-                                    document.get("location").toString(), (GeoPoint)document.get("coords"));
+                                    document.get("location").toString(), (GeoPoint)document.get("coords"),(boolean) document.get("imgIncluded"));
                             moodArray.add(mood);
                             Collections.sort(moodArray, new StringDateComparator());
                             moodAdapter = new MoodList(getActivity(), moodArray);

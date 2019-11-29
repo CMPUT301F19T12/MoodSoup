@@ -113,7 +113,7 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Mood mood = new Mood(document.get("email").toString(), document.get("username").toString(), document.get("date").toString(), document.get("time").toString(), document.get("emotion").toString(), document.get("reason").toString(), document.get("social").toString(), document.get("location").toString(), (GeoPoint) document.get("coords"));
+                        Mood mood = new Mood(document.get("email").toString(), document.get("username").toString(), document.get("date").toString(), document.get("time").toString(), document.get("emotion").toString(), document.get("reason").toString(), document.get("social").toString(), document.get("location").toString(), (GeoPoint) document.get("coords"), (boolean) document.get("imgIncluded"));
                         event_list.add(mood);
                     }
 
