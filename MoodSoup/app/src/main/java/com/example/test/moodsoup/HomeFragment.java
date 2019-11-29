@@ -108,7 +108,7 @@ public class HomeFragment extends Fragment {
      * which will be used to display in screen
      * - Much faster method because we do not have to access firebase.
      */
-    public void setFilter(final int position) {
+    private void setFilter(final int position) {
         final String[] emotion = getResources().getStringArray(R.array.emotionFilter);
         for (int i = 0; i < moodArray.size(); ++i) {
             if (moodArray.get(i).getEmotion().equals(emotion[position])) {
@@ -125,7 +125,7 @@ public class HomeFragment extends Fragment {
     * After, with the follower's now we will add the moods created by followers into "moodArray"
     * which will be shown in listView
     */
-    public void getFollowerMood() {
+    private void getFollowerMood() {
         for (int i = 0; i < followerArray.size(); ++i) {
             CollectionReference followerMoodColRef = db.collection("Users").document(followerArray.get(i)).collection("moodHistory");
             followerMoodColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

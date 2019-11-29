@@ -58,7 +58,6 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
     private String TAG = "ERROR HERE!";
     private ListView moodList;
     private TextView profileName;
-    private ListView event;
     private ArrayList<Mood> event_list;
     private ArrayAdapter<Mood> event_listAdapter;
     private String emailFromBundle;
@@ -66,7 +65,6 @@ public class ProfileFragment extends Fragment implements PendingContext.SheetLis
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.profile,container,false);
-        event = root.findViewById(R.id.event_list_self);
         ///Set profile picture
         ProfileFragmentArgs profileFragmentArgs = ProfileFragmentArgs.fromBundle(getArguments());
         emailFromBundle = profileFragmentArgs.getEmail();

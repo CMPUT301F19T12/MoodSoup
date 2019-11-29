@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -38,7 +37,7 @@ import static androidx.navigation.Navigation.findNavController;
  * 2019-11-07
  *
  * This page contains a list of all the people who are following you and a list of all the requests
- * that you have active. You may delete a follower and you may accept or reject a request.
+ * that you have active. You may delete a following and you may accept or reject a request.
  *
  *@author smayer <smayer@ualberta.ca>
  * @author Peter Spiers <pspiers@ualberta.ca>
@@ -46,11 +45,11 @@ import static androidx.navigation.Navigation.findNavController;
 
 public class Following extends Fragment implements PendingContext.SheetListener {
     private ArrayList<String> pendingList;
-    private ArrayList<String> followerList;
+    private ArrayList<String> followingList;
     private ListView pending;
-    private ListView follower;
+    private ListView following;
     private ArrayAdapter<String> pendingListAdapter;
-    private ArrayAdapter followerAdapter;
+    private ArrayAdapter followingAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,9 +61,9 @@ public class Following extends Fragment implements PendingContext.SheetListener 
         }
 
         pendingList = new ArrayList<>();
-        followerList = new ArrayList<>();
+        followingList = new ArrayList<>();
         pending = root.findViewById(R.id.pending);
-        follower = root.findViewById(R.id.follower);
+        following = root.findViewById(R.id.following);
 
         //registerForContextMenu(following);
         final FirebaseFirestore db;
@@ -90,29 +89,29 @@ public class Following extends Fragment implements PendingContext.SheetListener 
                 }
             }
         });
-        //Add a follower
-        CollectionReference followerColRef = db.collection("Users").document(user.getEmail()).collection("following");
-        followerColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        //Add a following
+        CollectionReference followingColRef = db.collection("Users").document(user.getEmail()).collection("following");
+        followingColRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
 
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        followerList.add(document.getId());
+                        followingList.add(document.getId());
                     }
-                    followerAdapter = new FollowerContext(context, followerList);
-                    follower.setAdapter(followerAdapter);
-                    registerForContextMenu(follower);
+                    followingAdapter = new FollowerContext(context, followingList);
+                    following.setAdapter(followingAdapter);
+                    registerForContextMenu(following);
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
                 }
             }
         });
 
-        follower.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        following.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Navigation.findNavController(root).navigate(FollowingDirections.actionNavFollowingToNavProfile().setEmail(followerList.get(i)));
+                Navigation.findNavController(root).navigate(FollowingDirections.actionNavFollowingToNavProfile().setEmail(followingList.get(i)));
             }
         });
 
@@ -125,27 +124,27 @@ public class Following extends Fragment implements PendingContext.SheetListener 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         MenuInflater inflater = getActivity().getMenuInflater();
-        if (v.getId() == R.id.follower) {
-            inflater.inflate(R.menu.follower_menu, menu);
+        if (v.getId() == R.id.following) {
+            inflater.inflate(R.menu.following_menu, menu);
         }
     }
 
     /**
      * The function will handle events when a item in context menu is clicked.
-     * It will handles removing the follower from the list and firebase.
+     * It will handles removing the following from the list and firebase.
      * */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.remove:
                 AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-                String email = followerList.get(info.position);
+                String email = followingList.get(info.position);
                 final String TAG = "Remove Following";
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 final FirebaseUser user = mAuth.getCurrentUser();
                 if (user != null) {
-                    //Remove user from my follower
+                    //Remove user from my following
                     db.collection("Users").document(user.getEmail()).collection("following").document(email)
                             .delete()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -161,8 +160,8 @@ public class Following extends Fragment implements PendingContext.SheetListener 
                                 }
                             });
 
-                    //Remove me from user's follower list
-                    db.collection("Users").document(email).collection("follower").document(user.getEmail())
+                    //Remove me from user's following list
+                    db.collection("Users").document(email).collection("following").document(user.getEmail())
                             .delete()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -177,12 +176,12 @@ public class Following extends Fragment implements PendingContext.SheetListener 
                                 }
                             });
                 }
-                follower.setAdapter(followerAdapter);
-                followerList.remove(info.position);
+                following.setAdapter(followingAdapter);
+                followingList.remove(info.position);
                 return true;
             case R.id.move_to_profile:
                 info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-                email = followerList.get(info.position);
+                email = followingList.get(info.position);
                 Navigation.findNavController(getView()).navigate(FollowingDirections.actionNavFollowingToNavProfile().setEmail(email));
             default:
                 return super.onContextItemSelected(item);

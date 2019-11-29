@@ -75,9 +75,10 @@ public class AndroidTest {
         final String password = "test123";
         solo.enterText((EditText)solo.getView(R.id.password_new_user_tv),password);
         solo.clickOnButton("Register");
+        solo.assertCurrentActivity("Wrong Activity: Expected MainActivity", MainActivity.class);
         assertEquals(email, FirebaseAuth.getInstance().getCurrentUser().getEmail());
-        FirebaseAuth.getInstance().getCurrentUser().delete();
         FirebaseFirestore.getInstance().collection("Users").document(email).delete();
+        FirebaseAuth.getInstance().getCurrentUser().delete();
         FirebaseAuth.getInstance().signOut();
     }
 
@@ -127,7 +128,6 @@ public class AndroidTest {
         assertEquals(email, FirebaseAuth.getInstance().getCurrentUser().getEmail());
         FirebaseAuth.getInstance().signOut();
     }
-    /*@Test
     /**
      * @author Richard Qin
      * Attempts to login to precreated account test@gmail.com with wrong password
@@ -147,6 +147,7 @@ public class AndroidTest {
         assertNull(FirebaseAuth.getInstance().getCurrentUser());
         FirebaseAuth.getInstance().signOut();
     }
+
 
     /*
     WILL KEEP THIS HERE FOR REFERENCE
@@ -265,10 +266,5 @@ public class AndroidTest {
     @After
     public void tearDown() throws Exception {
         solo.finishOpenedActivities();
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            FirebaseFirestore.getInstance().collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getEmail()).delete();
-            FirebaseAuth.getInstance().getCurrentUser().delete();
-            FirebaseAuth.getInstance().signOut();
-        }
     }
 }
