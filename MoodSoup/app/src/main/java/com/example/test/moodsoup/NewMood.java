@@ -80,6 +80,7 @@ public class NewMood extends AppCompatActivity{
     private String email,emotionText,reasonText,socialText, addressLocation;
     private GeoPoint geoPoint;
     private FusedLocationProviderClient mFusedLocationClient;
+    private boolean imageIncluded = false;
 
     // Constants
     int reqCode = -1;

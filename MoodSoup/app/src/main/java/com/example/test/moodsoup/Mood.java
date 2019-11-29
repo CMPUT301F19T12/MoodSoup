@@ -20,8 +20,9 @@ public class Mood{
     private String social;
     private String location;
     private GeoPoint coords;
+    private boolean imgIncluded;
 
-    public Mood(String email, String username, String date, String time, String emotion, String reason, String social, String location, GeoPoint coords) {
+    public Mood(String email, String username, String date, String time, String emotion, String reason, String social, String location, GeoPoint coords, boolean imgIncluded) {
         this.email = email;
         this.username = username;
         this.emotion = emotion;
@@ -31,6 +32,7 @@ public class Mood{
         this.social = social;
         this.location = location;
         this.coords = coords;
+        this.imgIncluded = imgIncluded;
     }
 
     public String getUsername() {
@@ -103,5 +105,13 @@ public class Mood{
 
     public void setCoords(GeoPoint coords) {
         this.coords = coords;
+    }
+
+    public boolean isImgIncluded() {
+        return imgIncluded;
+    }
+
+    public void setImgIncluded(boolean imgIncluded) {
+        this.imgIncluded = imgIncluded;
     }
 }
